@@ -4,12 +4,13 @@ import Router from "next/router";
 
 const Draft: React.FC = () => {
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
 
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
-      const body = { title, content };
+      const body = { title, content, description };
       await fetch(`http://localhost:3000/api/post`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,6 +33,13 @@ const Draft: React.FC = () => {
             placeholder="Title"
             type="text"
             value={title}
+          />
+          <textarea
+            cols={50}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description"
+            rows={8}
+            value={description}
           />
           <textarea
             cols={50}

@@ -1,6 +1,7 @@
 import React from "react";
 import Router from "next/router";
 import ReactMarkdown from "react-markdown";
+import { CodePreview } from "./CodePreview";
 
 export type PostProps = {
   id: number;
@@ -10,16 +11,19 @@ export type PostProps = {
     email: string;
   } | null;
   content: string;
+  description: string;
   published: boolean;
 };
 
 const Post: React.FC<{ post: PostProps }> = ({ post }) => {
   const authorName = post.author ? post.author.name : "Unknown author";
+  console.log(post);
   return (
     <div onClick={() => Router.push("/p/[id]", `/p/${post.id}`)}>
       <h2>{post.title}</h2>
       <small>By {authorName}</small>
-      <ReactMarkdown source={post.content} />
+      <ReactMarkdown source={post.description} />
+      <CodePreview value={post.content} />
       <style jsx>{`
         div {
           color: inherit;

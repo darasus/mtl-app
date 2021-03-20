@@ -195,6 +195,11 @@ const Header: React.FC = () => {
 
   return (
     <nav>
+      <Link href="/">
+        <a className="bold" data-active={isActive("/")}>
+          My little javascript library
+        </a>
+      </Link>
       {left}
       {right}
       <style jsx>{`
