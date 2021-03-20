@@ -15,9 +15,9 @@ export type PostProps = {
   published: boolean;
 };
 
-const Post: React.FC<{ post: PostProps }> = ({ post }) => {
+export const Post: React.FC<{ post: PostProps }> = ({ post }) => {
   const authorName = post.author ? post.author.name : "Unknown author";
-  console.log(post);
+
   return (
     <div onClick={() => Router.push("/p/[id]", `/p/${post.id}`)}>
       <h2>{post.title}</h2>
@@ -33,5 +33,3 @@ const Post: React.FC<{ post: PostProps }> = ({ post }) => {
     </div>
   );
 };
-
-export default Post;
