@@ -12,6 +12,10 @@ body {
   color: #fff;
 }
 
-code {
+.markdown-block {
+  @apply text-xs text-gray-500;
+}
+
+.markdown-block code {
   @apply bg-gray-800 text-purple-500 px-0.5 rounded-sm;
 }

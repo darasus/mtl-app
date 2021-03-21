@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { Author } from "../types/Author";
 import { AuthorPreview } from "./AuthorPreview";
 import { CodePreview } from "./CodePreview";
+import { Markdown } from "./Markdown";
 
 export type PostProps = {
   id: number;
@@ -27,8 +28,8 @@ export const Post: React.FC<{ post: PostProps }> = ({ post }) => {
         <span className="mr-2">by</span>
         <AuthorPreview author={post.author} />
       </div>
-      <div className="py-2 text-xs text-gray-500">
-        <ReactMarkdown source={post.description} />
+      <div className="my-2">
+        <Markdown value={post.description} />
       </div>
       <CodePreview value={post.content} />
     </div>

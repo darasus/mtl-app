@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/client";
 import Image from "next/image";
-import { LinkButton } from "./LinkButton";
+import { Button, LinkButton } from "./Button";
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -31,14 +31,12 @@ export const Header: React.FC = () => {
           </div>
           <span>{session.user.name}</span>
         </div>
-        <Link href="/create">
-          <button className="mr-2">
-            <a>New post</a>
-          </button>
-        </Link>
-        <button onClick={() => signOut()}>
-          <a>Log out</a>
-        </button>
+        <LinkButton className="mr-2" href="/create">
+          New post
+        </LinkButton>
+        <Button color="red" onClick={() => signOut()}>
+          Log out
+        </Button>
       </div>
     );
   }
