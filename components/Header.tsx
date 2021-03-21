@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/client";
+import Image from "next/image";
+import { LinkButton } from "./LinkButton";
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -15,9 +17,7 @@ export const Header: React.FC = () => {
   if (!session) {
     right = (
       <div>
-        <Link href="/api/auth/signin">
-          <a data-active={isActive("/signup")}>Log in</a>
-        </Link>
+        <LinkButton href="/api/auth/signin">Log in</LinkButton>
       </div>
     );
   }
@@ -44,10 +44,12 @@ export const Header: React.FC = () => {
   }
 
   return (
-    <nav className="flex py-4">
+    <nav className="flex py-4 items-center">
       <div className="flex-grow">
         <Link href="/">
-          <a>My little javascript library</a>
+          <a>
+            <Image src="/logo.svg" height="31" width={200} />
+          </a>
         </Link>
       </div>
       {right}
