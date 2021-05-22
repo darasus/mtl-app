@@ -1,32 +1,27 @@
 import React from "react";
-// import Router from "next/router";
 import ReactMarkdown from "react-markdown";
-import { Author } from "../types/Author";
-import { AuthorPreview } from "./AuthorPreview";
+import { UserPreview } from "./UserPreview";
 import { CodePreview } from "./CodePreview";
 import { Markdown } from "./Markdown";
+import Prisma from ".prisma/client";
+import Link from "next/link";
 
-export type PostProps = {
-  id: number;
-  title: string;
-  author: Author;
-  content: string;
-  description: string;
-  published: boolean;
-};
+interface Props {
+  post: Prisma.Post & { author: Prisma.User };
+}
 
-export const Post: React.FC<{ post: PostProps }> = ({ post }) => {
-  console.log(post);
+export const Post: React.FC<Props> = ({ post }) => {
   return (
     <div
       className="border-gray-100 border mb-10 p-4"
       style={{ boxShadow: "#ffffff1f 10px 10px 0px 0px" }}
-      // onClick={() => Router.push("/p/[id]", `/p/${post.id}`)}
     >
       <div className="flex items-center">
-        <span className="mr-2">{post.title}</span>
+        <Link as={`/p/${post.id}`} href={"/p/[id]"}>
+          <a className="mr-2">{post.title}</a>
+        </Link>
         <span className="mr-2">by</span>
-        <AuthorPreview author={post.author} />
+        <UserPreview user={post.author} />
       </div>
       <div className="my-2">
         <Markdown value={post.description} />

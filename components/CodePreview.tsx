@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const CodePreview: React.FC<Props> = (props) => {
-  let prevHeight = React.useRef(null);
+  const [prevHeight, setPrevHeight] = React.useState(0);
 
   const updateEditorHeight: EditorProps["onMount"] = React.useCallback(
     (editor, monaco) => {
@@ -25,8 +25,8 @@ export const CodePreview: React.FC<Props> = (props) => {
       const lineCount = editor.getModel()?.getLineCount() || 1;
       const height = editor.getTopForLineNumber(lineCount + 1) + lineHeight;
 
-      if (prevHeight.current !== height) {
-        prevHeight.current = height;
+      if (prevHeight !== height) {
+        setPrevHeight(height);
         editorElement.style.height = `${height}px`;
         editor.layout();
       }
@@ -37,7 +37,7 @@ export const CodePreview: React.FC<Props> = (props) => {
   return (
     <div>
       <Editor
-        height={prevHeight.current}
+        height={prevHeight}
         defaultLanguage="javascript"
         value={props.value}
         onMount={updateEditorHeight}

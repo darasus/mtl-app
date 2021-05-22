@@ -13,13 +13,17 @@
   "dependencies": {
     "@monaco-editor/react": "^4.1.0",
     "@prisma/client": "2.19.0",
+    "axios": "^0.21.1",
+    "babel-plugin-superjson-next": "^0.3.0",
     "clsx": "^1.1.1",
     "next": "10.0.9",
     "next-auth": "3.13.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-markdown": "5.0.3",
-    "react-monaco-editor": "^0.43.0"
+    "react-monaco-editor": "^0.43.0",
+    "react-query": "^3.13.0",
+    "superjson": "^1.7.4"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^3.1.3",

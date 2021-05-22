@@ -4,17 +4,19 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/client";
 import Image from "next/image";
 import { Button, LinkButton } from "./Button";
+import { UserPreview } from "./UserPreview";
+import { useMeQuery } from "../hooks/useMeQuery";
 
 export const Header: React.FC = () => {
   const router = useRouter();
-  const [session] = useSession();
+  const { data: me } = useMeQuery();
 
   const isActive: (pathname: string) => boolean = (pathname) =>
     router.pathname === pathname;
 
   let right = null;
 
-  if (!session) {
+  if (!me) {
     right = (
       <div>
         <LinkButton href="/api/auth/signin">Log in</LinkButton>
@@ -22,14 +24,11 @@ export const Header: React.FC = () => {
     );
   }
 
-  if (session) {
+  if (me) {
     right = (
       <div className="flex">
         <div className="flex items-center mr-2">
-          <div className="w-8 rounded-full overflow-hidden mr-2">
-            <img className="w-full" src={session.user.image} />
-          </div>
-          <span>{session.user.name}</span>
+          <UserPreview user={me} />
         </div>
         <LinkButton className="mr-2" href="/create">
           New post

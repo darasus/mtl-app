@@ -10,7 +10,7 @@ const Draft: React.FC = () => {
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
-      const body = { title, content, description };
+      const body = { title, content, description, published: true };
       await fetch(`http://localhost:3000/api/post`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -1,29 +1,15 @@
-import { GetStaticProps } from "next";
+import axios from "axios";
+import { GetServerSideProps, GetStaticProps } from "next";
+import { getSession } from "next-auth/client";
+import { QueryClient } from "react-query";
 import { Layout } from "../components/Layout";
-import { Post, PostProps } from "../components/Post";
+import { Post } from "../components/Post";
 import prisma from "../lib/prisma";
-
-export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.post.findMany({
-    where: {
-      published: true,
-    },
-    include: {
-      author: {
-        select: {
-          name: true,
-          image: true,
-        },
-      },
-    },
-  });
-  return {
-    props: { feed },
-  };
-};
+import { fetchMe } from "../request/fetchMe";
+import Prisma from ".prisma/client";
 
 type Props = {
-  feed: PostProps[];
+  feed: (Prisma.Post & { author: Prisma.User })[];
 };
 
 const Index: React.FC<Props> = (props) => {
@@ -41,3 +27,34 @@ const Index: React.FC<Props> = (props) => {
 };
 
 export default Index;
+
+export const getServerSideProps: GetServerSideProps = async (): Promise<{
+  props: Props;
+}> => {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery("me", fetchMe);
+
+  const feed = await prisma.post.findMany({
+    where: {
+      published: false,
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          userName: true,
+          image: true,
+          emailVerified: true,
+          createdAt: true,
+          email: true,
+          updatedAt: true,
+        },
+      },
+    },
+  });
+
+  return {
+    props: { feed },
+  };
+};
