@@ -11,7 +11,7 @@ interface Props {
 export const UserPreview: React.FC<Props> = ({ user }) => {
   return (
     <Link href={`/u/${user.userName}`}>
-      <div className="flex items-center">
+      <div className="flex cursor-pointer items-center">
         <div className="rounded-full h-8 w-8 overflow-hidden mr-2">
           <Image className="w-full" src={user.image} width="50" height="50" />
         </div>

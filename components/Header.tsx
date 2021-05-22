@@ -30,7 +30,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center mr-2">
           <UserPreview user={me} />
         </div>
-        <LinkButton className="mr-2" href="/create">
+        <LinkButton className="mr-2" href="/create-post">
           New post
         </LinkButton>
         <Button color="red" onClick={() => signOut()}>
