@@ -2,21 +2,45 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { Layout } from "../../components/Layout";
 import Router from "next/router";
-import { useSession } from "next-auth/client";
 import Prisma from ".prisma/client";
-import { getUserByUsername } from "../../request/getUserByUsername";
 import prisma from "../../lib/prisma";
 import { Post } from "../../components/Post";
+import { View } from "@react-spectrum/view";
+import { Flex } from "@react-spectrum/layout";
+import Image from "next/image";
+import { Heading, Text } from "@react-spectrum/text";
 
-const UserPage: React.FC<Props> = (props) => {
+interface Props {
+  user: Prisma.User;
+  feed: (Prisma.Post & { author: Prisma.User })[];
+}
+
+const UserPage: React.FC<Props> = ({ feed, user }) => {
   return (
     <Layout>
       <main>
-        {props.feed.map((post) => (
-          <div key={post.id}>
-            <Post post={post} />
-          </div>
-        ))}
+        <View marginBottom="size-100">
+          <Flex direction="column" alignItems="center">
+            <View
+              width={150}
+              height={150}
+              borderRadius="large"
+              overflow="hidden"
+              marginBottom="size-100"
+            >
+              <Image src={user.image} width="500" height="500" alt="Avatar" />
+            </View>
+            <Text>{user.name}</Text>
+          </Flex>
+        </View>
+        <View>
+          <Heading>Latest posts:</Heading>
+          {feed.map((post) => (
+            <View key={post.id} marginBottom="size-100">
+              <Post post={post} />
+            </View>
+          ))}
+        </View>
       </main>
     </Layout>
   );
@@ -24,27 +48,17 @@ const UserPage: React.FC<Props> = (props) => {
 
 export default UserPage;
 
-async function publishPost(id: number): Promise<void> {
-  await fetch(`http://localhost:3000/api/publish/${id}`, {
-    method: "PUT",
-  });
-  await Router.push("/");
-}
-
-async function deletePost(id: number): Promise<void> {
-  await fetch(`http://localhost:3000/api/post/${id}`, {
-    method: "DELETE",
-  });
-  await Router.push("/");
-}
-
-export const getServerSideProps: GetServerSideProps = async (): Promise<{
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+}): Promise<{
   props: Props;
 }> => {
-  const feed = await prisma.post.findMany({
+  const user = await prisma.user.findUnique({
     where: {
-      published: false,
+      id: Number(params.id),
     },
+  });
+  const feed = await prisma.post.findMany({
     include: {
       author: {
         select: {
@@ -62,10 +76,6 @@ export const getServerSideProps: GetServerSideProps = async (): Promise<{
   });
 
   return {
-    props: { feed },
+    props: { user, feed },
   };
 };
-
-interface Props {
-  feed: (Prisma.Post & { author: Prisma.User })[];
-}

@@ -6,9 +6,5 @@ interface Props {
 }
 
 export const Markdown: React.FC<Props> = ({ value }) => {
-  return (
-    <div className="markdown-block">
-      <ReactMarkdown source={value} />
-    </div>
-  );
+  return <ReactMarkdown source={value} />;
 };

@@ -7,6 +7,7 @@ import { Post } from "../components/Post";
 import prisma from "../lib/prisma";
 import { fetchMe } from "../request/fetchMe";
 import Prisma from ".prisma/client";
+import { View } from "@react-spectrum/view";
 
 type Props = {
   feed: (Prisma.Post & { author: Prisma.User })[];
@@ -17,9 +18,9 @@ const Index: React.FC<Props> = (props) => {
     <Layout>
       <main>
         {props.feed.map((post) => (
-          <div key={post.id}>
+          <View key={post.id} marginBottom="size-100">
             <Post post={post} />
-          </div>
+          </View>
         ))}
       </main>
     </Layout>

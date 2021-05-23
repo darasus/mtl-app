@@ -1,22 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { Layout } from "../components/Layout";
-import Router from "next/router";
+import { useRouter } from "next/router";
+import { TextArea, TextField } from "@react-spectrum/textfield";
+import { View } from "@react-spectrum/view";
+import { Button } from "@react-spectrum/button";
+import { Heading } from "@react-spectrum/text";
+import { usePostCreateMutation } from "../hooks/usePostCreateMutation";
+import { useMeQuery } from "../hooks/useMeQuery";
 
 const Draft: React.FC = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [content, setContent] = React.useState("");
+  const createPost = usePostCreateMutation();
+  const me = useMeQuery();
+  const router = useRouter();
 
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
-      const body = { title, content, description, published: true };
-      await fetch(`http://localhost:3000/api/post`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      await Router.push("/drafts");
+      const body = { title, content, description };
+      await createPost.mutateAsync(body);
+      await router.push(`/u/${me.data.id}`);
     } catch (error) {
       console.error(error);
     }
@@ -24,64 +29,41 @@ const Draft: React.FC = () => {
 
   return (
     <Layout>
-      <div>
+      <View>
         <form onSubmit={submitData}>
-          <h1>New Draft</h1>
-          <input
-            autoFocus
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
-            type="text"
-            value={title}
-          />
-          <textarea
-            cols={50}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description"
-            rows={8}
-            value={description}
-          />
-          <textarea
-            cols={50}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Content"
-            rows={8}
-            value={content}
-          />
-          <input disabled={!content || !title} type="submit" value="Create" />
-          <a className="back" href="#" onClick={() => Router.push("/")}>
-            or Cancel
-          </a>
+          <Heading>New little JavaScript library</Heading>
+          <View marginBottom="size-200">
+            <TextField
+              autoFocus
+              onChange={setTitle}
+              label="Title"
+              type="text"
+              value={title}
+              width="100%"
+            />
+          </View>
+          <View marginBottom="size-200">
+            <TextArea
+              label="Description"
+              width="100%"
+              onChange={setDescription}
+              placeholder=""
+              value={description}
+            />
+          </View>
+          <View marginBottom="size-200">
+            <TextArea
+              width="100%"
+              onChange={setContent}
+              label="Little JavaScript library"
+              value={content}
+            />
+          </View>
+          <Button variant="cta" type="submit">
+            Create
+          </Button>
         </form>
-      </div>
-      <style jsx>{`
-        .page {
-          background: white;
-          padding: 3rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        input[type="text"],
-        textarea {
-          width: 100%;
-          padding: 0.5rem;
-          margin: 0.5rem 0;
-          border-radius: 0.25rem;
-          border: 0.125rem solid rgba(0, 0, 0, 0.2);
-        }
-
-        input[type="submit"] {
-          background: #ececec;
-          border: 0;
-          padding: 1rem 2rem;
-        }
-
-        .back {
-          margin-left: 1rem;
-        }
-      `}</style>
+      </View>
     </Layout>
   );
 };

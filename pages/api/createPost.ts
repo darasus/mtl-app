@@ -15,6 +15,7 @@ export default async function handle(
         title,
         content,
         description,
+        published: true,
         author: { connect: { email: session?.user?.email } },
       },
     });

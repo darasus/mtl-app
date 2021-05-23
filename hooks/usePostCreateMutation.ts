@@ -1,10 +1,16 @@
 import axios from "axios";
 import { useMutation } from "react-query";
 
+interface Variables {
+  title: string;
+  description: string;
+  content: string;
+}
+
 export const usePostCreateMutation = () => {
-  return useMutation((variables) =>
+  return useMutation<{}, {}, Variables>((variables) =>
     axios(`/api/createPost`, {
-      method: "PUT",
+      method: "POST",
       data: variables,
     })
   );

@@ -1,5 +1,8 @@
 import Prisma from ".prisma/client";
-import { WithAdditionalParams } from "next-auth/_utils";
+import { Flex } from "@react-spectrum/layout";
+import { Text } from "@react-spectrum/text";
+import { View } from "@react-spectrum/view";
+import { Link as SPLink } from "@react-spectrum/link";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -10,13 +13,23 @@ interface Props {
 
 export const UserPreview: React.FC<Props> = ({ user }) => {
   return (
-    <Link href={`/u/${user.userName}`}>
-      <div className="flex cursor-pointer items-center">
-        <div className="rounded-full h-8 w-8 overflow-hidden mr-2">
-          <Image className="w-full" src={user.image} width="50" height="50" />
-        </div>
-        <span>{user.name}</span>
-      </div>
+    <Link as={`/u/${user.id}`} href="/u/[id]">
+      <SPLink variant="secondary">
+        <a>
+          <Flex alignItems="center">
+            <View
+              width={30}
+              height={30}
+              borderRadius="large"
+              overflow="hidden"
+              marginEnd="size-100"
+            >
+              <Image src={user.image} width="100" height="100" alt="Avatar" />
+            </View>
+            <Text>{user.name}</Text>
+          </Flex>
+        </a>
+      </SPLink>
     </Link>
   );
 };
