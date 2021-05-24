@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/client";
+import { signOut } from "next-auth/client";
 import Image from "next/image";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/useMeQuery";
@@ -12,9 +12,6 @@ import { View } from "@react-spectrum/view";
 export const Header: React.FC = () => {
   const router = useRouter();
   const { data: me } = useMeQuery();
-
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
 
   return (
     <View>
@@ -44,7 +41,7 @@ export const Header: React.FC = () => {
             <Button
               marginEnd="size-100"
               variant="cta"
-              onPress={() => router.push("/create-post")}
+              onPress={() => router.push("/p/create")}
             >
               New post
             </Button>

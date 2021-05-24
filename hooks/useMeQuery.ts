@@ -1,7 +1,12 @@
 import { useQuery } from "react-query";
 import { fetchMe } from "../request/fetchMe";
-import Prisma from ".prisma/client";
+import { useSession } from "next-auth/client";
 
 export const useMeQuery = () => {
-  return useQuery<Prisma.User>("me", fetchMe, { staleTime: 1000 * 60 * 5 });
+  const [session] = useSession();
+
+  return useQuery("me", fetchMe, {
+    staleTime: 1000 * 60 * 5,
+    enabled: !!session,
+  });
 };

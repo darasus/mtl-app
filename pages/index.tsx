@@ -1,12 +1,9 @@
-import axios from "axios";
-import { GetServerSideProps, GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
 import { Layout } from "../components/Layout";
 import { Post } from "../components/Post";
-import prisma from "../lib/prisma";
 import { fetchMe } from "../request/fetchMe";
-import Prisma from ".prisma/client";
 import { View } from "@react-spectrum/view";
 import { usePostDelete } from "../hooks/usePostDelete";
 import React from "react";

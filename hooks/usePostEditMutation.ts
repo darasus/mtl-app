@@ -8,17 +8,18 @@ interface Variables {
   content: string;
 }
 
-export const usePostCreateMutation = () => {
+export const usePostEditMutation = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation<Post, {}, Variables>(
     (variables) =>
-      axios(`/api/post/create`, {
-        method: "POST",
+      axios(`/api/post/${id}/update`, {
+        method: "PUT",
         data: variables,
       }).then((res) => res.data),
     {
-      async onSettled(_, __, id) {
+      async onSettled() {
+        await queryClient.invalidateQueries(["post", id]);
         await queryClient.invalidateQueries("feed");
       },
     }

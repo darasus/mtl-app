@@ -1,14 +1,14 @@
 import React from "react";
-import { Layout } from "../components/Layout";
+import { Layout } from "../../components/Layout";
 import { useRouter } from "next/router";
 import { TextArea, TextField } from "@react-spectrum/textfield";
 import { View } from "@react-spectrum/view";
 import { Button } from "@react-spectrum/button";
 import { Heading } from "@react-spectrum/text";
-import { usePostCreateMutation } from "../hooks/usePostCreateMutation";
-import { useMeQuery } from "../hooks/useMeQuery";
+import { usePostCreateMutation } from "../../hooks/usePostCreateMutation";
+import { useMeQuery } from "../../hooks/useMeQuery";
 
-const Draft: React.FC = () => {
+const CreatePostPage: React.FC = () => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [content, setContent] = React.useState("");
@@ -20,8 +20,8 @@ const Draft: React.FC = () => {
     e.preventDefault();
     try {
       const body = { title, content, description };
-      await createPost.mutateAsync(body);
-      await router.push(`/u/${me.data.id}`);
+      const post = await createPost.mutateAsync(body);
+      await router.push(`/p/${post.id}`);
     } catch (error) {
       console.error(error);
     }
@@ -68,4 +68,4 @@ const Draft: React.FC = () => {
   );
 };
 
-export default Draft;
+export default CreatePostPage;

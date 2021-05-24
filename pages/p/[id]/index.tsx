@@ -1,11 +1,11 @@
 import React from "react";
 import { GetServerSideProps } from "next";
-import { Layout } from "../../components/Layout";
-import prisma from "../../lib/prisma";
+import { Layout } from "../../../components/Layout";
+import prisma from "../../../lib/prisma";
 import Prisma from ".prisma/client";
-import { Post } from "../../components/Post";
+import { Post } from "../../../components/Post";
 import { QueryClient } from "react-query";
-import { fetchMe } from "../../request/fetchMe";
+import { fetchMe } from "../../../request/fetchMe";
 
 interface Props {
   post: Prisma.Post & { author: Prisma.User };

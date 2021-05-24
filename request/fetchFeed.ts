@@ -1,6 +1,5 @@
 import axios from "axios";
-import Prisma from ".prisma/client";
+import { Post } from "../types/Post";
 
-export const fetchFeed = (): Promise<
-  (Prisma.Post & { author: Prisma.User })[]
-> => axios(`${process.env.BASE_URL}/api/feed`).then((res) => res.data);
+export const fetchFeed = (): Promise<Post[]> =>
+  axios(`${process.env.BASE_URL}/api/feed`).then((res) => res.data);

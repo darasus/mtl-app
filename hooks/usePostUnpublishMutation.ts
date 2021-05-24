@@ -3,7 +3,7 @@ import { useMutation } from "react-query";
 
 export const usePostUnpublishMutation = (id: number) => {
   return useMutation(() =>
-    axios(`/api/unpublishPost/${id}`, {
+    axios(`/api/post/${id}/unpublish`, {
       method: "PUT",
     })
   );

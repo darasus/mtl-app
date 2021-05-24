@@ -1,10 +1,19 @@
 import axios from "axios";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 export const usePostDeleteMutation = () => {
-  return useMutation((id: number) =>
-    axios(`/api/deletePost/${id}`, {
-      method: "DELETE",
-    })
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (id: number) =>
+      axios(`/api/post/${id}/delete`, {
+        method: "DELETE",
+      }),
+    {
+      async onSettled(_, __, id) {
+        await queryClient.invalidateQueries(["post", id]);
+        await queryClient.invalidateQueries("feed");
+      },
+    }
   );
 };

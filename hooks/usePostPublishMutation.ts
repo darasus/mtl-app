@@ -1,10 +1,19 @@
 import axios from "axios";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 export const usePostPublishMutation = (id: number) => {
-  return useMutation(() =>
-    axios(`/api/publishPost/${id}`, {
-      method: "PUT",
-    })
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    () =>
+      axios(`/api/post/${id}/publish`, {
+        method: "PUT",
+      }),
+    {
+      async onSettled() {
+        await queryClient.invalidateQueries(["post", id]);
+        await queryClient.invalidateQueries("feed");
+      },
+    }
   );
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
 import { UserPreview } from "./UserPreview";
 import { CodePreview } from "./CodePreview";
 import { Markdown } from "./Markdown";
@@ -15,9 +14,10 @@ import Copy from "@spectrum-icons/workflow/Copy";
 import Edit from "@spectrum-icons/workflow/Edit";
 import useCopyClipboard from "../hooks/useClipboard";
 import { useRouter } from "next/router";
+import { Post as PostType } from "../types/Post";
 
 interface Props {
-  post: Prisma.Post & { author: Prisma.User };
+  post: PostType;
   onDeletePost?: () => void;
 }
 
@@ -34,6 +34,10 @@ export const Post: React.FC<Props> = React.memo(function Post({
 
   const handleTweetClick = React.useCallback(() => {
     window.open(`https://twitter.com/intent/tweet?text=Hello%20world`);
+  }, []);
+
+  const handleEditClick = React.useCallback(() => {
+    router.push(`/p/${post.id}/edit`);
   }, []);
 
   return (
@@ -80,7 +84,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Copy />
                 <Text>{isCopied ? "Copied!" : "Copy snippet"}</Text>
               </ActionButton>
-              <ActionButton isQuiet>
+              <ActionButton isQuiet onPress={handleEditClick}>
                 <Edit />
                 <Text>Edit</Text>
               </ActionButton>

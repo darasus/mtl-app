@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import prisma from "../../lib/prisma";
-import Prisma from ".prisma/client";
+import { User } from "../../types/User";
 
 export default async function handle(
   req: NextApiRequest,
@@ -9,16 +9,15 @@ export default async function handle(
 ) {
   const session = await getSession({ req });
 
-  console.log(session);
-
   if (!session) {
     res.status(401);
+    res.send({});
   }
 
   try {
-    const me: Prisma.User = await prisma.user.findUnique({
+    const me: User = await prisma.user.findUnique({
       where: {
-        email: "idarase@gmail.com",
+        email: session.user.email,
       },
       select: {
         userName: true,
