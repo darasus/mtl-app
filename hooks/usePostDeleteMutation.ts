@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useMutation } from "react-query";
 
-export const usePostDeleteMutation = (id: number) => {
-  return useMutation(() =>
+export const usePostDeleteMutation = () => {
+  return useMutation((id: number) =>
     axios(`/api/deletePost/${id}`, {
-      method: "PUT",
+      method: "DELETE",
     })
   );
 };

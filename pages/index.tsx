@@ -8,18 +8,26 @@ import prisma from "../lib/prisma";
 import { fetchMe } from "../request/fetchMe";
 import Prisma from ".prisma/client";
 import { View } from "@react-spectrum/view";
+import { usePostDelete } from "../hooks/usePostDelete";
+import React from "react";
+import { dehydrate } from "react-query/hydration";
+import { fetchFeed } from "../request/fetchFeed";
+import { useFeedQuery } from "../hooks/useFeedQuery";
 
-type Props = {
-  feed: (Prisma.Post & { author: Prisma.User })[];
-};
+const Index: React.FC = () => {
+  const feed = useFeedQuery();
+  const { deletePost } = usePostDelete();
+  const handleDeletePost = React.useCallback(
+    (id: number) => () => deletePost(id),
+    [deletePost]
+  );
 
-const Index: React.FC<Props> = (props) => {
   return (
     <Layout>
       <main>
-        {props.feed.map((post) => (
-          <View key={post.id} marginBottom="size-100">
-            <Post post={post} />
+        {feed.data?.map((post) => (
+          <View key={post.id} marginBottom="size-300">
+            <Post post={post} onDeletePost={handleDeletePost(post.id)} />
           </View>
         ))}
       </main>
@@ -29,33 +37,17 @@ const Index: React.FC<Props> = (props) => {
 
 export default Index;
 
-export const getServerSideProps: GetServerSideProps = async (): Promise<{
-  props: Props;
-}> => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery("me", fetchMe);
-
-  const feed = await prisma.post.findMany({
-    where: {
-      published: false,
-    },
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-          userName: true,
-          image: true,
-          emailVerified: true,
-          createdAt: true,
-          email: true,
-          updatedAt: true,
-        },
-      },
-    },
-  });
+  if (session) {
+    await queryClient.prefetchQuery("me", fetchMe);
+  }
+  await queryClient.prefetchQuery("feed", fetchFeed);
 
   return {
-    props: { feed },
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
   };
 };

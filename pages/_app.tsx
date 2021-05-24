@@ -10,6 +10,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ReactQueryDevtools } from "react-query/devtools";
 
+const theme: typeof defaultTheme = { ...defaultTheme };
+
 const App = ({ Component, pageProps }: AppProps) => {
   const queryClientRef = React.useRef<QueryClient>();
   if (!queryClientRef.current) {
@@ -18,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <SSRProvider>
-      <SpectrumProvider theme={defaultTheme} minHeight="100%">
+      <SpectrumProvider theme={theme} minHeight="100%">
         <AuthProvider session={pageProps.session}>
           <QueryClientProvider client={queryClientRef.current}>
             <Hydrate state={pageProps.dehydratedState}>

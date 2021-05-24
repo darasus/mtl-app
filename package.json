@@ -17,6 +17,7 @@
     "axios": "^0.21.1",
     "babel-plugin-superjson-next": "^0.3.0",
     "clsx": "^1.1.1",
+    "copy-to-clipboard": "^3.3.1",
     "next": "^10.0.9",
     "next-auth": "3.13.2",
     "react": "^17.0.1",

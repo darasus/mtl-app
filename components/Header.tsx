@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
         {!me && (
           <Flex>
             <Button
-              variant="primary"
+              variant="cta"
               onPress={() => router.push("/api/auth/signin")}
             >
               Log in

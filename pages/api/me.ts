@@ -9,6 +9,8 @@ export default async function handle(
 ) {
   const session = await getSession({ req });
 
+  console.log(session);
+
   if (!session) {
     res.status(401);
   }
@@ -16,7 +18,7 @@ export default async function handle(
   try {
     const me: Prisma.User = await prisma.user.findUnique({
       where: {
-        email: session.user.email,
+        email: "idarase@gmail.com",
       },
       select: {
         userName: true,

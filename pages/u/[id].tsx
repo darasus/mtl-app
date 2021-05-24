@@ -34,9 +34,9 @@ const UserPage: React.FC<Props> = ({ feed, user }) => {
           </Flex>
         </View>
         <View>
-          <Heading>Latest posts:</Heading>
+          <Heading>Latest libraries:</Heading>
           {feed.map((post) => (
-            <View key={post.id} marginBottom="size-100">
+            <View key={post.id} marginBottom="size-300">
               <Post post={post} />
             </View>
           ))}
