@@ -9,6 +9,7 @@ import { Link as SPLink } from "@react-spectrum/link";
 import Link from "next/link";
 import { View } from "@react-spectrum/view";
 import { Text } from "@react-spectrum/text";
+import { RouterLink } from "./RouterLinkt";
 
 interface Props {
   post: Prisma.Post & { author: Prisma.User };
@@ -20,11 +21,9 @@ export const Post: React.FC<Props> = ({ post }) => {
       <View borderColor="gray-900" borderWidth="thin" padding="size-200">
         <Flex direction="column">
           <Flex alignItems="center">
-            <Link as={`/p/${post.id}`} href={"/p/[id]"}>
-              <SPLink marginEnd="size-100">
-                <a>{post.title}</a>
-              </SPLink>
-            </Link>
+            <RouterLink marginEnd="size-100" href={`/p/${post.id}`}>
+              {post.title}
+            </RouterLink>
             <View marginEnd="size-100">
               <Text>by</Text>
             </View>

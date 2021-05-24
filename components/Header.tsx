@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/client";
 import Image from "next/image";
-// import { Button, LinkButton } from "./Button";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/useMeQuery";
 import { Flex } from "@react-spectrum/layout";

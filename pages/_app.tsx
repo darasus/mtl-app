@@ -5,14 +5,13 @@ import {
   defaultTheme,
 } from "@adobe/react-spectrum";
 import { AppProps } from "next/app";
-// import "../styles/globals.css";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const queryClientRef = React.useRef(null);
+  const queryClientRef = React.useRef<QueryClient>();
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient();
   }
