@@ -17,9 +17,9 @@ export default async function handle(
   }
 
   try {
-    const me: User = await prisma.user.findUnique({
+    const me: User | null = await prisma.user.findUnique({
       where: {
-        email: session.user.email,
+        email: session?.user.email as string,
       },
       select: {
         userName: true,

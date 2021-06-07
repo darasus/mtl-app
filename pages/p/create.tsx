@@ -5,10 +5,14 @@ import { TextArea, TextField } from "@react-spectrum/textfield";
 import { View } from "@react-spectrum/view";
 import { Button } from "@react-spectrum/button";
 import { Heading } from "@react-spectrum/text";
-import { usePostCreateMutation } from "../../hooks/usePostCreateMutation";
 import { Flex } from "@react-spectrum/layout";
 import { usePostCreate } from "../../hooks/usePostCreate";
 import { usePostSave } from "../../hooks/usePostSave";
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/client";
+import { QueryClient } from "react-query";
+import { dehydrate } from "react-query/hydration";
+import { fetchMe } from "../../request/fetchMe";
 
 const CreatePostPage: React.FC = () => {
   const [title, setTitle] = React.useState("");
@@ -23,17 +27,18 @@ const CreatePostPage: React.FC = () => {
     try {
       const body = { title, content, description };
       const post = await createPost(body);
-      await router.push(`/p/${post.id}`);
+      await router.push(`/p/${post?.id}`);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const save = async () => {
+  const save = async (e: any) => {
+    e.preventDefault();
     try {
       const body = { title, content, description };
       const post = await savePost(body);
-      await router.push(`/p/${post.id}`);
+      await router.push(`/p/${post?.id}`);
     } catch (error) {
       console.error(error);
     }
@@ -91,3 +96,17 @@ const CreatePostPage: React.FC = () => {
 };
 
 export default CreatePostPage;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+  const queryClient = new QueryClient();
+  if (session) {
+    await queryClient.prefetchQuery("me", fetchMe);
+  }
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+};

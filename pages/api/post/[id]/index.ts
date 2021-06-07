@@ -8,7 +8,7 @@ export default async function handle(
 ) {
   try {
     if (req.method === "GET") {
-      const post: Post = await prisma.post.findUnique({
+      const post: Post | null = await prisma.post.findUnique({
         where: {
           id: Number(req.query.id),
         },

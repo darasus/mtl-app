@@ -21,7 +21,12 @@ export const UserPreview: React.FC<Props> = ({ user }) => {
           overflow="hidden"
           marginEnd="size-100"
         >
-          <Image src={user.image} width="100" height="100" alt="Avatar" />
+          <Image
+            src={user.image as string}
+            width="100"
+            height="100"
+            alt="Avatar"
+          />
         </View>
         <Text>{user.name}</Text>
       </Flex>

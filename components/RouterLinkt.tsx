@@ -9,7 +9,7 @@ interface Props extends React.ComponentProps<typeof Link> {
 export const RouterLink: React.FC<Props> = ({ children, href, ...props }) => {
   const router = useRouter();
 
-  const handleClick = (e) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     router.push(href);
   };

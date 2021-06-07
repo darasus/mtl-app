@@ -10,7 +10,7 @@ export default async function handle(
 ) {
   try {
     if (req.method === "GET") {
-      const user: User = await prisma.user.findUnique({
+      const user: User | null = await prisma.user.findUnique({
         where: {
           id: Number(req.query.id),
         },

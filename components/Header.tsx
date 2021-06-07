@@ -1,17 +1,19 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { signOut } from "next-auth/client";
+import { signOut, useSession } from "next-auth/client";
 import Image from "next/image";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/useMeQuery";
 import { Flex } from "@react-spectrum/layout";
 import { Button } from "@react-spectrum/button";
 import { View } from "@react-spectrum/view";
+import { User } from "../types/User";
 
 export const Header: React.FC = () => {
   const router = useRouter();
-  const { data: me } = useMeQuery();
+  const me = useMeQuery();
+  const [, isLoggedIn] = useSession();
 
   return (
     <View>
@@ -23,20 +25,10 @@ export const Header: React.FC = () => {
             </a>
           </Link>
         </Flex>
-        {!me && (
-          <Flex>
-            <Button
-              variant="cta"
-              onPress={() => router.push("/api/auth/signin")}
-            >
-              Log in
-            </Button>
-          </Flex>
-        )}
-        {me && (
+        {isLoggedIn ? (
           <Flex>
             <Flex marginEnd="size-100">
-              <UserPreview user={me} />
+              <UserPreview user={me.data as User} />
             </Flex>
             <Button
               marginEnd="size-100"
@@ -47,6 +39,15 @@ export const Header: React.FC = () => {
             </Button>
             <Button variant="secondary" onPress={() => signOut()}>
               Log out
+            </Button>
+          </Flex>
+        ) : (
+          <Flex>
+            <Button
+              variant="cta"
+              onPress={() => router.push("/api/auth/signin")}
+            >
+              Log in
             </Button>
           </Flex>
         )}

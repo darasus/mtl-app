@@ -15,11 +15,13 @@ import { useUserQuery } from "../../hooks/useUserQuery";
 import { useRouter } from "next/router";
 import { useUserPostsQuery } from "../../hooks/useUserPostsQuery";
 import { fetchUserPosts } from "../../request/fetchUserPosts";
+import { useMeQuery } from "../../hooks/useMeQuery";
 
 const UserPage: React.FC = () => {
   const router = useRouter();
   const userId = Number(router.query.id);
   const user = useUserQuery(userId);
+  const me = useMeQuery();
   const posts = useUserPostsQuery(userId);
 
   if (!user.data || !posts.data) return null;
@@ -37,7 +39,7 @@ const UserPage: React.FC = () => {
               marginBottom="size-100"
             >
               <Image
-                src={user.data.image}
+                src={user.data?.image as string}
                 width="500"
                 height="500"
                 alt="Avatar"
@@ -50,7 +52,7 @@ const UserPage: React.FC = () => {
           <Heading>Latest libraries:</Heading>
           {posts.data.map((post) => (
             <View key={post.id} marginBottom="size-300">
-              <Post post={post} />
+              <Post post={post} isMyPost={post.authorId === me.data?.id} />
             </View>
           ))}
         </View>
@@ -64,6 +66,7 @@ export default UserPage;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   const queryClient = new QueryClient();
+
   if (session) {
     await queryClient.prefetchQuery("me", fetchMe);
     await queryClient.prefetchQuery(["user", context.query.id], () =>

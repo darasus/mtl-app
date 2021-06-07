@@ -17,7 +17,7 @@ export default async function handle(
         content,
         description,
         published: false,
-        author: { connect: { email: session?.user?.email } },
+        author: { connect: { email: session?.user?.email as string } },
       },
       include: {
         author: {

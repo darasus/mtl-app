@@ -72,7 +72,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Text>by</Text>
               </View>
               <View marginEnd="size-100">
-                <UserPreview user={post.author} />
+                {post.author && <UserPreview user={post.author} />}
               </View>
               <View>
                 <Text>{`${post.published ? "Published" : "Draft"}`}</Text>

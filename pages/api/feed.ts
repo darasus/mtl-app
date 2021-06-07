@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
-import Prisma from ".prisma/client";
+import { Post } from "../../types/Post";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    const feed: Prisma.Post[] = await prisma.post.findMany({
+    const feed: Post[] = await prisma.post.findMany({
       where: {
         published: true,
       },
