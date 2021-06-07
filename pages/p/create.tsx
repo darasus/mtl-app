@@ -6,21 +6,33 @@ import { View } from "@react-spectrum/view";
 import { Button } from "@react-spectrum/button";
 import { Heading } from "@react-spectrum/text";
 import { usePostCreateMutation } from "../../hooks/usePostCreateMutation";
-import { useMeQuery } from "../../hooks/useMeQuery";
+import { Flex } from "@react-spectrum/layout";
+import { usePostCreate } from "../../hooks/usePostCreate";
+import { usePostSave } from "../../hooks/usePostSave";
 
 const CreatePostPage: React.FC = () => {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [content, setContent] = React.useState("");
-  const createPost = usePostCreateMutation();
-  const me = useMeQuery();
+  const { createPost, isLoading: isCreating } = usePostCreate();
+  const { savePost, isLoading: isSaving } = usePostSave();
   const router = useRouter();
 
-  const submitData = async (e: React.SyntheticEvent) => {
+  const create = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
       const body = { title, content, description };
-      const post = await createPost.mutateAsync(body);
+      const post = await createPost(body);
+      await router.push(`/p/${post.id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const save = async () => {
+    try {
+      const body = { title, content, description };
+      const post = await savePost(body);
       await router.push(`/p/${post.id}`);
     } catch (error) {
       console.error(error);
@@ -30,7 +42,7 @@ const CreatePostPage: React.FC = () => {
   return (
     <Layout>
       <View>
-        <form onSubmit={submitData}>
+        <form onSubmit={create}>
           <Heading>New little JavaScript library</Heading>
           <View marginBottom="size-200">
             <TextField
@@ -59,9 +71,19 @@ const CreatePostPage: React.FC = () => {
               value={content}
             />
           </View>
-          <Button variant="cta" type="submit">
-            Create
-          </Button>
+          <Flex>
+            <Button
+              variant="cta"
+              type="submit"
+              marginEnd="size-200"
+              isDisabled={isCreating}
+            >
+              Publish
+            </Button>
+            <Button variant="primary" isDisabled={isSaving} onPress={save}>
+              Save
+            </Button>
+          </Flex>
         </form>
       </View>
     </Layout>

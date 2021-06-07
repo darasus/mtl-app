@@ -13,18 +13,11 @@ export default async function handle(
     res.status(401);
   }
 
-  const { title, content, description, published = true } = req.body;
-
   if (req.method === "PUT") {
     const post: Post = await prisma.post.update({
-      where: {
-        id: Number(req.query.id),
-      },
+      where: { id: Number(req.query.id) },
       data: {
-        title,
-        content,
-        description,
-        published,
+        published: false,
       },
       include: {
         author: {

@@ -6,16 +6,21 @@ import Prisma from ".prisma/client";
 import { Post } from "../../../components/Post";
 import { QueryClient } from "react-query";
 import { fetchMe } from "../../../request/fetchMe";
+import { usePostQuery } from "../../../hooks/usePostQuery";
+import { useRouter } from "next/router";
+import { fetchPost } from "../../../request/fetchPost";
+import { dehydrate } from "react-query/hydration";
 
-interface Props {
-  post: Prisma.Post & { author: Prisma.User };
-}
+const PostPage: React.FC = () => {
+  const router = useRouter();
+  const post = usePostQuery(Number(router.query.id));
 
-const PostPage: React.FC<Props> = ({ post }) => {
+  if (!post.data) return null;
+
   return (
     <Layout>
       <main>
-        <Post post={post} />
+        <Post post={post.data} />
       </main>
     </Layout>
   );
@@ -23,32 +28,16 @@ const PostPage: React.FC<Props> = ({ post }) => {
 
 export default PostPage;
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-}): Promise<{ props: Props }> => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery("me", fetchMe);
-  const post = await prisma.post.findUnique({
-    where: {
-      id: Number(params.id),
-    },
-    include: {
-      author: {
-        select: {
-          name: true,
-          email: true,
-          id: true,
-          userName: true,
-          updatedAt: true,
-          emailVerified: true,
-          createdAt: true,
-          image: true,
-        },
-      },
-    },
-  });
+  await queryClient.prefetchQuery(["post", params.id], () =>
+    fetchPost(Number(params.id))
+  );
 
   return {
-    props: { post },
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
   };
 };

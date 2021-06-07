@@ -12,23 +12,39 @@ import DeleteOutline from "@spectrum-icons/workflow/DeleteOutline";
 import Share from "@spectrum-icons/workflow/Share";
 import Copy from "@spectrum-icons/workflow/Copy";
 import Edit from "@spectrum-icons/workflow/Edit";
+import PublishRemove from "@spectrum-icons/workflow/PublishRemove";
+import PublishCheck from "@spectrum-icons/workflow/PublishCheck";
 import useCopyClipboard from "../hooks/useClipboard";
 import { useRouter } from "next/router";
 import { Post as PostType } from "../types/Post";
+import { usePostDelete } from "../hooks/usePostDelete";
+import { usePostUnpublish } from "../hooks/usePostUnpublish";
+import { usePostPublish } from "../hooks/usePostPublish";
 
 interface Props {
   post: PostType;
-  onDeletePost?: () => void;
 }
 
-export const Post: React.FC<Props> = React.memo(function Post({
-  post,
-  onDeletePost,
-}) {
+export const Post: React.FC<Props> = React.memo(function Post({ post }) {
   const router = useRouter();
+  const { deletePost } = usePostDelete(post.id);
+  const { unpublishPost } = usePostUnpublish(post.id);
+  const { publishPost } = usePostPublish(post.id);
   const [isCopied, copy] = useCopyClipboard(post.content, {
     successDuration: 3000,
   });
+
+  const handleDeletePost = React.useCallback(() => deletePost(), [deletePost]);
+
+  const handleUnpublishPost = React.useCallback(
+    () => unpublishPost(),
+    [unpublishPost]
+  );
+
+  const handlepublishPost = React.useCallback(
+    () => publishPost(),
+    [publishPost]
+  );
 
   const handleClipboardCopy = React.useCallback(() => copy(), [copy]);
 
@@ -88,7 +104,18 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Edit />
                 <Text>Edit</Text>
               </ActionButton>
-              <ActionButton isQuiet onPress={onDeletePost}>
+              {post.published ? (
+                <ActionButton isQuiet onPress={handleUnpublishPost}>
+                  <PublishRemove />
+                  <Text>Unpublish</Text>
+                </ActionButton>
+              ) : (
+                <ActionButton isQuiet onPress={handlepublishPost}>
+                  <PublishCheck />
+                  <Text>Publish</Text>
+                </ActionButton>
+              )}
+              <ActionButton isQuiet onPress={handleDeletePost}>
                 <DeleteOutline />
                 <Text>Remove</Text>
               </ActionButton>

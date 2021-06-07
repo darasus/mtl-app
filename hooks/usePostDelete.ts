@@ -1,11 +1,11 @@
 import React from "react";
 import { usePostDeleteMutation } from "./usePostDeleteMutation";
 
-export const usePostDelete = () => {
-  const deletePostMutation = usePostDeleteMutation();
+export const usePostDelete = (id: number) => {
+  const deletePostMutation = usePostDeleteMutation(id);
 
-  const deletePost = React.useCallback((id: number) => {
-    return deletePostMutation.mutate(id);
+  const deletePost = React.useCallback(() => {
+    return deletePostMutation.mutate();
   }, []);
 
   return { deletePost, isLoading: deletePostMutation.isLoading };

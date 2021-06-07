@@ -5,6 +5,7 @@ interface Data {
   title: string;
   description: string;
   content: string;
+  isPublished?: boolean;
 }
 
 export const usePostEdit = (id: number) => {

@@ -1,30 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import prisma from "../../../lib/prisma";
 import { getSession } from "next-auth/client";
-import prisma from "../../../../lib/prisma";
-import { Post } from "../../../../types/Post";
+import { Post } from "../../../types/Post";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { title, content, description } = req.body;
   const session = await getSession({ req });
 
-  if (!session) {
-    res.status(401);
-  }
-
-  const { title, content, description, published = true } = req.body;
-
-  if (req.method === "PUT") {
-    const post: Post = await prisma.post.update({
-      where: {
-        id: Number(req.query.id),
-      },
+  if (req.method === "POST") {
+    const post: Post = await prisma.post.create({
       data: {
         title,
         content,
         description,
-        published,
+        published: false,
+        author: { connect: { email: session?.user?.email } },
       },
       include: {
         author: {

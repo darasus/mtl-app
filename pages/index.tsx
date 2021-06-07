@@ -5,7 +5,6 @@ import { Layout } from "../components/Layout";
 import { Post } from "../components/Post";
 import { fetchMe } from "../request/fetchMe";
 import { View } from "@react-spectrum/view";
-import { usePostDelete } from "../hooks/usePostDelete";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import { fetchFeed } from "../request/fetchFeed";
@@ -13,18 +12,13 @@ import { useFeedQuery } from "../hooks/useFeedQuery";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
-  const { deletePost } = usePostDelete();
-  const handleDeletePost = React.useCallback(
-    (id: number) => () => deletePost(id),
-    [deletePost]
-  );
 
   return (
     <Layout>
       <main>
         {feed.data?.map((post) => (
           <View key={post.id} marginBottom="size-300">
-            <Post post={post} onDeletePost={handleDeletePost(post.id)} />
+            <Post post={post} />
           </View>
         ))}
       </main>

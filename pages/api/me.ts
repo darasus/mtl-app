@@ -9,6 +9,8 @@ export default async function handle(
 ) {
   const session = await getSession({ req });
 
+  console.log(session);
+
   if (!session) {
     res.status(401);
     res.send({});
@@ -33,5 +35,7 @@ export default async function handle(
 
     res.status(200);
     res.send(me);
-  } catch (error) {}
+  } catch (error) {
+    return error;
+  }
 }
