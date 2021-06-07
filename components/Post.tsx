@@ -2,7 +2,6 @@ import React from "react";
 import { UserPreview } from "./UserPreview";
 import { CodePreview } from "./CodePreview";
 import { Markdown } from "./Markdown";
-import Prisma from ".prisma/client";
 import { Flex } from "@react-spectrum/layout";
 import { View } from "@react-spectrum/view";
 import { Text } from "@react-spectrum/text";
@@ -23,14 +22,18 @@ import { usePostPublish } from "../hooks/usePostPublish";
 
 interface Props {
   post: PostType;
+  isMyPost: boolean;
 }
 
-export const Post: React.FC<Props> = React.memo(function Post({ post }) {
+export const Post: React.FC<Props> = React.memo(function Post({
+  post,
+  isMyPost,
+}) {
   const router = useRouter();
   const { deletePost } = usePostDelete(post.id);
   const { unpublishPost } = usePostUnpublish(post.id);
   const { publishPost } = usePostPublish(post.id);
-  const [isCopied, copy] = useCopyClipboard(post.content, {
+  const [isCopied, copy] = useCopyClipboard(post.content || "", {
     successDuration: 3000,
   });
 
@@ -77,10 +80,10 @@ export const Post: React.FC<Props> = React.memo(function Post({ post }) {
             </Flex>
             <Flex>
               <Text>
-                <Markdown value={post.description} />
+                <Markdown value={post.description || ""} />
               </Text>
             </Flex>
-            <CodePreview value={post.content} />
+            <CodePreview value={post.content || ""} />
           </View>
           <View>
             <View
@@ -100,25 +103,30 @@ export const Post: React.FC<Props> = React.memo(function Post({ post }) {
                 <Copy />
                 <Text>{isCopied ? "Copied!" : "Copy snippet"}</Text>
               </ActionButton>
-              <ActionButton isQuiet onPress={handleEditClick}>
-                <Edit />
-                <Text>Edit</Text>
-              </ActionButton>
-              {post.published ? (
-                <ActionButton isQuiet onPress={handleUnpublishPost}>
-                  <PublishRemove />
-                  <Text>Unpublish</Text>
-                </ActionButton>
-              ) : (
-                <ActionButton isQuiet onPress={handlepublishPost}>
-                  <PublishCheck />
-                  <Text>Publish</Text>
+              {isMyPost && (
+                <ActionButton isQuiet onPress={handleEditClick}>
+                  <Edit />
+                  <Text>Edit</Text>
                 </ActionButton>
               )}
-              <ActionButton isQuiet onPress={handleDeletePost}>
-                <DeleteOutline />
-                <Text>Remove</Text>
-              </ActionButton>
+              {isMyPost &&
+                (post.published ? (
+                  <ActionButton isQuiet onPress={handleUnpublishPost}>
+                    <PublishRemove />
+                    <Text>Unpublish</Text>
+                  </ActionButton>
+                ) : (
+                  <ActionButton isQuiet onPress={handlepublishPost}>
+                    <PublishCheck />
+                    <Text>Publish</Text>
+                  </ActionButton>
+                ))}
+              {isMyPost && (
+                <ActionButton isQuiet onPress={handleDeletePost}>
+                  <DeleteOutline />
+                  <Text>Remove</Text>
+                </ActionButton>
+              )}
             </View>
           </View>
         </Flex>

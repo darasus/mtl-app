@@ -15,13 +15,13 @@ import { usePostQuery } from "../../../hooks/usePostQuery";
 import { usePostEdit } from "../../../hooks/usePostEdit";
 import { Flex } from "@react-spectrum/layout";
 
-const CreatePostPage: React.FC = () => {
+const EditPostPage: React.FC = () => {
   const router = useRouter();
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [content, setContent] = React.useState("");
+  const [title, setTitle] = React.useState<string | null>("");
+  const [description, setDescription] = React.useState<string | null>("");
+  const [content, setContent] = React.useState<string | null>("");
   const post = usePostQuery(Number(router.query.id));
-  const { editPost, isLoading } = usePostEdit(post.data?.id);
+  const { editPost, isLoading } = usePostEdit(post.data?.id as number);
 
   React.useEffect(() => {
     if (post.data && !title && !description && !content) {
@@ -35,9 +35,10 @@ const CreatePostPage: React.FC = () => {
   const publish = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
-      const body = { title, content, description };
-      await editPost({ ...body, isPublished: true });
-      await router.push(`/p/${post.data.id}`);
+      if (title && content && description) {
+        await editPost({ title, content, description, isPublished: true });
+        await router.push(`/p/${post.data?.id}`);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -45,9 +46,10 @@ const CreatePostPage: React.FC = () => {
 
   const save = async () => {
     try {
-      const body = { title, content, description };
-      await editPost({ ...body, isPublished: false });
-      await router.push(`/p/${post.data.id}`);
+      if (title && content && description) {
+        await editPost({ title, content, description, isPublished: false });
+        await router.push(`/p/${post.data?.id}`);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -64,7 +66,7 @@ const CreatePostPage: React.FC = () => {
               onChange={setTitle}
               label="Title"
               type="text"
-              value={title}
+              value={title || ""}
               width="100%"
             />
           </View>
@@ -74,7 +76,7 @@ const CreatePostPage: React.FC = () => {
               width="100%"
               onChange={setDescription}
               placeholder=""
-              value={description}
+              value={description || ""}
             />
           </View>
           <View marginBottom="size-200">
@@ -82,7 +84,7 @@ const CreatePostPage: React.FC = () => {
               width="100%"
               onChange={setContent}
               label="Little JavaScript library"
-              value={content}
+              value={content || ""}
             />
           </View>
           <Flex>
@@ -104,7 +106,7 @@ const CreatePostPage: React.FC = () => {
   );
 };
 
-export default CreatePostPage;
+export default EditPostPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
