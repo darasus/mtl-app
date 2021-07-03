@@ -15,8 +15,6 @@ const Index: React.FC = () => {
   const feed = useFeedQuery();
   const me = useMeQuery();
 
-  console.log(me.data);
-
   return (
     <Layout>
       <main>

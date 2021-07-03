@@ -12,7 +12,7 @@ interface Props {
 
 export const UserPreview: React.FC<Props> = ({ user }) => {
   return (
-    <RouterLink variant="secondary" href={`/u/${user.id}`}>
+    <RouterLink variant="secondary" href={`/u/${user?.id}`}>
       <Flex alignItems="center">
         <View
           width={30}
@@ -22,13 +22,13 @@ export const UserPreview: React.FC<Props> = ({ user }) => {
           marginEnd="size-100"
         >
           <Image
-            src={user.image as string}
+            src={user?.image as string}
             width="100"
             height="100"
             alt="Avatar"
           />
         </View>
-        <Text>{user.name}</Text>
+        <Text>{user?.name}</Text>
       </Flex>
     </RouterLink>
   );

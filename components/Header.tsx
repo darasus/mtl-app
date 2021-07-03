@@ -8,7 +8,6 @@ import { useMeQuery } from "../hooks/useMeQuery";
 import { Flex } from "@react-spectrum/layout";
 import { Button } from "@react-spectrum/button";
 import { View } from "@react-spectrum/view";
-import { User } from "../types/User";
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -25,10 +24,10 @@ export const Header: React.FC = () => {
             </a>
           </Link>
         </Flex>
-        {isLoggedIn ? (
+        {isLoggedIn && me.data ? (
           <Flex>
             <Flex marginEnd="size-100">
-              <UserPreview user={me.data as User} />
+              <UserPreview user={me.data} />
             </Flex>
             <Button
               marginEnd="size-100"
