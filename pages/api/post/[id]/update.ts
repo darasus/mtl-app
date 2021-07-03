@@ -3,6 +3,7 @@ import { getSession } from "next-auth/client";
 import prisma from "../../../../lib/prisma";
 import { Post } from "../../../../types/Post";
 import invariant from "invariant";
+import * as R from "ramda";
 
 export default async function handle(
   req: NextApiRequest,
@@ -22,8 +23,7 @@ export default async function handle(
   const { title, content, description, published = true } = req.body;
 
   try {
-    console.log(req.body);
-    const post: Post = await prisma.post.update({
+    const post = await prisma.post.update({
       where: {
         id: Number(req.query.id),
       },
@@ -46,9 +46,28 @@ export default async function handle(
             image: true,
           },
         },
+        likes: {
+          select: {
+            id: true,
+          },
+          include: {
+            author: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
       },
     });
-    res.json(post);
+    const newPost: Post = {
+      ...R.omit(["likes"], post),
+      likes: post.likes.length,
+      isLikedByMe: post.likes.some(
+        (like) => like.author?.email === session.user?.email
+      ),
+    };
+    res.json(newPost);
   } catch (error) {
     return error;
   }

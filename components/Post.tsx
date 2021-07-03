@@ -1,6 +1,5 @@
 import React from "react";
 import { UserPreview } from "./UserPreview";
-import { CodePreview } from "./CodePreview";
 import { Markdown } from "./Markdown";
 import { Flex } from "@react-spectrum/layout";
 import { View } from "@react-spectrum/view";
@@ -11,6 +10,7 @@ import DeleteOutline from "@spectrum-icons/workflow/DeleteOutline";
 import Share from "@spectrum-icons/workflow/Share";
 import Copy from "@spectrum-icons/workflow/Copy";
 import Edit from "@spectrum-icons/workflow/Edit";
+import Comment from "@spectrum-icons/workflow/Comment";
 import PublishRemove from "@spectrum-icons/workflow/PublishRemove";
 import PublishCheck from "@spectrum-icons/workflow/PublishCheck";
 import useCopyClipboard from "../hooks/useClipboard";
@@ -20,6 +20,8 @@ import { usePostDelete } from "../hooks/usePostDelete";
 import { usePostUnpublish } from "../hooks/usePostUnpublish";
 import { usePostPublish } from "../hooks/usePostPublish";
 import { Synaxt } from "./Syntax";
+import { LikeButton } from "./LikeButton";
+import { LikeCount } from "./LikeCount";
 
 interface Props {
   post: PostType;
@@ -37,6 +39,8 @@ export const Post: React.FC<Props> = React.memo(function Post({
   const [isCopied, copy] = useCopyClipboard(post.content || "", {
     successDuration: 3000,
   });
+
+  const handleCommentClick = () => {};
 
   const handleDeletePost = React.useCallback(() => deletePost(), [deletePost]);
 
@@ -61,75 +65,81 @@ export const Post: React.FC<Props> = React.memo(function Post({
   }, []);
 
   return (
-    <>
-      <View borderColor="gray-900" borderWidth="thin">
-        <Flex direction="column">
-          <View padding="size-200">
-            <Flex alignItems="center">
-              <RouterLink marginEnd="size-100" href={`/p/${post.id}`}>
-                {post.title}
-              </RouterLink>
-              <View marginEnd="size-100">
-                <Text>by</Text>
-              </View>
-              <View marginEnd="size-100">
-                {post.author && <UserPreview user={post.author} />}
-              </View>
-              <View>
-                <Text>{`${post.published ? "Published" : "Draft"}`}</Text>
-              </View>
-            </Flex>
-            <Flex>
-              <Markdown value={post.description || ""} />
-            </Flex>
-            <Synaxt value={post.content || ""} />
-          </View>
-          <View>
-            <View
-              borderTopColor="gray-900"
-              borderTopWidth="thin"
-              padding="size-100"
-            >
-              <ActionButton isQuiet onPress={handleTweetClick}>
-                <Share />
-                <Text>Tweet</Text>
-              </ActionButton>
-              <ActionButton
-                isQuiet
-                onPress={handleClipboardCopy}
-                isDisabled={isCopied}
-              >
-                <Copy />
-                <Text>{isCopied ? "Copied!" : "Copy snippet"}</Text>
-              </ActionButton>
-              {isMyPost && (
-                <ActionButton isQuiet onPress={handleEditClick}>
-                  <Edit />
-                  <Text>Edit</Text>
-                </ActionButton>
-              )}
-              {isMyPost &&
-                (post.published ? (
-                  <ActionButton isQuiet onPress={handleUnpublishPost}>
-                    <PublishRemove />
-                    <Text>Unpublish</Text>
-                  </ActionButton>
-                ) : (
-                  <ActionButton isQuiet onPress={handlepublishPost}>
-                    <PublishCheck />
-                    <Text>Publish</Text>
-                  </ActionButton>
-                ))}
-              {isMyPost && (
-                <ActionButton isQuiet onPress={handleDeletePost}>
-                  <DeleteOutline />
-                  <Text>Remove</Text>
-                </ActionButton>
-              )}
+    <View borderColor="gray-900" borderWidth="thin">
+      <Flex direction="column">
+        <View padding="size-200">
+          <Flex alignItems="center">
+            <RouterLink marginEnd="size-100" href={`/p/${post.id}`}>
+              {post.title}
+            </RouterLink>
+            <View marginEnd="size-100">
+              <Text>by</Text>
             </View>
+            <View marginEnd="size-100">
+              {post.author && <UserPreview user={post.author} />}
+            </View>
+            <View marginEnd="size-100">
+              <Text>{`${post.published ? "Published" : "Draft"}`}</Text>
+            </View>
+            <View>
+              <LikeCount post={post} />
+            </View>
+          </Flex>
+          <Flex>
+            <Markdown value={post.description || ""} />
+          </Flex>
+          <Synaxt value={post.content || ""} />
+        </View>
+        <View>
+          <View
+            borderTopColor="gray-900"
+            borderTopWidth="thin"
+            padding="size-100"
+          >
+            <LikeButton post={post} />
+            <ActionButton isQuiet onPress={handleCommentClick}>
+              <Comment />
+              <Text>Comment</Text>
+            </ActionButton>
+            <ActionButton isQuiet onPress={handleTweetClick}>
+              <Share />
+              <Text>Tweet</Text>
+            </ActionButton>
+            <ActionButton
+              isQuiet
+              onPress={handleClipboardCopy}
+              isDisabled={isCopied}
+            >
+              <Copy />
+              <Text>{isCopied ? "Copied!" : "Copy snippet"}</Text>
+            </ActionButton>
+            {isMyPost && (
+              <ActionButton isQuiet onPress={handleEditClick}>
+                <Edit />
+                <Text>Edit</Text>
+              </ActionButton>
+            )}
+            {isMyPost &&
+              (post.published ? (
+                <ActionButton isQuiet onPress={handleUnpublishPost}>
+                  <PublishRemove />
+                  <Text>Unpublish</Text>
+                </ActionButton>
+              ) : (
+                <ActionButton isQuiet onPress={handlepublishPost}>
+                  <PublishCheck />
+                  <Text>Publish</Text>
+                </ActionButton>
+              ))}
+            {isMyPost && (
+              <ActionButton isQuiet onPress={handleDeletePost}>
+                <DeleteOutline />
+                <Text>Remove</Text>
+              </ActionButton>
+            )}
           </View>
-        </Flex>
-      </View>
-    </>
+        </View>
+      </Flex>
+    </View>
   );
 });

@@ -8,13 +8,15 @@ datasource db {
 }
 
 model Post {
-  id          Int     @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   title       String
-  content     String? @db.LongText
+  content     String?    @db.LongText
   description String?
-  published   Boolean @default(false)
-  author      User?   @relation(fields: [authorId], references: [id])
+  published   Boolean    @default(false)
+  author      User?      @relation(fields: [authorId], references: [id])
   authorId    Int?
+  likes       Like[]     
+  comments    Comment[]
 }
 
 model User {
@@ -27,6 +29,8 @@ model User {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   posts         Post[]
+  comments      Comment[]
+  likes         Like[]
 
   @@map(name: "users")
 }
@@ -72,4 +76,25 @@ model VerificationRequest {
   updatedAt  DateTime @default(now()) @map(name: "updated_at")
 
   @@map(name: "verification_requests")
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     Int
+  content    String?  @db.LongText
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @map(name: "updated_at")
+  author     User?    @relation(fields: [authorId], references: [id])
+  authorId   Int?
+}
+
+model Like {
+  id         Int      @id @default(autoincrement())
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     Int
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @map(name: "updated_at")
+  author     User?    @relation(fields: [authorId], references: [id])
+  authorId   Int?
 }

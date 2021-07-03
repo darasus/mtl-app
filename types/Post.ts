@@ -1,3 +1,7 @@
 import Prisma from ".prisma/client";
 
-export type Post = Prisma.Post & { author?: Prisma.User | null };
+export type Post = Prisma.Post & {
+  author?: Prisma.User | null;
+  likes: number;
+  isLikedByMe: boolean;
+};
