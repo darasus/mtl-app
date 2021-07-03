@@ -80,9 +80,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               </View>
             </Flex>
             <Flex>
-              <Text>
-                <Markdown value={post.description || ""} />
-              </Text>
+              <Markdown value={post.description || ""} />
             </Flex>
             <Synaxt value={post.content || ""} />
           </View>
