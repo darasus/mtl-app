@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/client";
+import { signOut } from "next-auth/client";
 import Image from "next/image";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/useMeQuery";
@@ -12,7 +12,6 @@ import { View } from "@react-spectrum/view";
 export const Header: React.FC = () => {
   const router = useRouter();
   const me = useMeQuery();
-  const [, isLoggedIn] = useSession();
 
   return (
     <View>
@@ -24,7 +23,7 @@ export const Header: React.FC = () => {
             </a>
           </Link>
         </Flex>
-        {isLoggedIn && me.data ? (
+        {me.data ? (
           <Flex>
             <Flex marginEnd="size-100">
               <UserPreview user={me.data} />

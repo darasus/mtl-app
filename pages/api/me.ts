@@ -11,7 +11,9 @@ export default async function handle(
 
   if (!session) {
     res.status(401);
-    res.send({});
+    res.send({
+      error: "Not authorized",
+    });
   }
 
   try {

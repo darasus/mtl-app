@@ -7,9 +7,7 @@ import { Heading } from "@react-spectrum/text";
 import { Layout } from "../../../components/Layout";
 import { dehydrate } from "react-query/hydration";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
-import { fetchMe } from "../../../request/fetchMe";
 import { fetchPost } from "../../../request/fetchPost";
 import { usePostQuery } from "../../../hooks/usePostQuery";
 import { usePostEdit } from "../../../hooks/usePostEdit";
@@ -109,11 +107,7 @@ const EditPostPage: React.FC = () => {
 export default EditPostPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
   const queryClient = new QueryClient();
-  if (session) {
-    await queryClient.prefetchQuery("me", fetchMe);
-  }
   await queryClient.prefetchQuery(["post", context.query.id], () =>
     fetchPost(Number(context.query.id))
   );

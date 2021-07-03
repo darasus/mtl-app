@@ -9,10 +9,8 @@ import { Flex } from "@react-spectrum/layout";
 import { usePostCreate } from "../../hooks/usePostCreate";
 import { usePostSave } from "../../hooks/usePostSave";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
-import { fetchMe } from "../../request/fetchMe";
 
 const CreatePostPage: React.FC = () => {
   const [title, setTitle] = React.useState("");
@@ -98,11 +96,7 @@ const CreatePostPage: React.FC = () => {
 export default CreatePostPage;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
   const queryClient = new QueryClient();
-  if (session) {
-    await queryClient.prefetchQuery("me", fetchMe);
-  }
 
   return {
     props: {

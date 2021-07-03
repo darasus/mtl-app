@@ -19,6 +19,7 @@ import { Post as PostType } from "../types/Post";
 import { usePostDelete } from "../hooks/usePostDelete";
 import { usePostUnpublish } from "../hooks/usePostUnpublish";
 import { usePostPublish } from "../hooks/usePostPublish";
+import { Synaxt } from "./Syntax";
 
 interface Props {
   post: PostType;
@@ -83,7 +84,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Markdown value={post.description || ""} />
               </Text>
             </Flex>
-            <CodePreview value={post.content || ""} />
+            <Synaxt value={post.content || ""} />
           </View>
           <View>
             <View

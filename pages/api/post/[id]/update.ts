@@ -14,37 +14,40 @@ export default async function handle(
   }
 
   const { title, content, description, published = true } = req.body;
-
-  if (req.method === "PUT") {
-    const post: Post = await prisma.post.update({
-      where: {
-        id: Number(req.query.id),
-      },
-      data: {
-        title,
-        content,
-        description,
-        published,
-      },
-      include: {
-        author: {
-          select: {
-            name: true,
-            email: true,
-            id: true,
-            userName: true,
-            updatedAt: true,
-            emailVerified: true,
-            createdAt: true,
-            image: true,
+  try {
+    if (req.method === "PUT") {
+      const post: Post = await prisma.post.update({
+        where: {
+          id: Number(req.query.id),
+        },
+        data: {
+          title,
+          content,
+          description,
+          published,
+        },
+        include: {
+          author: {
+            select: {
+              name: true,
+              email: true,
+              id: true,
+              userName: true,
+              updatedAt: true,
+              emailVerified: true,
+              createdAt: true,
+              image: true,
+            },
           },
         },
-      },
-    });
-    res.json(post);
-  } else {
-    throw new Error(
-      `The HTTP ${req.method} method is not supported at this route.`
-    );
+      });
+      res.json(post);
+    } else {
+      throw new Error(
+        `The HTTP ${req.method} method is not supported at this route.`
+      );
+    }
+  } catch (error) {
+    return error;
   }
 }

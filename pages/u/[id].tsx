@@ -68,7 +68,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
 
   if (session) {
-    await queryClient.prefetchQuery("me", fetchMe);
     await queryClient.prefetchQuery(["user", context.query.id], () =>
       fetchUser(Number(context.query.id))
     );
