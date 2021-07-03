@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "react-query";
-import { likePost } from "../request/likePost";
+import { addComment } from "../request/addComment";
 import { createUseFeedQueryCacheKey } from "./useFeedQuery";
 
-export const usePostLikeMutation = () => {
+export const usePostCommentMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation<unknown, unknown, { postId: number }>(
-    ({ postId }) => likePost(postId),
+  return useMutation<unknown, unknown, { postId: number; content: string }>(
+    ({ postId, content }) => addComment(postId, content),
     {
       onSettled() {
         queryClient.invalidateQueries(createUseFeedQueryCacheKey());

@@ -82,7 +82,7 @@ model Comment {
   id         Int      @id @default(autoincrement())
   post       Post     @relation(fields: [postId], references: [id])
   postId     Int
-  content    String?  @db.LongText
+  content    String   @db.LongText
   createdAt  DateTime @default(now()) @map(name: "created_at")
   updatedAt  DateTime @default(now()) @map(name: "updated_at")
   author     User?    @relation(fields: [authorId], references: [id])

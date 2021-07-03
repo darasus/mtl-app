@@ -3,6 +3,7 @@ import { getSession } from "next-auth/client";
 import prisma from "../../lib/prisma";
 import { Post } from "../../types/Post";
 import * as R from "ramda";
+import invariant from "invariant";
 
 const postQueryIncludeFragment = {
   include: {
@@ -24,6 +25,28 @@ const postQueryIncludeFragment = {
         author: {
           select: {
             email: true,
+          },
+        },
+      },
+    },
+    comments: {
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        postId: true,
+        updatedAt: true,
+        authorId: true,
+        author: {
+          select: {
+            id: true,
+            name: true,
+            userName: true,
+            image: true,
+            emailVerified: true,
+            createdAt: true,
+            email: true,
+            updatedAt: true,
           },
         },
       },
@@ -58,6 +81,20 @@ export class PostService {
         likes,
         isLikedByMe,
       };
+    });
+  }
+
+  async addComment(content: string) {
+    const session = await getSession({ req: this.req });
+
+    invariant(!!session?.user?.email, "Unknown user!");
+
+    await prisma.comment.create({
+      data: {
+        content,
+        post: { connect: { id: Number(this.req.query.id) } },
+        author: { connect: { email: session?.user?.email } },
+      },
     });
   }
 

@@ -22,6 +22,7 @@ import { usePostPublish } from "../hooks/usePostPublish";
 import { Synaxt } from "./Syntax";
 import { LikeButton } from "./LikeButton";
 import { LikeCount } from "./LikeCount";
+import { PostComments } from "./PostComments";
 
 interface Props {
   post: PostType;
@@ -138,6 +139,13 @@ export const Post: React.FC<Props> = React.memo(function Post({
               </ActionButton>
             )}
           </View>
+        </View>
+        <View
+          borderTopColor="gray-900"
+          borderTopWidth="thin"
+          padding="size-100"
+        >
+          <PostComments post={post} />
         </View>
       </Flex>
     </View>
