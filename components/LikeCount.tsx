@@ -12,8 +12,8 @@ export const LikeCount: React.FC<Props> = ({ post }) => {
   return (
     <Flex alignItems="center">
       <View marginEnd="static-size-40">
-        <Flex alignItems="center">
-          <Heart color="positive" />
+        <Flex alignItems="center" gap="size-10">
+          <Heart color="negative" />
           <Text>{post.likes}</Text>
         </Flex>
       </View>

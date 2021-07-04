@@ -11,7 +11,7 @@ model Post {
   id          Int        @id @default(autoincrement())
   title       String
   content     String?    @db.LongText
-  description String?
+  description String?    @db.LongText
   published   Boolean    @default(false)
   author      User?      @relation(fields: [authorId], references: [id])
   authorId    Int?

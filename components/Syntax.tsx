@@ -6,7 +6,7 @@ interface Props {
   value: string;
 }
 
-export const Synaxt: React.FC<Props> = ({ value }) => {
+export const Syntax: React.FC<Props> = ({ value }) => {
   return (
     <Highlight
       {...defaultProps}
