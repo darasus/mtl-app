@@ -14,28 +14,29 @@ export const UserPreview: React.FC<Props> = ({ user }) => {
   return (
     <RouterLink variant="secondary" href={`/u/${user?.id}`}>
       <Flex alignItems="center">
-        <UserProfilePic user={user} />
+        <View marginEnd="size-100">
+          <UserProfilePic user={user} />
+        </View>
         <Text>{user?.name}</Text>
       </Flex>
     </RouterLink>
   );
 };
 
-export const UserProfilePic: React.FC<Props> = ({ user }) => {
+export const UserProfilePic = React.forwardRef<
+  HTMLDivElement,
+  React.PropsWithChildren<Props>
+>(({ user }, ref) => {
   return (
-    <View
-      width={30}
-      height={30}
-      borderRadius="large"
-      overflow="hidden"
-      marginEnd="size-100"
-    >
-      <Image
-        src={user?.image as string}
-        width="100"
-        height="100"
-        alt="Avatar"
-      />
-    </View>
+    <div ref={ref}>
+      <View width={30} height={30} borderRadius="large" overflow="hidden">
+        <Image
+          src={user?.image as string}
+          width="100"
+          height="100"
+          alt="Avatar"
+        />
+      </View>
+    </div>
   );
-};
+});

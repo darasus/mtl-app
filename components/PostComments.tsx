@@ -1,4 +1,13 @@
-import { Flex, Text, TextField, View } from "@adobe/react-spectrum";
+import {
+  Button,
+  Flex,
+  Text,
+  TextArea,
+  TextField,
+  Tooltip,
+  TooltipTrigger,
+  View,
+} from "@adobe/react-spectrum";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useMeQuery } from "../hooks/useMeQuery";
@@ -29,32 +38,58 @@ export const PostComments: React.FC<Props> = ({ post }) => {
 
   return (
     <>
-      {post.comments.map((comment) => (
-        <View key={comment.id}>
-          <Text>{comment.author?.name}</Text>
-          <Text>{comment.createdAt}</Text>
-          <Text>{comment.content}</Text>
-        </View>
-      ))}
+      <View borderTopColor="gray-900" borderTopWidth="thin" padding="size-200">
+        {post.comments.map((comment, i) => {
+          if (!comment.author) return null;
+          return (
+            <Flex
+              key={comment.id}
+              gap="size-200"
+              marginBottom={post.comments.length === i + 1 ? "" : "size-100"}
+            >
+              <UserProfilePic user={comment.author} />
+              <View>
+                <Flex gap="size-100">
+                  <Text>{comment.author.name}</Text>
+                  <Text>-</Text>
+                  <Text>{new Date(comment.createdAt).toDateString()}</Text>
+                </Flex>
+                <Text>{comment.content}</Text>
+              </View>
+            </Flex>
+          );
+        })}
+      </View>
       <form onSubmit={submit}>
-        <View>
-          <Flex width="single-line-0">
+        <View
+          borderTopColor="gray-400"
+          borderTopWidth="thin"
+          padding="size-200"
+        >
+          <Flex gap="size-200">
             <UserProfilePic user={me.data} />
-            <Controller
-              name="comment"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  isDisabled={isLoading}
-                  name={field.name}
-                  onBlur={field.onBlur}
-                  value={field.value}
-                  aria-label="comment field"
-                  onChange={(value) => field.onChange(value)}
-                  placeholder="Type your comment here..."
-                />
-              )}
-            />
+            <View flexGrow={1}>
+              <Controller
+                name="comment"
+                control={control}
+                render={({ field }) => (
+                  <TextArea
+                    width="100%"
+                    autoComplete="false"
+                    isDisabled={isLoading}
+                    name={field.name}
+                    onBlur={field.onBlur}
+                    value={field.value}
+                    aria-label="comment field"
+                    onChange={(value) => field.onChange(value)}
+                    placeholder="Type your comment here..."
+                  />
+                )}
+              />
+            </View>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
           </Flex>
         </View>
       </form>

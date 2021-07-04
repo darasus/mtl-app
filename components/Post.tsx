@@ -33,6 +33,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
   post,
   isMyPost,
 }) {
+  const [commentsVisible, setCommentsVisible] = React.useState(false);
   const router = useRouter();
   const { deletePost } = usePostDelete(post.id);
   const { unpublishPost } = usePostUnpublish(post.id);
@@ -41,7 +42,9 @@ export const Post: React.FC<Props> = React.memo(function Post({
     successDuration: 3000,
   });
 
-  const handleCommentClick = () => {};
+  const handleCommentClick = React.useCallback(() => {
+    setCommentsVisible(!commentsVisible);
+  }, [commentsVisible]);
 
   const handleDeletePost = React.useCallback(() => deletePost(), [deletePost]);
 
@@ -100,7 +103,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
             <LikeButton post={post} />
             <ActionButton isQuiet onPress={handleCommentClick}>
               <Comment />
-              <Text>Comment</Text>
+              <Text>{`Comment (${post.comments.length})`}</Text>
             </ActionButton>
             <ActionButton isQuiet onPress={handleTweetClick}>
               <Share />
@@ -140,12 +143,12 @@ export const Post: React.FC<Props> = React.memo(function Post({
             )}
           </View>
         </View>
-        <View
-          borderTopColor="gray-900"
-          borderTopWidth="thin"
-          padding="size-100"
-        >
-          <PostComments post={post} />
+        <View>
+          {commentsVisible && (
+            <View>
+              <PostComments post={post} />
+            </View>
+          )}
         </View>
       </Flex>
     </View>
