@@ -7,7 +7,7 @@ const withTM = require("next-transpile-modules")([
   "@react-spectrum/actiongroup/*",
 ]);
 
-module.exports = withPlugins([withCSS, withTM], {
+module.exports = withPlugins([withTM, withCSS], {
   webpack5: false,
   images: {
     domains: ["avatars.githubusercontent.com"],
