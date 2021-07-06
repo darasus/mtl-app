@@ -25,7 +25,7 @@ export default async function handle(
 
   try {
     const postService = new PostService({ req });
-    await postService.addComment(req.body.content);
+    await postService.addComment();
     res.json({ status: "success" });
   } catch (error) {
     return error;

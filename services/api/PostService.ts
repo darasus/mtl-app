@@ -4,6 +4,13 @@ import prisma from "../../lib/prisma";
 import { Post } from "../../types/Post";
 import * as R from "ramda";
 import invariant from "invariant";
+import Prisma from ".prisma/client";
+import { Session } from "next-auth";
+
+type InputPost = Prisma.Post & {
+  likes: (Prisma.Like & { author: Prisma.User | null })[];
+  comments: Prisma.Comment[];
+};
 
 const postQueryIncludeFragment = {
   include: {
@@ -22,9 +29,20 @@ const postQueryIncludeFragment = {
     likes: {
       select: {
         id: true,
+        postId: true,
+        createdAt: true,
+        updatedAt: true,
+        authorId: true,
         author: {
           select: {
+            id: true,
+            name: true,
+            userName: true,
+            image: true,
+            emailVerified: true,
+            createdAt: true,
             email: true,
+            updatedAt: true,
           },
         },
       },
@@ -70,31 +88,97 @@ export class PostService {
       ...postQueryIncludeFragment,
     });
 
-    return posts.map((post) => {
-      const likes = post.likes.length;
-      const isLikedByMe = post.likes.some(
-        (like) => like.author?.email === session?.user?.email
-      );
-
-      return {
-        ...R.omit(["likes"], post),
-        likes,
-        isLikedByMe,
-      };
-    });
+    return posts.map((post) => this.preparePost(post, session));
   }
 
-  async addComment(content: string) {
+  async fetchUserPosts(): Promise<Post[]> {
+    const session = await getSession({ req: this.req });
+    const posts = await prisma.post.findMany({
+      where: {
+        authorId: Number(this.req.query.id),
+      },
+      ...postQueryIncludeFragment,
+    });
+
+    return posts.map((post) => this.preparePost(post, session));
+  }
+
+  async addComment() {
     const session = await getSession({ req: this.req });
 
     invariant(!!session?.user?.email, "Unknown user!");
 
     await prisma.comment.create({
       data: {
-        content,
+        content: this.req.body.content,
         post: { connect: { id: Number(this.req.query.id) } },
         author: { connect: { email: session?.user?.email } },
       },
+    });
+  }
+
+  async updatePost() {
+    const { title, content, description, published = true } = this.req.body;
+    await prisma.post.update({
+      where: {
+        id: Number(this.req.query.id),
+      },
+      data: {
+        title,
+        content,
+        description,
+        published,
+      },
+    });
+  }
+
+  async unpublishPost() {
+    await prisma.post.update({
+      where: { id: Number(this.req.query.id) },
+      data: {
+        published: false,
+      },
+    });
+  }
+
+  async publishPost() {
+    await prisma.post.update({
+      where: { id: Number(this.req.query.id) },
+      data: {
+        published: true,
+      },
+    });
+  }
+
+  async createPost() {
+    const session = await getSession({ req: this.req });
+    const { title, content, description } = this.req.body;
+    const post = await prisma.post.create({
+      data: {
+        title,
+        content,
+        description,
+        published: true,
+        author: { connect: { email: session?.user?.email as string } },
+      },
+      ...postQueryIncludeFragment,
+    });
+
+    return this.preparePost(post, session);
+  }
+
+  async savePost() {
+    const session = await getSession({ req: this.req });
+    const { title, content, description } = this.req.body;
+    await prisma.post.create({
+      data: {
+        title,
+        content,
+        description,
+        published: false,
+        author: { connect: { email: session?.user?.email as string } },
+      },
+      ...postQueryIncludeFragment,
     });
   }
 
@@ -109,9 +193,13 @@ export class PostService {
 
     if (!post) return null;
 
+    return this.preparePost(post, session);
+  }
+
+  preparePost = (post: InputPost, session: Session | null): Post => {
     const likes = post.likes.length;
     const isLikedByMe = post.likes.some(
-      (like) => like.author?.email === session?.user?.email
+      (like: any) => like.author?.email === session?.user?.email
     );
 
     return {
@@ -119,5 +207,5 @@ export class PostService {
       likes,
       isLikedByMe,
     };
-  }
+  };
 }

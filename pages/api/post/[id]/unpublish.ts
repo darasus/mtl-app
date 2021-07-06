@@ -1,43 +1,28 @@
+import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
-import prisma from "../../../../lib/prisma";
-import { Post } from "../../../../types/Post";
+import { PostService } from "../../../../services/api/PostService";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  invariant(
+    req.method === "PUT",
+    `The HTTP ${req.method} method is not supported at this route.`
+  );
+
   const session = await getSession({ req });
 
   if (!session) {
     res.status(401);
   }
 
-  if (req.method === "PUT") {
-    const post: Post = await prisma.post.update({
-      where: { id: Number(req.query.id) },
-      data: {
-        published: false,
-      },
-      include: {
-        author: {
-          select: {
-            name: true,
-            email: true,
-            id: true,
-            userName: true,
-            updatedAt: true,
-            emailVerified: true,
-            createdAt: true,
-            image: true,
-          },
-        },
-      },
-    });
-    res.json(post);
-  } else {
-    throw new Error(
-      `The HTTP ${req.method} method is not supported at this route.`
-    );
+  try {
+    const postService = new PostService({ req });
+    await postService.unpublishPost();
+    res.json({ status: "success" });
+  } catch (error) {
+    return error;
   }
 }

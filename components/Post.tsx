@@ -35,9 +35,11 @@ export const Post: React.FC<Props> = React.memo(function Post({
 }) {
   const [commentsVisible, setCommentsVisible] = React.useState(false);
   const router = useRouter();
-  const { deletePost } = usePostDelete(post.id);
-  const { unpublishPost } = usePostUnpublish(post.id);
-  const { publishPost } = usePostPublish(post.id);
+  const { deletePost, isLoading: isDeleting } = usePostDelete(post.id);
+  const { unpublishPost, isLoading: isUnpublishing } = usePostUnpublish(
+    post.id
+  );
+  const { publishPost, isLoading: isPublishing } = usePostPublish(post.id);
   const [isCopied, copy] = useCopyClipboard(post.content || "", {
     successDuration: 3000,
   });
@@ -89,7 +91,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               <LikeCount post={post} />
             </View>
           </Flex>
-          <Flex>
+          <Flex direction="column">
             <Markdown value={post.description || ""} />
           </Flex>
           <Syntax value={post.content || ""} />
@@ -125,18 +127,30 @@ export const Post: React.FC<Props> = React.memo(function Post({
             )}
             {isMyPost &&
               (post.published ? (
-                <ActionButton isQuiet onPress={handleUnpublishPost}>
+                <ActionButton
+                  isQuiet
+                  onPress={handleUnpublishPost}
+                  isDisabled={isUnpublishing}
+                >
                   <PublishRemove />
                   <Text>Unpublish</Text>
                 </ActionButton>
               ) : (
-                <ActionButton isQuiet onPress={handlepublishPost}>
+                <ActionButton
+                  isQuiet
+                  onPress={handlepublishPost}
+                  isDisabled={isPublishing}
+                >
                   <PublishCheck />
                   <Text>Publish</Text>
                 </ActionButton>
               ))}
             {isMyPost && (
-              <ActionButton isQuiet onPress={handleDeletePost}>
+              <ActionButton
+                isQuiet
+                onPress={handleDeletePost}
+                isDisabled={isDeleting}
+              >
                 <DeleteOutline />
                 <Text>Remove</Text>
               </ActionButton>

@@ -22,12 +22,9 @@ interface Props {
 export const PostComments: React.FC<Props> = ({ post }) => {
   const me = useMeQuery();
   const { commentPost, isLoading } = usePostComment();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({ defaultValues: { comment: "" } });
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: { comment: "" },
+  });
 
   const submit = handleSubmit(async (data) => {
     await commentPost(post.id, data.comment);

@@ -11,7 +11,6 @@ import { Hydrate } from "react-query/hydration";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 const theme: typeof defaultTheme = { ...defaultTheme };
-console.log(defaultTheme);
 
 const App = ({ Component, pageProps }: AppProps) => {
   const queryClientRef = React.useRef<QueryClient>();

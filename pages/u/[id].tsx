@@ -8,7 +8,6 @@ import Image from "next/image";
 import { Heading, Text } from "@react-spectrum/text";
 import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
-import { fetchMe } from "../../request/fetchMe";
 import { dehydrate } from "react-query/hydration";
 import { fetchUser } from "../../request/fetchUser";
 import { useUserQuery } from "../../hooks/useUserQuery";
@@ -50,7 +49,7 @@ const UserPage: React.FC = () => {
         </View>
         <View>
           <Heading>Latest libraries:</Heading>
-          {posts.data.map((post) => (
+          {posts.data?.map((post) => (
             <View key={post.id} marginBottom="size-300">
               <Post post={post} isMyPost={post.authorId === me.data?.id} />
             </View>

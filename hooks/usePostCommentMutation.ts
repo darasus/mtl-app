@@ -7,7 +7,7 @@ export const usePostCommentMutation = () => {
   return useMutation<unknown, unknown, { postId: number; content: string }>(
     ({ postId, content }) => addComment(postId, content),
     {
-      onSettled() {
+      onSuccess() {
         queryClient.invalidateQueries(createUseFeedQueryCacheKey());
       },
     }
