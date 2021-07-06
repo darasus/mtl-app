@@ -8,14 +8,14 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  invariant(
+    req.method === "GET",
+    `The HTTP ${req.method} method is not supported at this route.`
+  );
+
   try {
-    invariant(
-      req.method === "GET",
-      `The HTTP ${req.method} method is not supported at this route.`
-    );
     const postService = new PostService({ req });
-    const feed: Post[] = await postService.fetchFeed();
-    res.status(200);
+    const feed = await postService.fetchFeed();
     res.send(feed);
   } catch (error) {}
 }

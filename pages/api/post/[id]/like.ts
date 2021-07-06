@@ -26,15 +26,12 @@ export default async function handle(
   try {
     const postService = new PostService({ req });
     const post = await postService.fetchPost();
+
     if (post?.isLikedByMe) {
       res.json({ message: "Post is already liked by you!" });
     }
-    await prisma.like.create({
-      data: {
-        post: { connect: { id: Number(req.query.id) } },
-        author: { connect: { email: session?.user?.email } },
-      },
-    });
+
+    await postService.likePost();
     res.json({ status: "success" });
   } catch (error) {
     return error;

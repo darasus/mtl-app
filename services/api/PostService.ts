@@ -79,6 +79,19 @@ export class PostService {
     this.req = req;
   }
 
+  preparePost = (post: InputPost, session: Session | null): Post => {
+    const likes = post.likes.length;
+    const isLikedByMe = post.likes.some(
+      (like: any) => like.author?.email === session?.user?.email
+    );
+
+    return {
+      ...R.omit(["likes"], post),
+      likes,
+      isLikedByMe,
+    };
+  };
+
   async fetchFeed(): Promise<Post[]> {
     const session = await getSession({ req: this.req });
     const posts = await prisma.post.findMany({
@@ -106,13 +119,11 @@ export class PostService {
   async addComment() {
     const session = await getSession({ req: this.req });
 
-    invariant(!!session?.user?.email, "Unknown user!");
-
     await prisma.comment.create({
       data: {
         content: this.req.body.content,
         post: { connect: { id: Number(this.req.query.id) } },
-        author: { connect: { email: session?.user?.email } },
+        author: { connect: { email: session?.user?.email! } },
       },
     });
   }
@@ -196,16 +207,19 @@ export class PostService {
     return this.preparePost(post, session);
   }
 
-  preparePost = (post: InputPost, session: Session | null): Post => {
-    const likes = post.likes.length;
-    const isLikedByMe = post.likes.some(
-      (like: any) => like.author?.email === session?.user?.email
-    );
+  async deletePost() {
+    await prisma.post.delete({
+      where: { id: Number(this.req.query.id) },
+    });
+  }
 
-    return {
-      ...R.omit(["likes"], post),
-      likes,
-      isLikedByMe,
-    };
-  };
+  async likePost() {
+    const session = await getSession({ req: this.req });
+    await prisma.like.create({
+      data: {
+        post: { connect: { id: Number(this.req.query.id) } },
+        author: { connect: { email: session?.user?.email! } },
+      },
+    });
+  }
 }

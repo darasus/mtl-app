@@ -1,12 +1,17 @@
+import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
-import prisma from "../../lib/prisma";
-import { User } from "../../types/User";
+import { UserService } from "../../services/api/UserService";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  invariant(
+    req.method === "GET",
+    `The HTTP ${req.method} method is not supported at this route.`
+  );
+
   const session = await getSession({ req });
 
   if (!session) {
@@ -17,23 +22,8 @@ export default async function handle(
   }
 
   try {
-    const me: User | null = await prisma.user.findUnique({
-      where: {
-        email: session?.user?.email as string,
-      },
-      select: {
-        userName: true,
-        email: true,
-        id: true,
-        image: true,
-        name: true,
-        emailVerified: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    res.status(200);
+    const userService = new UserService({ session });
+    const me = await userService.getUserByEmail(session?.user?.email!);
     res.send(me);
   } catch (error) {
     return error;
