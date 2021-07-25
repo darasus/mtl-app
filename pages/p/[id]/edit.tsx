@@ -1,9 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { TextArea, TextField } from "@react-spectrum/textfield";
-import { View } from "@react-spectrum/view";
-import { Button } from "@react-spectrum/button";
-import { Heading } from "@react-spectrum/text";
+import { Textarea, Input, Label } from "@rebass/forms";
+import { Heading, Box, Button, Flex } from "rebass";
 import { Layout } from "../../../components/Layout";
 import { dehydrate } from "react-query/hydration";
 import { GetServerSideProps } from "next";
@@ -11,7 +9,6 @@ import { QueryClient } from "react-query";
 import { fetchPost } from "../../../request/fetchPost";
 import { usePostQuery } from "../../../hooks/usePostQuery";
 import { usePostEdit } from "../../../hooks/usePostEdit";
-import { Flex } from "@react-spectrum/layout";
 
 const EditPostPage: React.FC = () => {
   const router = useRouter();
@@ -55,51 +52,51 @@ const EditPostPage: React.FC = () => {
 
   return (
     <Layout>
-      <View>
+      <Box>
         <form onSubmit={publish}>
           <Heading>{`Edit: ${title}`}</Heading>
-          <View marginBottom="size-200">
-            <TextField
+          <Box marginBottom="size-200">
+            <Label>Title</Label>
+            <Input
               autoFocus
-              onChange={setTitle}
-              label="Title"
+              onChange={(e) => setTitle(e.target.value)}
               type="text"
               value={title || ""}
               width="100%"
             />
-          </View>
-          <View marginBottom="size-200">
-            <TextArea
-              label="Description"
+          </Box>
+          <Box marginBottom="size-200">
+            <Label>Description</Label>
+            <Textarea
               width="100%"
-              onChange={setDescription}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder=""
               value={description || ""}
             />
-          </View>
-          <View marginBottom="size-200">
-            <TextArea
+          </Box>
+          <Box marginBottom="size-200">
+            <Label>Little JavaScript library</Label>
+            <Textarea
               width="100%"
-              onChange={setContent}
-              label="Little JavaScript library"
+              onChange={(e) => setContent(e.target.value)}
               value={content || ""}
             />
-          </View>
+          </Box>
           <Flex>
             <Button
               variant="cta"
               type="submit"
-              marginEnd="size-200"
-              isDisabled={isLoading}
+              marginRight="size-200"
+              disabled={isLoading}
             >
               Publish
             </Button>
-            <Button variant="primary" isDisabled={isLoading} onPress={save}>
+            <Button variant="primary" disabled={isLoading} onClick={save}>
               Save
             </Button>
           </Flex>
         </form>
-      </View>
+      </Box>
     </Layout>
   );
 };

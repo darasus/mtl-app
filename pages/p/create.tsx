@@ -1,11 +1,8 @@
 import React from "react";
 import { Layout } from "../../components/Layout";
 import { useRouter } from "next/router";
-import { TextArea, TextField } from "@react-spectrum/textfield";
-import { View } from "@react-spectrum/view";
-import { Button } from "@react-spectrum/button";
-import { Heading } from "@react-spectrum/text";
-import { Flex } from "@react-spectrum/layout";
+import { Textarea, Input, Label } from "@rebass/forms";
+import { Box, Heading, Flex, Button } from "rebass";
 import { usePostCreate } from "../../hooks/usePostCreate";
 import { usePostSave } from "../../hooks/usePostSave";
 import { GetServerSideProps } from "next";
@@ -44,51 +41,51 @@ const CreatePostPage: React.FC = () => {
 
   return (
     <Layout>
-      <View>
+      <Box>
         <form onSubmit={create}>
           <Heading>New little JavaScript library</Heading>
-          <View marginBottom="size-200">
-            <TextField
+          <Box marginBottom="size-200">
+            <Label>Title</Label>
+            <Input
               autoFocus
-              onChange={setTitle}
-              label="Title"
+              onChange={(e) => setTitle(e.target.value)}
               type="text"
               value={title}
               width="100%"
             />
-          </View>
-          <View marginBottom="size-200">
-            <TextArea
-              label="Description"
+          </Box>
+          <Box marginBottom="size-200">
+            <Label>Description</Label>
+            <Textarea
               width="100%"
-              onChange={setDescription}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder=""
               value={description}
             />
-          </View>
-          <View marginBottom="size-200">
-            <TextArea
+          </Box>
+          <Box marginBottom="size-200">
+            <Label>Little JavaScript library</Label>
+            <Textarea
               width="100%"
-              onChange={setContent}
-              label="Little JavaScript library"
+              onChange={(e) => setContent(e.target.value)}
               value={content}
             />
-          </View>
+          </Box>
           <Flex>
             <Button
               variant="cta"
               type="submit"
-              marginEnd="size-200"
-              isDisabled={isCreating}
+              marginRight="size-200"
+              disabled={isCreating}
             >
               Publish
             </Button>
-            <Button variant="primary" isDisabled={isSaving} onPress={save}>
+            <Button variant="primary" disabled={isSaving} onClick={save}>
               Save
             </Button>
           </Flex>
         </form>
-      </View>
+      </Box>
     </Layout>
   );
 };

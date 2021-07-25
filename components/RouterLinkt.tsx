@@ -1,4 +1,4 @@
-import { Link } from "@react-spectrum/link";
+import { Link } from "rebass";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -6,7 +6,12 @@ interface Props extends React.ComponentProps<typeof Link> {
   href: string;
 }
 
-export const RouterLink: React.FC<Props> = ({ children, href, ...props }) => {
+export const RouterLink: React.FC<Props> = ({
+  children,
+  href,
+  sx,
+  ...props
+}) => {
   const router = useRouter();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -15,7 +20,7 @@ export const RouterLink: React.FC<Props> = ({ children, href, ...props }) => {
   };
 
   return (
-    <Link {...props}>
+    <Link {...props} sx={{ ...sx, display: "flex", alignItems: "center" }}>
       <a href={href} onClick={handleClick}>
         {children}
       </a>

@@ -2,10 +2,9 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { Layout } from "../../components/Layout";
 import { Post } from "../../components/Post";
-import { View } from "@react-spectrum/view";
-import { Flex } from "@react-spectrum/layout";
+import { Box, Flex } from "rebass";
 import Image from "next/image";
-import { Heading, Text } from "@react-spectrum/text";
+import { Heading, Text } from "rebass";
 import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
@@ -28,12 +27,11 @@ const UserPage: React.FC = () => {
   return (
     <Layout>
       <main>
-        <View marginBottom="size-100">
-          <Flex direction="column" alignItems="center">
-            <View
+        <Box marginBottom="size-100">
+          <Flex flexDirection="column" alignItems="center">
+            <Box
               width={150}
               height={150}
-              borderRadius="large"
               overflow="hidden"
               marginBottom="size-100"
             >
@@ -43,18 +41,18 @@ const UserPage: React.FC = () => {
                 height="500"
                 alt="Avatar"
               />
-            </View>
+            </Box>
             <Text>{user.data.name}</Text>
           </Flex>
-        </View>
-        <View>
+        </Box>
+        <Box>
           <Heading>Latest libraries:</Heading>
           {posts.data?.map((post) => (
-            <View key={post.id} marginBottom="size-300">
+            <Box key={post.id} marginBottom="size-300">
               <Post post={post} isMyPost={post.authorId === me.data?.id} />
-            </View>
+            </Box>
           ))}
-        </View>
+        </Box>
       </main>
     </Layout>
   );

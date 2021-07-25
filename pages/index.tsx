@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { Layout } from "../components/Layout";
 import { Post } from "../components/Post";
-import { View } from "@react-spectrum/view";
+import { Box } from "rebass";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import { fetchFeed } from "../request/fetchFeed";
@@ -17,9 +17,9 @@ const Index: React.FC = () => {
     <Layout>
       <main>
         {feed.data?.map((post) => (
-          <View key={post.id} marginBottom="size-300">
+          <Box key={post.id} marginBottom="size-300">
             <Post post={post} isMyPost={post.authorId === me.data?.id} />
-          </View>
+          </Box>
         ))}
       </main>
     </Layout>

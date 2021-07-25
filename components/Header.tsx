@@ -5,16 +5,14 @@ import { signOut } from "next-auth/client";
 import Image from "next/image";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/useMeQuery";
-import { Flex } from "@react-spectrum/layout";
-import { Button } from "@react-spectrum/button";
-import { View } from "@react-spectrum/view";
+import { Button, Flex, Box } from "rebass";
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const me = useMeQuery();
 
   return (
-    <View>
+    <Box>
       <Flex alignItems="center">
         <Flex flexGrow={1}>
           <Link href="/">
@@ -25,17 +23,18 @@ export const Header: React.FC = () => {
         </Flex>
         {me.data ? (
           <Flex>
-            <Flex marginEnd="size-100">
+            <Flex sx={{ marginRight: 2 }}>
               <UserPreview user={me.data} />
             </Flex>
             <Button
-              marginEnd="size-100"
-              variant="cta"
-              onPress={() => router.push("/p/create")}
+              sx={{
+                marginRight: 2,
+              }}
+              onClick={() => router.push("/p/create")}
             >
               New post
             </Button>
-            <Button variant="secondary" onPress={() => signOut()}>
+            <Button variant="secondary" onClick={() => signOut()}>
               Log out
             </Button>
           </Flex>
@@ -43,13 +42,13 @@ export const Header: React.FC = () => {
           <Flex>
             <Button
               variant="cta"
-              onPress={() => router.push("/api/auth/signin")}
+              onClick={() => router.push("/api/auth/signin")}
             >
               Log in
             </Button>
           </Flex>
         )}
       </Flex>
-    </View>
+    </Box>
   );
 };

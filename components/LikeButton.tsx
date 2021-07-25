@@ -1,5 +1,4 @@
-import { ActionButton, Text } from "@adobe/react-spectrum";
-import ThumbUpOutline from "@spectrum-icons/workflow/ThumbUpOutline";
+import { Button, Text } from "rebass";
 import React from "react";
 import { usePostLike } from "../hooks/usePostLike";
 import { Post } from "../types/Post";
@@ -13,13 +12,8 @@ export const LikeButton: React.FC<Props> = ({ post }) => {
   const handleLikeClick = () => likePost(post.id);
 
   return (
-    <ActionButton
-      isQuiet
-      onPress={handleLikeClick}
-      isDisabled={isLoading || post.isLikedByMe}
-    >
-      <ThumbUpOutline />
+    <Button onClick={handleLikeClick} disabled={isLoading || post.isLikedByMe}>
       {post.isLikedByMe ? <Text>Liked!</Text> : <Text>Like</Text>}
-    </ActionButton>
+    </Button>
   );
 };

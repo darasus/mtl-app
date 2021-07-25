@@ -1,13 +1,5 @@
-import {
-  Button,
-  Flex,
-  Text,
-  TextArea,
-  TextField,
-  Tooltip,
-  TooltipTrigger,
-  View,
-} from "@adobe/react-spectrum";
+import { Button, Flex, Text, Box } from "rebass";
+import { Textarea, Input } from "@rebass/forms";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useMeQuery } from "../hooks/useMeQuery";
@@ -35,45 +27,40 @@ export const PostComments: React.FC<Props> = ({ post }) => {
 
   return (
     <>
-      <View borderTopColor="gray-900" borderTopWidth="thin" padding="size-200">
+      <Box>
         {post.comments.map((comment, i) => {
           if (!comment.author) return null;
           return (
             <Flex
               key={comment.id}
-              gap="size-200"
               marginBottom={post.comments.length === i + 1 ? "" : "size-100"}
             >
               <UserProfilePic user={comment.author} />
-              <View>
-                <Flex gap="size-100">
+              <Box>
+                <Flex>
                   <Text>{comment.author.name}</Text>
                   <Text>-</Text>
                   <Text>{new Date(comment.createdAt).toDateString()}</Text>
                 </Flex>
                 <Text>{comment.content}</Text>
-              </View>
+              </Box>
             </Flex>
           );
         })}
-      </View>
+      </Box>
       <form onSubmit={submit}>
-        <View
-          borderTopColor="gray-400"
-          borderTopWidth="thin"
-          padding="size-200"
-        >
-          <Flex gap="size-200">
+        <Box>
+          <Flex>
             <UserProfilePic user={me.data} />
-            <View flexGrow={1}>
+            <Box flexGrow={1}>
               <Controller
                 name="comment"
                 control={control}
                 render={({ field }) => (
-                  <TextArea
+                  <Textarea
                     width="100%"
                     autoComplete="false"
-                    isDisabled={isLoading}
+                    disabled={isLoading}
                     name={field.name}
                     onBlur={field.onBlur}
                     value={field.value}
@@ -83,12 +70,12 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                   />
                 )}
               />
-            </View>
+            </Box>
             <Button variant="primary" type="submit">
               Submit
             </Button>
           </Flex>
-        </View>
+        </Box>
       </form>
     </>
   );

@@ -1,5 +1,4 @@
-import { Flex } from "@react-spectrum/layout";
-import { Footer, View } from "@react-spectrum/view";
+import { Flex, Box } from "rebass";
 import React, { ReactNode } from "react";
 import { Header } from "./Header";
 
@@ -9,15 +8,15 @@ type Props = {
 
 export const Layout: React.FC<Props> = (props) => (
   <>
-    <Flex direction="column" width="100%" alignItems="center">
-      <Flex direction="column" width="100%" maxWidth={960} flexShrink={0}>
-        <View paddingY="size-200">
+    <Flex flexDirection="column" width="100%" alignItems="center">
+      <Flex flexDirection="column" width="100%" maxWidth={960} flexShrink={0}>
+        <Box paddingY="size-200">
           <Header />
-        </View>
-        <View marginBottom="size-200">{props.children}</View>
-        <View>
-          <Footer>&copy; All rights reserved.</Footer>
-        </View>
+        </Box>
+        <Box marginBottom="size-200">{props.children}</Box>
+        <Box>
+          <Box>&copy; All rights reserved.</Box>
+        </Box>
       </Flex>
     </Flex>
     <style jsx global>{`

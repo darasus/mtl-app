@@ -1,14 +1,8 @@
 const withPlugins = require("next-compose-plugins");
 const withCSS = require("@zeit/next-css");
-const withTM = require("next-transpile-modules")([
-  "@adobe/react-spectrum",
-  "@spectrum-icons/.*",
-  "@react-spectrum/.*",
-  "@react-spectrum/actiongroup/*",
-]);
 
-module.exports = withPlugins([withTM, withCSS], {
-  webpack5: false,
+module.exports = withPlugins([], {
+  webpack5: true,
   images: {
     domains: ["avatars.githubusercontent.com"],
   },

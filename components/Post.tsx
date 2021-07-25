@@ -1,18 +1,9 @@
 import React from "react";
 import { UserPreview } from "./UserPreview";
 import { Markdown } from "./Markdown";
-import { Flex } from "@react-spectrum/layout";
-import { View } from "@react-spectrum/view";
-import { Text } from "@react-spectrum/text";
+import { Flex, Box, Text } from "rebass";
 import { RouterLink } from "./RouterLinkt";
-import { ActionButton } from "@react-spectrum/button";
-import DeleteOutline from "@spectrum-icons/workflow/DeleteOutline";
-import Share from "@spectrum-icons/workflow/Share";
-import Copy from "@spectrum-icons/workflow/Copy";
-import Edit from "@spectrum-icons/workflow/Edit";
-import Comment from "@spectrum-icons/workflow/Comment";
-import PublishRemove from "@spectrum-icons/workflow/PublishRemove";
-import PublishCheck from "@spectrum-icons/workflow/PublishCheck";
+import { Button } from "rebass";
 import useCopyClipboard from "../hooks/useClipboard";
 import { useRouter } from "next/router";
 import { Post as PostType } from "../types/Post";
@@ -71,100 +62,87 @@ export const Post: React.FC<Props> = React.memo(function Post({
   }, []);
 
   return (
-    <View borderColor="gray-900" borderWidth="thin">
-      <Flex direction="column">
-        <View padding="size-200">
+    <Box sx={{ borderColor: "gray", borderWidth: 1, borderStyle: "solid" }}>
+      <Flex flexDirection="column">
+        <Box sx={{ padding: 2 }}>
           <Flex alignItems="center">
-            <RouterLink marginEnd="size-100" href={`/p/${post.id}`}>
+            <RouterLink sx={{ marginRight: 2 }} href={`/p/${post.id}`}>
               {post.title}
             </RouterLink>
-            <View marginEnd="size-100">
+            <Box sx={{ marginRight: 2 }}>
               <Text>by</Text>
-            </View>
-            <View marginEnd="size-100">
+            </Box>
+            <Box sx={{ marginRight: 1 }}>
               {post.author && <UserPreview user={post.author} />}
-            </View>
-            <View marginEnd="size-100">
+            </Box>
+            <Box sx={{ marginRight: 1 }}>
               <Text>{`${post.published ? "Published" : "Draft"}`}</Text>
-            </View>
-            <View>
+            </Box>
+            <Box>
               <LikeCount post={post} />
-            </View>
+            </Box>
           </Flex>
-          <Flex direction="column">
+          <Flex flexDirection="column">
             <Markdown value={post.description || ""} />
           </Flex>
           <Syntax value={post.content || ""} />
-        </View>
-        <View>
-          <View
-            borderTopColor="gray-900"
-            borderTopWidth="thin"
-            padding="size-100"
+        </Box>
+        <Box>
+          <Box
+            sx={{
+              borderTopColor: "white",
+              borderTopWidth: 1,
+              borderStyle: "solid",
+              padding: 1,
+            }}
           >
             <LikeButton post={post} />
-            <ActionButton isQuiet onPress={handleCommentClick}>
-              <Comment />
+            <Button onClick={handleCommentClick}>
+              {/* <Comment /> */}
               <Text>{`Comment (${post.comments.length})`}</Text>
-            </ActionButton>
-            <ActionButton isQuiet onPress={handleTweetClick}>
-              <Share />
+            </Button>
+            <Button onClick={handleTweetClick}>
+              {/* <Share /> */}
               <Text>Tweet</Text>
-            </ActionButton>
-            <ActionButton
-              isQuiet
-              onPress={handleClipboardCopy}
-              isDisabled={isCopied}
-            >
-              <Copy />
+            </Button>
+            <Button onClick={handleClipboardCopy} disabled={isCopied}>
+              {/* <Copy /> */}
               <Text>{isCopied ? "Copied!" : "Copy snippet"}</Text>
-            </ActionButton>
+            </Button>
             {isMyPost && (
-              <ActionButton isQuiet onPress={handleEditClick}>
-                <Edit />
+              <Button onClick={handleEditClick}>
+                {/* <Edit /> */}
                 <Text>Edit</Text>
-              </ActionButton>
+              </Button>
             )}
             {isMyPost &&
               (post.published ? (
-                <ActionButton
-                  isQuiet
-                  onPress={handleUnpublishPost}
-                  isDisabled={isUnpublishing}
-                >
-                  <PublishRemove />
+                <Button onClick={handleUnpublishPost} disabled={isUnpublishing}>
+                  {/* <PublishRemove /> */}
                   <Text>Unpublish</Text>
-                </ActionButton>
+                </Button>
               ) : (
-                <ActionButton
-                  isQuiet
-                  onPress={handlepublishPost}
-                  isDisabled={isPublishing}
-                >
-                  <PublishCheck />
+                <Button onClick={handlepublishPost} disabled={isPublishing}>
+                  {/* <PublishCheck /> */}
                   <Text>Publish</Text>
-                </ActionButton>
+                </Button>
               ))}
             {isMyPost && (
-              <ActionButton
-                isQuiet
-                onPress={handleDeletePost}
-                isDisabled={isDeleting}
-              >
-                <DeleteOutline />
+              <Button onClick={handleDeletePost} disabled={isDeleting}>
+                {/* <DeleteOutline /> */}
                 <Text>Remove</Text>
-              </ActionButton>
+              </Button>
             )}
-          </View>
-        </View>
-        <View>
+          </Box>
+        </Box>
+        <Box>
           {commentsVisible && (
-            <View>
+            <Box>
               <PostComments post={post} />
-            </View>
+            </Box>
           )}
-        </View>
+        </Box>
       </Flex>
-    </View>
+    </Box>
   );
 });
