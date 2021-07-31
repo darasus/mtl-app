@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/client";
+import { ColorModeScript } from "@chakra-ui/react";
 import Document, {
   Html,
   Head,
@@ -6,7 +6,7 @@ import Document, {
   NextScript,
   DocumentContext,
 } from "next/document";
-import prisma from "../lib/prisma";
+import { theme } from "../theme";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -20,6 +20,7 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head />
         <body>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />
         </body>
