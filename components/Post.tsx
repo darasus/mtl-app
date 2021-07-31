@@ -13,6 +13,15 @@ import { Syntax } from "./Syntax";
 import { LikeButton } from "./LikeButton";
 import { LikeCount } from "./LikeCount";
 import { PostComments } from "./PostComments";
+import {
+  ChatIcon,
+  ShareIcon,
+  DocumentDuplicateIcon,
+  PencilAltIcon,
+  CloudDownloadIcon,
+  CloudUploadIcon,
+  TrashIcon,
+} from "@heroicons/react/outline";
 
 interface Props {
   post: PostType;
@@ -87,52 +96,89 @@ export const Post: React.FC<Props> = React.memo(function Post({
           <Syntax value={post.content || ""} />
         </Box>
         <Box>
-          <Box
-            sx={{
-              borderTopColor: "white",
-              borderTopWidth: 1,
-              borderStyle: "solid",
-              padding: 1,
-            }}
-          >
-            <LikeButton post={post} />
-            <Button onClick={handleCommentClick}>
-              {/* <Comment /> */}
+          <Flex alignItems="center" p="2" borderTop="1px solid white">
+            <Box mr="2">
+              <LikeButton post={post} />
+            </Box>
+            <Button
+              leftIcon={<ChatIcon width="20" height="20" />}
+              onClick={handleCommentClick}
+              variant="outline"
+              size="sm"
+              mr={2}
+            >
               <Text>{`Comment (${post.comments.length})`}</Text>
             </Button>
-            <Button onClick={handleTweetClick}>
-              {/* <Share /> */}
+            <Button
+              leftIcon={<ShareIcon width="20" height="20" />}
+              onClick={handleTweetClick}
+              variant="outline"
+              size="sm"
+              mr={2}
+            >
               <Text>Tweet</Text>
             </Button>
-            <Button onClick={handleClipboardCopy} disabled={isCopied}>
-              {/* <Copy /> */}
+            <Button
+              leftIcon={<DocumentDuplicateIcon width="20" height="20" />}
+              onClick={handleClipboardCopy}
+              disabled={isCopied}
+              variant="outline"
+              size="sm"
+              mr={2}
+            >
               <Text>{isCopied ? "Copied!" : "Copy snippet"}</Text>
             </Button>
             {isMyPost && (
-              <Button onClick={handleEditClick}>
-                {/* <Edit /> */}
+              <Button
+                onClick={handleEditClick}
+                variant="outline"
+                size="sm"
+                mr={2}
+                leftIcon={<PencilAltIcon width="20" height="20" />}
+              >
                 <Text>Edit</Text>
               </Button>
             )}
             {isMyPost &&
               (post.published ? (
-                <Button onClick={handleUnpublishPost} disabled={isUnpublishing}>
+                <Button
+                  onClick={handleUnpublishPost}
+                  disabled={isUnpublishing}
+                  variant="outline"
+                  size="sm"
+                  mr={2}
+                  leftIcon={<CloudDownloadIcon width="20" height="20" />}
+                >
                   {/* <PublishRemove /> */}
                   <Text>Unpublish</Text>
                 </Button>
               ) : (
-                <Button onClick={handlepublishPost} disabled={isPublishing}>
+                <Button
+                  onClick={handlepublishPost}
+                  disabled={isPublishing}
+                  variant="outline"
+                  size="sm"
+                  mr={2}
+                  leftIcon={<CloudUploadIcon width="20" height="20" />}
+                >
                   {/* <PublishCheck /> */}
                   <Text>Publish</Text>
                 </Button>
               ))}
             {isMyPost && (
-              <Button onClick={handleDeletePost} disabled={isDeleting}>
+              <Button
+                onClick={handleDeletePost}
+                disabled={isDeleting}
+                variant="outline"
+                size="sm"
+                mr={2}
+                leftIcon={<TrashIcon width="20" height="20" />}
+              >
                 {/* <DeleteOutline /> */}
                 <Text>Remove</Text>
               </Button>
             )}
-          </Box>
+          </Flex>
         </Box>
         <Box>
           {commentsVisible && (
