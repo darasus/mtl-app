@@ -5,7 +5,6 @@ export const theme = extendTheme({
     global: {
       "html, body": {
         color: "black",
-        lineHeight: "tall",
       },
       a: {
         color: "teal.500",
