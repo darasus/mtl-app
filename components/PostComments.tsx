@@ -1,5 +1,4 @@
-import { Button, Flex, Text, Box } from "rebass";
-import { Textarea, Input } from "@rebass/forms";
+import { Button, Flex, Text, Box, Textarea, Input } from "@chakra-ui/react";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useMeQuery } from "../hooks/useMeQuery";

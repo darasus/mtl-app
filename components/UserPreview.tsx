@@ -1,5 +1,5 @@
 import Prisma from ".prisma/client";
-import { Flex, Text, Box } from "rebass";
+import { Flex, Text, Box } from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
 import { RouterLink } from "./RouterLinkt";

@@ -1,8 +1,15 @@
 import React from "react";
 import { Layout } from "../../components/Layout";
 import { useRouter } from "next/router";
-import { Textarea, Input, Label } from "@rebass/forms";
-import { Box, Heading, Flex, Button } from "rebass";
+import {
+  Textarea,
+  Input,
+  Box,
+  Heading,
+  Flex,
+  Button,
+  Text,
+} from "@chakra-ui/react";
 import { usePostCreate } from "../../hooks/usePostCreate";
 import { usePostSave } from "../../hooks/usePostSave";
 import { GetServerSideProps } from "next";
@@ -45,7 +52,7 @@ const CreatePostPage: React.FC = () => {
         <form onSubmit={create}>
           <Heading>New little JavaScript library</Heading>
           <Box marginBottom="size-200">
-            <Label>Title</Label>
+            <Text>Title</Text>
             <Input
               autoFocus
               onChange={(e) => setTitle(e.target.value)}
@@ -55,7 +62,7 @@ const CreatePostPage: React.FC = () => {
             />
           </Box>
           <Box marginBottom="size-200">
-            <Label>Description</Label>
+            <Text>Description</Text>
             <Textarea
               width="100%"
               onChange={(e) => setDescription(e.target.value)}
@@ -64,7 +71,7 @@ const CreatePostPage: React.FC = () => {
             />
           </Box>
           <Box marginBottom="size-200">
-            <Label>Little JavaScript library</Label>
+            <Text>Little JavaScript library</Text>
             <Textarea
               width="100%"
               onChange={(e) => setContent(e.target.value)}

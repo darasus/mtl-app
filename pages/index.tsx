@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { Layout } from "../components/Layout";
 import { Post } from "../components/Post";
-import { Box } from "rebass";
+import { Box } from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import { fetchFeed } from "../request/fetchFeed";

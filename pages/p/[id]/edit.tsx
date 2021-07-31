@@ -1,7 +1,14 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Textarea, Input, Label } from "@rebass/forms";
-import { Heading, Box, Button, Flex } from "rebass";
+import {
+  Textarea,
+  Input,
+  Heading,
+  Box,
+  Button,
+  Flex,
+  Text,
+} from "@chakra-ui/react";
 import { Layout } from "../../../components/Layout";
 import { dehydrate } from "react-query/hydration";
 import { GetServerSideProps } from "next";
@@ -56,7 +63,7 @@ const EditPostPage: React.FC = () => {
         <form onSubmit={publish}>
           <Heading>{`Edit: ${title}`}</Heading>
           <Box marginBottom="size-200">
-            <Label>Title</Label>
+            <Text>Title</Text>
             <Input
               autoFocus
               onChange={(e) => setTitle(e.target.value)}
@@ -66,7 +73,7 @@ const EditPostPage: React.FC = () => {
             />
           </Box>
           <Box marginBottom="size-200">
-            <Label>Description</Label>
+            <Text>Description</Text>
             <Textarea
               width="100%"
               onChange={(e) => setDescription(e.target.value)}
@@ -75,7 +82,7 @@ const EditPostPage: React.FC = () => {
             />
           </Box>
           <Box marginBottom="size-200">
-            <Label>Little JavaScript library</Label>
+            <Text>Little JavaScript library</Text>
             <Textarea
               width="100%"
               onChange={(e) => setContent(e.target.value)}

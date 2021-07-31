@@ -5,7 +5,7 @@ import { signOut } from "next-auth/client";
 import Image from "next/image";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/useMeQuery";
-import { Button, Flex, Box } from "rebass";
+import { Button, Flex, Box } from "@chakra-ui/react";
 
 export const Header: React.FC = () => {
   const router = useRouter();

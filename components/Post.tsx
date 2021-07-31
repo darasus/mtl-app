@@ -1,9 +1,8 @@
 import React from "react";
 import { UserPreview } from "./UserPreview";
 import { Markdown } from "./Markdown";
-import { Flex, Box, Text } from "rebass";
+import { Flex, Box, Text, Button } from "@chakra-ui/react";
 import { RouterLink } from "./RouterLinkt";
-import { Button } from "rebass";
 import useCopyClipboard from "../hooks/useClipboard";
 import { useRouter } from "next/router";
 import { Post as PostType } from "../types/Post";

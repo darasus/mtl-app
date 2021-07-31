@@ -1,4 +1,4 @@
-import { Button, Text } from "rebass";
+import { Button, Text } from "@chakra-ui/react";
 import React from "react";
 import { usePostLike } from "../hooks/usePostLike";
 import { Post } from "../types/Post";

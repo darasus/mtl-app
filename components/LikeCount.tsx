@@ -1,4 +1,4 @@
-import { Flex, Text, Box } from "rebass";
+import { Flex, Text, Box } from "@chakra-ui/react";
 import React from "react";
 import { Post } from "../types/Post";
 
