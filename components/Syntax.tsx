@@ -1,7 +1,7 @@
 import React from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
-import { codeTheme } from "../constants/codeTheme";
-import { useColorMode, useColorModeValue } from "@chakra-ui/react";
+import { syntaxStylesDark, syntaxStylesLight } from "../constants/codeTheme";
+import { useColorMode, useColorModeValue, useToken } from "@chakra-ui/react";
 
 interface Props {
   value: string;
@@ -9,13 +9,13 @@ interface Props {
 
 export const Syntax: React.FC<Props> = ({ value }) => {
   const { colorMode } = useColorMode();
+  const [gray50, gray900] = useToken("colors", ["gray.50", "gray.900"]);
 
   const theme = {
-    ...codeTheme,
+    styles: colorMode === "dark" ? syntaxStylesDark : syntaxStylesLight,
     plain: {
       color: "#9CDCFE",
-      backgroundColor:
-        colorMode === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.0)",
+      backgroundColor: colorMode === "dark" ? gray900 : gray50,
     },
   };
 

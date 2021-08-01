@@ -1,4 +1,4 @@
-import { Flex, Box } from "@chakra-ui/react";
+import { Flex, Box, Text } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
 import { Header } from "./Header";
 
@@ -14,8 +14,10 @@ export const Layout: React.FC<Props> = (props) => (
           <Header />
         </Box>
         <Box marginBottom="size-200">{props.children}</Box>
-        <Box>
-          <Box>&copy; All rights reserved.</Box>
+        <Box my={5}>
+          <Flex justifyContent="center">
+            <Text color="gray.500">{`${new Date().getFullYear()} © All rights reserved.`}</Text>
+          </Flex>
         </Box>
       </Flex>
     </Flex>
