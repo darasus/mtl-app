@@ -18,7 +18,7 @@ export const LikeButton: React.FC<Props> = ({ post }) => {
       onClick={handleLikeClick}
       disabled={isLoading || post.isLikedByMe}
       size="sm"
-      variant="outline"
+      variant="ghost"
     >
       {post.isLikedByMe ? <Text>Liked!</Text> : <Text>Like</Text>}
     </Button>

@@ -1,16 +1,28 @@
 import React from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import { codeTheme } from "../constants/codeTheme";
+import { useColorMode, useColorModeValue } from "@chakra-ui/react";
 
 interface Props {
   value: string;
 }
 
 export const Syntax: React.FC<Props> = ({ value }) => {
+  const { colorMode } = useColorMode();
+
+  const theme = {
+    ...codeTheme,
+    plain: {
+      color: "#9CDCFE",
+      backgroundColor:
+        colorMode === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.0)",
+    },
+  };
+
   return (
     <Highlight
       {...defaultProps}
-      theme={codeTheme}
+      theme={theme}
       code={value}
       language="javascript"
     >

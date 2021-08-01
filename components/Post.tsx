@@ -1,7 +1,7 @@
 import React from "react";
 import { UserPreview } from "./UserPreview";
 import { Markdown } from "./Markdown";
-import { Flex, Box, Text, Button } from "@chakra-ui/react";
+import { Flex, Box, Text, Button, useColorMode } from "@chakra-ui/react";
 import { RouterLink } from "./RouterLinkt";
 import useCopyClipboard from "../hooks/useClipboard";
 import { useRouter } from "next/router";
@@ -33,6 +33,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
   post,
   isMyPost,
 }) {
+  const { colorMode } = useColorMode();
   const [commentsVisible, setCommentsVisible] = React.useState(false);
   const router = useRouter();
   const { deletePost, isLoading: isDeleting } = usePostDelete(post.id);
@@ -70,8 +71,10 @@ export const Post: React.FC<Props> = React.memo(function Post({
     router.push(`/p/${post.id}/edit`);
   }, []);
 
+  const borerColor = colorMode === "dark" ? "grey.900" : "grey.100";
+
   return (
-    <Box borderColor="white" borderWidth="thin">
+    <Box borderColor={borerColor} borderWidth="thin">
       <Flex flexDirection="column">
         <Box p="5">
           <Flex alignItems="center">
@@ -93,20 +96,22 @@ export const Post: React.FC<Props> = React.memo(function Post({
               <LikeCount post={post} />
             </Box>
           </Flex>
+          <Box mb={4} />
           <Flex flexDirection="column">
             <Markdown value={post.description || ""} />
           </Flex>
+          <Box mb={4} />
           <Syntax value={post.content || ""} />
         </Box>
-        <Box>
-          <Flex alignItems="center" p="2" borderTop="1px solid white">
+        <Box borderColor={borerColor} borderTopWidth="thin">
+          <Flex alignItems="center" p={4}>
             <Box mr="2">
               <LikeButton post={post} />
             </Box>
             <Button
               leftIcon={<ChatIcon width="20" height="20" />}
               onClick={handleCommentClick}
-              variant="outline"
+              variant="ghost"
               size="sm"
               mr={2}
             >
@@ -115,7 +120,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
             <Button
               leftIcon={<ShareIcon width="20" height="20" />}
               onClick={handleTweetClick}
-              variant="outline"
+              variant="ghost"
               size="sm"
               mr={2}
             >
@@ -125,7 +130,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               leftIcon={<DocumentDuplicateIcon width="20" height="20" />}
               onClick={handleClipboardCopy}
               disabled={isCopied}
-              variant="outline"
+              variant="ghost"
               size="sm"
               mr={2}
             >
@@ -134,7 +139,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
             {isMyPost && (
               <Button
                 onClick={handleEditClick}
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 mr={2}
                 leftIcon={<PencilAltIcon width="20" height="20" />}
@@ -147,7 +152,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Button
                   onClick={handleUnpublishPost}
                   disabled={isUnpublishing}
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   mr={2}
                   leftIcon={<CloudDownloadIcon width="20" height="20" />}
@@ -159,7 +164,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Button
                   onClick={handlepublishPost}
                   disabled={isPublishing}
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   mr={2}
                   leftIcon={<CloudUploadIcon width="20" height="20" />}
@@ -172,7 +177,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               <Button
                 onClick={handleDeletePost}
                 disabled={isDeleting}
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 mr={2}
                 leftIcon={<TrashIcon width="20" height="20" />}
