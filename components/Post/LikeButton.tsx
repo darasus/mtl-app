@@ -1,7 +1,7 @@
 import { Button, Text } from "@chakra-ui/react";
 import React from "react";
-import { usePostLike } from "../hooks/usePostLike";
-import { Post } from "../types/Post";
+import { usePostLike } from "../../hooks/usePostLike";
+import { Post } from "../../types/Post";
 import { ThumbUpIcon } from "@heroicons/react/outline";
 
 interface Props {

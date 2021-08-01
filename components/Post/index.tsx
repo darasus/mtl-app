@@ -1,29 +1,21 @@
 import React from "react";
-import { UserPreview } from "./UserPreview";
-import { Markdown } from "./Markdown";
+import { Markdown } from "../Markdown";
 import { Flex, Box, Text, Button, useColorMode } from "@chakra-ui/react";
-import { RouterLink } from "./RouterLinkt";
-import useCopyClipboard from "../hooks/useClipboard";
-import { useRouter } from "next/router";
-import { Post as PostType } from "../types/Post";
-import { usePostDelete } from "../hooks/usePostDelete";
-import { usePostUnpublish } from "../hooks/usePostUnpublish";
-import { usePostPublish } from "../hooks/usePostPublish";
-import { Syntax } from "./Syntax";
+import { RouterLink } from "../RouterLinkt";
+import useCopyClipboard from "../../hooks/useClipboard";
+import { Post as PostType } from "../../types/Post";
+import { Syntax } from "../Syntax";
 import { LikeButton } from "./LikeButton";
 import { LikeCount } from "./LikeCount";
-import { PostComments } from "./PostComments";
+import { PostComments } from "../PostComments";
 import {
   ChatIcon,
   ShareIcon,
   DocumentDuplicateIcon,
-  PencilAltIcon,
-  CloudDownloadIcon,
-  CloudUploadIcon,
-  TrashIcon,
 } from "@heroicons/react/outline";
-import { PostUserPreview } from "./PostUserPreview";
-import { useColors } from "../hooks/useColors";
+import { PostUserPreview } from "../PostUserPreview";
+import { useColors } from "../../hooks/useColors";
+import { ActionMenu } from "./ActionMenu";
 
 interface Props {
   post: PostType;
@@ -36,12 +28,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
 }) {
   const { borderColor } = useColors();
   const [commentsVisible, setCommentsVisible] = React.useState(false);
-  const router = useRouter();
-  const { deletePost, isLoading: isDeleting } = usePostDelete(post.id);
-  const { unpublishPost, isLoading: isUnpublishing } = usePostUnpublish(
-    post.id
-  );
-  const { publishPost, isLoading: isPublishing } = usePostPublish(post.id);
+
   const [isCopied, copy] = useCopyClipboard(post.content || "", {
     successDuration: 3000,
   });
@@ -50,26 +37,10 @@ export const Post: React.FC<Props> = React.memo(function Post({
     setCommentsVisible(!commentsVisible);
   }, [commentsVisible]);
 
-  const handleDeletePost = React.useCallback(() => deletePost(), [deletePost]);
-
-  const handleUnpublishPost = React.useCallback(
-    () => unpublishPost(),
-    [unpublishPost]
-  );
-
-  const handlepublishPost = React.useCallback(
-    () => publishPost(),
-    [publishPost]
-  );
-
   const handleClipboardCopy = React.useCallback(() => copy(), [copy]);
 
   const handleTweetClick = React.useCallback(() => {
     window.open(`https://twitter.com/intent/tweet?text=Hello%20world`);
-  }, []);
-
-  const handleEditClick = React.useCallback(() => {
-    router.push(`/p/${post.id}/edit`);
   }, []);
 
   return (
@@ -137,56 +108,8 @@ export const Post: React.FC<Props> = React.memo(function Post({
             >
               <Text>{isCopied ? "Copied!" : "Copy"}</Text>
             </Button>
-            {isMyPost && (
-              <Button
-                onClick={handleEditClick}
-                variant="ghost"
-                size="sm"
-                mr={2}
-                leftIcon={<PencilAltIcon width="20" height="20" />}
-              >
-                <Text>Edit</Text>
-              </Button>
-            )}
-            {isMyPost &&
-              (post.published ? (
-                <Button
-                  onClick={handleUnpublishPost}
-                  disabled={isUnpublishing}
-                  variant="ghost"
-                  size="sm"
-                  mr={2}
-                  leftIcon={<CloudDownloadIcon width="20" height="20" />}
-                >
-                  {/* <PublishRemove /> */}
-                  <Text>Unpublish</Text>
-                </Button>
-              ) : (
-                <Button
-                  onClick={handlepublishPost}
-                  disabled={isPublishing}
-                  variant="ghost"
-                  size="sm"
-                  mr={2}
-                  leftIcon={<CloudUploadIcon width="20" height="20" />}
-                >
-                  {/* <PublishCheck /> */}
-                  <Text>Publish</Text>
-                </Button>
-              ))}
-            {isMyPost && (
-              <Button
-                onClick={handleDeletePost}
-                disabled={isDeleting}
-                variant="ghost"
-                size="sm"
-                mr={2}
-                leftIcon={<TrashIcon width="20" height="20" />}
-              >
-                {/* <DeleteOutline /> */}
-                <Text>Remove</Text>
-              </Button>
-            )}
+            <Box flexGrow={1} />
+            <ActionMenu isMyPost={isMyPost} post={post} />
           </Flex>
         </Box>
         <Box>
