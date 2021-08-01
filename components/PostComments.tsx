@@ -1,4 +1,4 @@
-import { Button, Flex, Text, Box, Textarea } from "@chakra-ui/react";
+import { Button, Flex, Text, Box, Textarea, Input } from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -34,6 +34,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
         backgroundColor={darkerBgColor}
         borderColor={borderColor}
         borderTopWidth="thin"
+        borderBottomWidth="thin"
       >
         {post.comments.map((comment, i) => {
           if (!comment.author) return null;
@@ -49,6 +50,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                 borderRadius={100}
                 overflow="hidden"
                 boxShadow="base"
+                mr={2}
               >
                 <Image
                   src={comment.author.image}
@@ -57,20 +59,20 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                   alt="Avatar"
                 />
               </Box>
-              <Box>
+              <Box mt={1}>
                 <Flex>
-                  <Text>{comment.author.name}</Text>
-                  <Text>-</Text>
-                  <Text>{new Date(comment.createdAt).toDateString()}</Text>
+                  <Text fontSize="sm" color="gray.400">{`${
+                    comment.author.name
+                  } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                 </Flex>
-                <Text>{comment.content}</Text>
+                <Text fontSize="sm">{comment.content}</Text>
               </Box>
             </Flex>
           );
         })}
       </Box>
       <form onSubmit={submit}>
-        <Box>
+        <Box p={3}>
           <Flex>
             <Box
               width={7}
@@ -78,6 +80,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
               borderRadius={100}
               overflow="hidden"
               boxShadow="base"
+              mr={2}
             >
               <Image
                 src={me.data.image}
@@ -86,12 +89,12 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                 alt="Avatar"
               />
             </Box>
-            <Box flexGrow={1}>
+            <Box flexGrow={1} mr={2}>
               <Controller
                 name="comment"
                 control={control}
                 render={({ field }) => (
-                  <Textarea
+                  <Input
                     width="100%"
                     autoComplete="false"
                     disabled={isLoading}
@@ -105,7 +108,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                 )}
               />
             </Box>
-            <Button variant="primary" type="submit">
+            <Button type="submit" disabled={isLoading}>
               Submit
             </Button>
           </Flex>
