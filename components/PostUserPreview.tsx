@@ -1,8 +1,8 @@
 import Prisma from ".prisma/client";
 import { Flex, Text, Box } from "@chakra-ui/react";
+import Image from "next/image";
 import React from "react";
 import { RouterLink } from "./RouterLinkt";
-import { UserProfilePic } from "./UserProfilePic";
 
 interface Props {
   user: Prisma.User;
@@ -10,13 +10,27 @@ interface Props {
 
 export const PostUserPreview: React.FC<Props> = ({ user }) => {
   return (
-    <RouterLink variant="secondary" href={`/u/${user?.id}`}>
-      <Flex alignItems="center">
-        <Box mr={1}>
-          <UserProfilePic user={user} />
-        </Box>
+    <Flex alignItems="center">
+      <Box
+        width={7}
+        height={7}
+        borderRadius={100}
+        overflow="hidden"
+        boxShadow="base"
+        mr={1}
+      >
+        <RouterLink href={`/u/${user?.id}`}>
+          <Image
+            src={user?.image as string}
+            width="100"
+            height="100"
+            alt="Avatar"
+          />
+        </RouterLink>
+      </Box>
+      <RouterLink href={`/u/${user?.id}`}>
         <Text fontSize="sm">{user?.name}</Text>
-      </Flex>
-    </RouterLink>
+      </RouterLink>
+    </Flex>
   );
 };

@@ -79,7 +79,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
         <Box>
           <Box p={4} borderColor={borerColor} borderBottomWidth="thin">
             <Flex alignItems="center">
-              <RouterLink mr={2} href={`/p/${post.id}`}>
+              <RouterLink href={`/p/${post.id}`}>
                 <Text fontSize="sm">{post.title}</Text>
               </RouterLink>
               <Box mr={2}>

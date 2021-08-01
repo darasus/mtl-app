@@ -21,14 +21,5 @@ export const Layout: React.FC<Props> = (props) => (
         </Box>
       </Flex>
     </Flex>
-    <style jsx global>{`
-      html,
-      body,
-      #__next {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-      }
-    `}</style>
   </>
 );

@@ -33,6 +33,10 @@ const UserPage: React.FC = () => {
               height={150}
               overflow="hidden"
               marginBottom="size-100"
+              borderRadius="100"
+              borderWidth="thick"
+              borderColor="brand"
+              boxShadow="base"
             >
               <Image
                 src={user.data?.image as string}
