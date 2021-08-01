@@ -6,7 +6,6 @@ import useCopyClipboard from "../../hooks/useClipboard";
 import { Post as PostType } from "../../types/Post";
 import { Syntax } from "../Syntax";
 import { LikeButton } from "./LikeButton";
-import { LikeCount } from "./LikeCount";
 import { PostComments } from "../PostComments";
 import {
   ChatIcon,
@@ -49,9 +48,11 @@ export const Post: React.FC<Props> = React.memo(function Post({
         <Box>
           <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
             <Flex alignItems="center">
-              <RouterLink href={`/p/${post.id}`}>
-                <Text fontSize="sm">{post.title}</Text>
-              </RouterLink>
+              <Box mr={2}>
+                <RouterLink href={`/p/${post.id}`}>
+                  <Text fontSize="sm">{post.title}</Text>
+                </RouterLink>
+              </Box>
               <Box mr={2}>
                 <Text fontSize="sm">by</Text>
               </Box>
@@ -62,9 +63,6 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Text fontSize="sm">{`${
                   post.published ? "Published" : "Draft"
                 }`}</Text>
-              </Box>
-              <Box>
-                <LikeCount post={post} />
               </Box>
             </Flex>
           </Box>

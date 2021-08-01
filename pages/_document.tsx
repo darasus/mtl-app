@@ -20,7 +20,7 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <link
-            href="https://fonts.googleapis.com/css2?family=Dekko"
+            href="https://fonts.googleapis.com/css2?family=Merriweather"
             rel="stylesheet"
           />
         </Head>

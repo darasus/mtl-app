@@ -20,8 +20,8 @@ export default async function handle(
 
   try {
     const postService = new PostService({ req });
-    await postService.createPost();
-    res.json({ status: "success" });
+    const post = await postService.createPost();
+    res.json(post);
   } catch (error) {
     return error;
   }

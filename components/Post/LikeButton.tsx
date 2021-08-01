@@ -20,7 +20,9 @@ export const LikeButton: React.FC<Props> = ({ post }) => {
       size="sm"
       variant="ghost"
     >
-      {post.isLikedByMe ? <Text>Liked!</Text> : <Text>Like</Text>}
+      <Text>{`${post.isLikedByMe ? "Liked!" : "Like"}${
+        post.likes > 0 ? ` (${post.likes})` : ""
+      }`}</Text>
     </Button>
   );
 };

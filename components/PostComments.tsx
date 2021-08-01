@@ -36,6 +36,9 @@ export const PostComments: React.FC<Props> = ({ post }) => {
         borderTopWidth="thin"
         borderBottomWidth="thin"
       >
+        {post.comments.length === 0 && (
+          <Text fontSize="sm">No comments yet...</Text>
+        )}
         {post.comments.map((comment, i) => {
           if (!comment.author) return null;
           if (!comment.author.image) return null;

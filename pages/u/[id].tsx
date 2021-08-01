@@ -59,7 +59,7 @@ const UserPage: React.FC = () => {
           <Box>
             <Heading>Latest libraries:</Heading>
             {posts.data?.map((post) => (
-              <Box key={post.id} marginBottom="size-300">
+              <Box key={post.id} mb={6}>
                 <Post post={post} isMyPost={post.authorId === me.data?.id} />
               </Box>
             ))}

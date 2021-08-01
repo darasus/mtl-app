@@ -16,90 +16,108 @@ import { QueryClient } from "react-query";
 import { fetchPost } from "../../../request/fetchPost";
 import { usePostQuery } from "../../../hooks/usePostQuery";
 import { usePostEdit } from "../../../hooks/usePostEdit";
+import { Controller, useForm } from "react-hook-form";
+import { CodeEditor } from "../../../components/CodeEditor";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+interface Form {
+  title: string;
+  description: string;
+  content: string;
+}
+
+const schema = yup.object().shape({
+  title: yup.string().min(3).max(100).required(),
+  description: yup.string().min(3).max(1000).required(),
+  content: yup.string().min(3).max(1000).required(),
+});
 
 const EditPostPage: React.FC = () => {
   const router = useRouter();
-  const [title, setTitle] = React.useState<string | null>("");
-  const [description, setDescription] = React.useState<string | null>("");
-  const [content, setContent] = React.useState<string | null>("");
   const post = usePostQuery(Number(router.query.id));
   const { editPost, isLoading } = usePostEdit(post.data?.id as number);
+  const {
+    reset,
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<Form>({
+    resolver: yupResolver(schema),
+  });
+
+  console.log(errors);
 
   React.useEffect(() => {
-    if (post.data && !title && !description && !content) {
-      const { title, description, content } = post.data;
-      setTitle(title);
-      setDescription(description);
-      setContent(content);
-    }
-  }, [post]);
+    if (!post.data) return;
+    const { title, description, content } = post.data;
+    reset({
+      title,
+      description: description || "",
+      content: content || "",
+    });
+  }, [post.data]);
 
-  const publish = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    try {
-      if (title && content && description) {
-        await editPost({ title, content, description, isPublished: true });
-        await router.push(`/p/${post.data?.id}`);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const save = async () => {
-    try {
-      if (title && content && description) {
-        await editPost({ title, content, description, isPublished: false });
-        await router.push(`/p/${post.data?.id}`);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const submit = handleSubmit(async ({ title, description, content }) => {
+    await editPost({ title, description, content, isPublished: true });
+    await router.push(`/p/${post.data?.id}`);
+  });
 
   return (
     <Layout>
       <Box>
-        <form onSubmit={publish}>
-          <Heading>{`Edit: ${title}`}</Heading>
-          <Box marginBottom="size-200">
-            <Text>Title</Text>
-            <Input
-              autoFocus
-              onChange={(e) => setTitle(e.target.value)}
-              type="text"
-              value={title || ""}
-              width="100%"
+        <form onSubmit={submit}>
+          <Heading mb={2}>{`Edit: ${post.data?.title}`}</Heading>
+          <Box mb={3}>
+            <Text mr={1} color="gray.500" mb={2}>
+              Title
+            </Text>
+            {errors.title?.message && (
+              <Text color="red.500" mb={2}>
+                {errors.title?.message}
+              </Text>
+            )}
+            <Input {...register("title")} isInvalid={!!errors.title?.message} />
+          </Box>
+          <Box mb={3}>
+            <Flex>
+              <Text color="gray.500">Description</Text>
+              {errors.description?.message && (
+                <Text color="red.500" mb={2}>
+                  {errors.description?.message}
+                </Text>
+              )}
+            </Flex>
+            <Textarea
+              {...register("description")}
+              isInvalid={!!errors.description?.message}
             />
           </Box>
-          <Box marginBottom="size-200">
-            <Text>Description</Text>
-            <Textarea
-              width="100%"
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder=""
-              value={description || ""}
-            />
-          </Box>
-          <Box marginBottom="size-200">
-            <Text>Little JavaScript library</Text>
-            <Textarea
-              width="100%"
-              onChange={(e) => setContent(e.target.value)}
-              value={content || ""}
+          <Box mb={3}>
+            <Text color="gray.500">Little JavaScript library</Text>
+            {errors.content?.message && (
+              <Text color="red.500" mb={2}>
+                {errors.content?.message}
+              </Text>
+            )}
+            <Controller
+              name="content"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <CodeEditor value={value} onChange={onChange} />
+              )}
             />
           </Box>
           <Flex>
             <Button
-              variant="cta"
               type="submit"
               marginRight="size-200"
               disabled={isLoading}
+              variant="solid"
+              mr={2}
             >
               Publish
-            </Button>
-            <Button variant="primary" disabled={isLoading} onClick={save}>
-              Save
             </Button>
           </Flex>
         </form>
