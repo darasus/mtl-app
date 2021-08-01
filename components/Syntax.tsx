@@ -1,21 +1,22 @@
 import React from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import { syntaxStylesDark, syntaxStylesLight } from "../constants/codeTheme";
-import { useColorMode, useColorModeValue, useToken } from "@chakra-ui/react";
+import { useColorMode, useToken } from "@chakra-ui/react";
+import { useColors } from "../hooks/useColors";
 
 interface Props {
   value: string;
 }
 
 export const Syntax: React.FC<Props> = ({ value }) => {
+  const { darkerBgColor } = useColors();
   const { colorMode } = useColorMode();
-  const [gray50, gray900] = useToken("colors", ["gray.50", "gray.900"]);
 
   const theme = {
     styles: colorMode === "dark" ? syntaxStylesDark : syntaxStylesLight,
     plain: {
       color: "#9CDCFE",
-      backgroundColor: colorMode === "dark" ? gray900 : gray50,
+      backgroundColor: darkerBgColor,
     },
   };
 

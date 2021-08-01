@@ -1,10 +1,11 @@
-import { Button, Flex, Text, Box, Textarea, Input } from "@chakra-ui/react";
+import { Button, Flex, Text, Box, Textarea } from "@chakra-ui/react";
+import Image from "next/image";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useColors } from "../hooks/useColors";
 import { useMeQuery } from "../hooks/useMeQuery";
 import { usePostComment } from "../hooks/usePostComment";
 import { Post } from "../types/Post";
-import { UserProfilePic } from "./UserPreview";
 
 interface Props {
   post: Post;
@@ -12,6 +13,7 @@ interface Props {
 
 export const PostComments: React.FC<Props> = ({ post }) => {
   const me = useMeQuery();
+  const { borderColor, darkerBgColor } = useColors();
   const { commentPost, isLoading } = usePostComment();
   const { control, handleSubmit, reset } = useForm({
     defaultValues: { comment: "" },
@@ -23,18 +25,38 @@ export const PostComments: React.FC<Props> = ({ post }) => {
   });
 
   if (!me.data) return null;
+  if (!me.data.image) return null;
 
   return (
     <>
-      <Box>
+      <Box
+        p={3}
+        backgroundColor={darkerBgColor}
+        borderColor={borderColor}
+        borderTopWidth="thin"
+      >
         {post.comments.map((comment, i) => {
           if (!comment.author) return null;
+          if (!comment.author.image) return null;
           return (
             <Flex
               key={comment.id}
-              marginBottom={post.comments.length === i + 1 ? "" : "size-100"}
+              marginBottom={post.comments.length === i + 1 ? 0 : 2}
             >
-              <UserProfilePic user={comment.author} />
+              <Box
+                width={7}
+                height={7}
+                borderRadius={100}
+                overflow="hidden"
+                boxShadow="base"
+              >
+                <Image
+                  src={comment.author.image}
+                  width="100"
+                  height="100"
+                  alt="Avatar"
+                />
+              </Box>
               <Box>
                 <Flex>
                   <Text>{comment.author.name}</Text>
@@ -50,7 +72,20 @@ export const PostComments: React.FC<Props> = ({ post }) => {
       <form onSubmit={submit}>
         <Box>
           <Flex>
-            <UserProfilePic user={me.data} />
+            <Box
+              width={7}
+              height={7}
+              borderRadius={100}
+              overflow="hidden"
+              boxShadow="base"
+            >
+              <Image
+                src={me.data.image}
+                width="100"
+                height="100"
+                alt="Avatar"
+              />
+            </Box>
             <Box flexGrow={1}>
               <Controller
                 name="comment"

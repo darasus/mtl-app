@@ -23,6 +23,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/outline";
 import { PostUserPreview } from "./PostUserPreview";
+import { useColors } from "../hooks/useColors";
 
 interface Props {
   post: PostType;
@@ -33,7 +34,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
   post,
   isMyPost,
 }) {
-  const { colorMode } = useColorMode();
+  const { borderColor } = useColors();
   const [commentsVisible, setCommentsVisible] = React.useState(false);
   const router = useRouter();
   const { deletePost, isLoading: isDeleting } = usePostDelete(post.id);
@@ -71,13 +72,11 @@ export const Post: React.FC<Props> = React.memo(function Post({
     router.push(`/p/${post.id}/edit`);
   }, []);
 
-  const borerColor = colorMode === "dark" ? "grey.900" : "grey.100";
-
   return (
-    <Box borderColor={borerColor} borderWidth="thin">
+    <Box borderColor={borderColor} borderWidth="thin">
       <Flex flexDirection="column">
         <Box>
-          <Box p={4} borderColor={borerColor} borderBottomWidth="thin">
+          <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
             <Flex alignItems="center">
               <RouterLink href={`/p/${post.id}`}>
                 <Text fontSize="sm">{post.title}</Text>
@@ -98,14 +97,14 @@ export const Post: React.FC<Props> = React.memo(function Post({
               </Box>
             </Flex>
           </Box>
-          <Box p={4} borderColor={borerColor} borderBottomWidth="thin">
+          <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
             <Flex flexDirection="column">
               <Markdown value={post.description || ""} />
             </Flex>
           </Box>
           <Syntax value={post.content || ""} />
         </Box>
-        <Box borderColor={borerColor} borderTopWidth="thin">
+        <Box borderColor={borderColor} borderTopWidth="thin">
           <Flex alignItems="center" p={4}>
             <Box mr="2">
               <LikeButton post={post} />
