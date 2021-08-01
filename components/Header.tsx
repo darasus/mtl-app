@@ -5,38 +5,66 @@ import { signOut } from "next-auth/client";
 import Image from "next/image";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/useMeQuery";
-import { Button, Flex, Box, Link as ChakraLink } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Box,
+  Link as ChakraLink,
+  useColorMode,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
+import { PlusSmIcon, LogoutIcon, UserIcon } from "@heroicons/react/outline";
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const me = useMeQuery();
+  const { colorMode } = useColorMode();
 
   return (
-    <Box py="3">
+    <Box py="6" cursor="pointer">
       <Flex alignItems="center">
         <Flex flexGrow={1}>
           <Link href="/" passHref>
             <ChakraLink display="block">
-              <Image src="/logo.svg" height="31" width={200} />
+              <Image
+                src={
+                  colorMode === "dark" ? "/logo-light.svg" : "/logo-dark.svg"
+                }
+                height="40"
+                width={170}
+              />
             </ChakraLink>
           </Link>
         </Flex>
         {me.data ? (
-          <Flex>
-            <Flex sx={{ marginRight: 2 }}>
-              <UserPreview user={me.data} />
-            </Flex>
-            <Button
-              sx={{
-                marginRight: 2,
-              }}
-              onClick={() => router.push("/p/create")}
-            >
-              New post
-            </Button>
-            <Button variant="secondary" onClick={() => signOut()}>
-              Log out
-            </Button>
+          <Flex alignItems="center">
+            <Menu>
+              <MenuButton as={UserPreview} aria-label="Options" />
+              <MenuList>
+                <MenuItem
+                  icon={<UserIcon width="20" height="20" />}
+                  onClick={() => router.push(`/u/${me.data?.id}`)}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  icon={<PlusSmIcon width="20" height="20" />}
+                  onClick={() => router.push("/p/create")}
+                >
+                  New post
+                </MenuItem>
+                <MenuItem
+                  color="red.500"
+                  icon={<LogoutIcon width="20" height="20" />}
+                  onClick={() => signOut()}
+                >
+                  Logout
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Flex>
         ) : (
           <Flex>

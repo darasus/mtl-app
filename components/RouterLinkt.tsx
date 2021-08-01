@@ -1,6 +1,7 @@
 import { Link } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { Link as ChakraLink } from "@chakra-ui/react";
 
 interface Props extends React.ComponentProps<typeof Link> {
   href: string;
@@ -21,9 +22,9 @@ export const RouterLink: React.FC<Props> = ({
 
   return (
     <Link {...props} sx={{ ...sx, display: "flex", alignItems: "center" }}>
-      <a href={href} onClick={handleClick}>
+      <ChakraLink href={href} onClick={handleClick} textDecoration="underline">
         {children}
-      </a>
+      </ChakraLink>
     </Link>
   );
 };

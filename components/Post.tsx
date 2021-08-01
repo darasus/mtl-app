@@ -22,6 +22,7 @@ import {
   CloudUploadIcon,
   TrashIcon,
 } from "@heroicons/react/outline";
+import { PostUserPreview } from "./PostUserPreview";
 
 interface Props {
   post: PostType;
@@ -70,21 +71,23 @@ export const Post: React.FC<Props> = React.memo(function Post({
   }, []);
 
   return (
-    <Box sx={{ borderColor: "gray", borderWidth: 1, borderStyle: "solid" }}>
+    <Box borderColor="white" borderWidth="thin">
       <Flex flexDirection="column">
-        <Box sx={{ padding: 2 }}>
+        <Box p="5">
           <Flex alignItems="center">
-            <RouterLink sx={{ marginRight: 2 }} href={`/p/${post.id}`}>
-              {post.title}
+            <RouterLink mr={1} href={`/p/${post.id}`}>
+              <Text fontSize="sm">{post.title}</Text>
             </RouterLink>
-            <Box sx={{ marginRight: 2 }}>
-              <Text>by</Text>
+            <Box mr={1}>
+              <Text fontSize="sm">by</Text>
             </Box>
-            <Box sx={{ marginRight: 1 }}>
-              {post.author && <UserPreview user={post.author} />}
+            <Box mr={1}>
+              {post.author && <PostUserPreview user={post.author} />}
             </Box>
-            <Box sx={{ marginRight: 1 }}>
-              <Text>{`${post.published ? "Published" : "Draft"}`}</Text>
+            <Box mr={1}>
+              <Text fontSize="sm">{`${
+                post.published ? "Published" : "Draft"
+              }`}</Text>
             </Box>
             <Box>
               <LikeCount post={post} />

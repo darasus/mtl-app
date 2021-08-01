@@ -1,40 +1,27 @@
 import Prisma from ".prisma/client";
 import { Flex, Text, Box } from "@chakra-ui/react";
-import Image from "next/image";
 import React from "react";
+import { useMeQuery } from "../hooks/useMeQuery";
 import { RouterLink } from "./RouterLinkt";
+import { UserProfilePic } from "./UserProfilePic";
 
-interface Props {
-  user: Prisma.User;
-}
+export const UserPreview = React.forwardRef<HTMLDivElement>(
+  ({ ...props }, ref) => {
+    const me = useMeQuery();
 
-export const UserPreview: React.FC<Props> = ({ user }) => {
-  return (
-    <RouterLink variant="secondary" href={`/u/${user?.id}`}>
-      <Flex alignItems="center">
-        <Box sx={{ marginRight: 2 }}>
-          <UserProfilePic user={user} />
-        </Box>
-        <Text>{user?.name}</Text>
-      </Flex>
-    </RouterLink>
-  );
-};
+    if (!me.data) return null;
 
-export const UserProfilePic = React.forwardRef<
-  HTMLDivElement,
-  React.PropsWithChildren<Props>
->(({ user }, ref) => {
-  return (
-    <div ref={ref}>
-      <Box width={30} height={30} sx={{ borderRadius: 100 }} overflow="hidden">
-        <Image
-          src={user?.image as string}
-          width="100"
-          height="100"
-          alt="Avatar"
-        />
-      </Box>
-    </div>
-  );
-});
+    return (
+      <div {...props}>
+        <Flex ref={ref} alignItems="center">
+          <Box mr={2}>
+            <UserProfilePic user={me.data} />
+          </Box>
+          <Text fontSize="sm" fontWeight="semibold">
+            {me.data.name}
+          </Text>
+        </Flex>
+      </div>
+    );
+  }
+);
