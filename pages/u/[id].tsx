@@ -2,7 +2,7 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { Layout } from "../../components/Layout";
 import { Post } from "../../components/Post";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
@@ -25,38 +25,47 @@ const UserPage: React.FC = () => {
 
   return (
     <Layout>
-      <main>
-        <Box marginBottom="size-100">
-          <Flex flexDirection="column" alignItems="center">
-            <Box
-              width={150}
-              height={150}
-              overflow="hidden"
-              marginBottom="size-100"
-              borderRadius="100"
-              borderWidth="thick"
-              borderColor="brand"
-              boxShadow="base"
-            >
-              <Image
-                src={user.data?.image as string}
-                width="500"
-                height="500"
-                alt="Avatar"
-              />
-            </Box>
-            <Text>{user.data.name}</Text>
-          </Flex>
-        </Box>
-        <Box>
-          <Heading>Latest libraries:</Heading>
-          {posts.data?.map((post) => (
-            <Box key={post.id} marginBottom="size-300">
-              <Post post={post} isMyPost={post.authorId === me.data?.id} />
-            </Box>
-          ))}
-        </Box>
-      </main>
+      <Grid
+        templateRows="repeat(2, 1fr)"
+        templateColumns="repeat(5, 1fr)"
+        gap={4}
+      >
+        <GridItem rowSpan={2} colSpan={1}>
+          <Box marginBottom="size-100">
+            <Flex flexDirection="column">
+              <Box
+                width={150}
+                height={150}
+                overflow="hidden"
+                marginBottom="size-100"
+                borderRadius="100"
+                borderWidth="thick"
+                borderColor="brand"
+                boxShadow="base"
+                mb={2}
+              >
+                <Image
+                  src={user.data?.image as string}
+                  width="500"
+                  height="500"
+                  alt="Avatar"
+                />
+              </Box>
+              <Text fontWeight="bold">{user.data.name}</Text>
+            </Flex>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={4}>
+          <Box>
+            <Heading>Latest libraries:</Heading>
+            {posts.data?.map((post) => (
+              <Box key={post.id} marginBottom="size-300">
+                <Post post={post} isMyPost={post.authorId === me.data?.id} />
+              </Box>
+            ))}
+          </Box>
+        </GridItem>
+      </Grid>
     </Layout>
   );
 };

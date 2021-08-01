@@ -136,7 +136,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               size="sm"
               mr={2}
             >
-              <Text>{isCopied ? "Copied!" : "Copy snippet"}</Text>
+              <Text>{isCopied ? "Copied!" : "Copy"}</Text>
             </Button>
             {isMyPost && (
               <Button

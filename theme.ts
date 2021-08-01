@@ -17,4 +17,11 @@ export const theme = extendTheme({
       },
     }),
   },
+  components: {
+    Heading: {
+      baseStyle: {
+        fontFamily: "Dekko",
+      },
+    },
+  },
 });
