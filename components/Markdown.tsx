@@ -30,6 +30,8 @@ function getCoreProps(props: GetCoreProps): any {
     : {};
 }
 
+const sizes = ["2xl", "xl", "lg", "md", "sm", "xs"];
+
 const defaults: Record<string, ElementType> = {
   p: (props) => {
     const { children } = props;
@@ -141,9 +143,74 @@ const defaults: Record<string, ElementType> = {
       </ListItem>
     );
   },
+  h1: ({ level, children, ...props }) => (
+    <Heading
+      my={4}
+      as={`h${level}`}
+      // @ts-ignore
+      size={sizes[`${level - 1}`]}
+      {...getCoreProps({ level, children, ...props })}
+    >
+      {children}
+    </Heading>
+  ),
+  h2: ({ level, children, ...props }) => (
+    <Heading
+      my={4}
+      as={`h${level}`}
+      // @ts-ignore
+      size={sizes[`${level - 1}`]}
+      {...getCoreProps({ level, children, ...props })}
+    >
+      {children}
+    </Heading>
+  ),
+  h3: ({ level, children, ...props }) => (
+    <Heading
+      my={4}
+      as={`h${level}`}
+      // @ts-ignore
+      size={sizes[`${level - 1}`]}
+      {...getCoreProps({ level, children, ...props })}
+    >
+      {children}
+    </Heading>
+  ),
+  h4: ({ level, children, ...props }) => (
+    <Heading
+      my={4}
+      as={`h${level}`}
+      // @ts-ignore
+      size={sizes[`${level - 1}`]}
+      {...getCoreProps({ level, children, ...props })}
+    >
+      {children}
+    </Heading>
+  ),
+  h5: ({ level, children, ...props }) => (
+    <Heading
+      my={4}
+      as={`h${level}`}
+      // @ts-ignore
+      size={sizes[`${level - 1}`]}
+      {...getCoreProps({ level, children, ...props })}
+    >
+      {children}
+    </Heading>
+  ),
+  h6: ({ level, children, ...props }) => (
+    <Heading
+      my={4}
+      as={`h${level}`}
+      // @ts-ignore
+      size={sizes[`${level - 1}`]}
+      {...getCoreProps({ level, children, ...props })}
+    >
+      {children}
+    </Heading>
+  ),
   heading: (props) => {
     const { level, children } = props;
-    const sizes = ["2xl", "xl", "lg", "md", "sm", "xs"];
     return (
       <Heading
         my={4}

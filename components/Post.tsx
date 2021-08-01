@@ -76,31 +76,33 @@ export const Post: React.FC<Props> = React.memo(function Post({
   return (
     <Box borderColor={borerColor} borderWidth="thin">
       <Flex flexDirection="column">
-        <Box p="5">
-          <Flex alignItems="center">
-            <RouterLink mr={1} href={`/p/${post.id}`}>
-              <Text fontSize="sm">{post.title}</Text>
-            </RouterLink>
-            <Box mr={1}>
-              <Text fontSize="sm">by</Text>
-            </Box>
-            <Box mr={1}>
-              {post.author && <PostUserPreview user={post.author} />}
-            </Box>
-            <Box mr={1}>
-              <Text fontSize="sm">{`${
-                post.published ? "Published" : "Draft"
-              }`}</Text>
-            </Box>
-            <Box>
-              <LikeCount post={post} />
-            </Box>
-          </Flex>
-          <Box mb={4} />
-          <Flex flexDirection="column">
-            <Markdown value={post.description || ""} />
-          </Flex>
-          <Box mb={4} />
+        <Box>
+          <Box p={4} borderColor={borerColor} borderBottomWidth="thin">
+            <Flex alignItems="center">
+              <RouterLink mr={2} href={`/p/${post.id}`}>
+                <Text fontSize="sm">{post.title}</Text>
+              </RouterLink>
+              <Box mr={2}>
+                <Text fontSize="sm">by</Text>
+              </Box>
+              <Box mr={2}>
+                {post.author && <PostUserPreview user={post.author} />}
+              </Box>
+              <Box mr={2}>
+                <Text fontSize="sm">{`${
+                  post.published ? "Published" : "Draft"
+                }`}</Text>
+              </Box>
+              <Box>
+                <LikeCount post={post} />
+              </Box>
+            </Flex>
+          </Box>
+          <Box p={4} borderColor={borerColor} borderBottomWidth="thin">
+            <Flex flexDirection="column">
+              <Markdown value={post.description || ""} />
+            </Flex>
+          </Box>
           <Syntax value={post.content || ""} />
         </Box>
         <Box borderColor={borerColor} borderTopWidth="thin">
