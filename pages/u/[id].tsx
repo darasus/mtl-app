@@ -2,7 +2,15 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { Layout } from "../../components/Layout";
 import { Post } from "../../components/Post";
-import { Box, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import Image from "next/image";
 import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
@@ -13,6 +21,8 @@ import { useRouter } from "next/router";
 import { useUserPostsQuery } from "../../hooks/useUserPostsQuery";
 import { fetchUserPosts } from "../../request/fetchUserPosts";
 import { useMeQuery } from "../../hooks/useMeQuery";
+import { useFollowMutation } from "../../hooks/useFollowMutation";
+import { useFollowersCountQuery } from "../../hooks/useFollowersCountQuery";
 
 const UserPage: React.FC = () => {
   const router = useRouter();
@@ -20,6 +30,14 @@ const UserPage: React.FC = () => {
   const user = useUserQuery(userId);
   const me = useMeQuery();
   const posts = useUserPostsQuery(userId);
+  const followMutation = useFollowMutation();
+  const followersCount = useFollowersCountQuery(userId);
+
+  const handleFollow = () => {
+    followMutation.mutateAsync({
+      userId: user.data?.id!,
+    });
+  };
 
   if (!user.data || !posts.data) return null;
 
@@ -52,7 +70,9 @@ const UserPage: React.FC = () => {
                 />
               </Box>
               <Text fontWeight="bold">{user.data.name}</Text>
+              <Text fontWeight="bold">{`Number of followers: ${followersCount.data}`}</Text>
             </Flex>
+            <Button onClick={handleFollow}>Follow</Button>
           </Box>
         </GridItem>
         <GridItem colSpan={4}>

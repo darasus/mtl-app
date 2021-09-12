@@ -39,4 +39,21 @@ export class UserService {
       ...selectQueryFragment,
     });
   }
+
+  async followUser(followingUserId: number) {
+    await prisma.follow.create({
+      data: {
+        follower: {
+          connect: {
+            email: this.session?.user?.email as string,
+          },
+        },
+        following: {
+          connect: {
+            id: followingUserId,
+          },
+        },
+      },
+    });
+  }
 }
