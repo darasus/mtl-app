@@ -1,4 +1,4 @@
-import { NextApiRequest } from "next";
+import invariant from "invariant";
 import { Session } from "next-auth";
 import prisma from "../../lib/prisma";
 
@@ -20,6 +20,10 @@ export class UserService {
 
   constructor({ session }: { session: Session | null }) {
     this.session = session;
+  }
+
+  async getMe() {
+    return this.getUserByEmail(this.session?.user?.email as string);
   }
 
   async getUserById(id: number) {
@@ -55,5 +59,37 @@ export class UserService {
         },
       },
     });
+  }
+
+  async unfollowUser(followingUserId: number) {
+    const me = await this.getMe();
+
+    invariant(me, "Me user is not found");
+
+    await prisma.follow.delete({
+      where: {
+        followerId_followingId: {
+          followerId: me?.id,
+          followingId: followingUserId,
+        },
+      },
+    });
+  }
+
+  async doIFollow(followingUserId: number) {
+    const me = await this.getMe();
+
+    invariant(me, "Me user is not found");
+
+    const response = await prisma.follow.findFirst({
+      where: {
+        followingId: followingUserId,
+        followerId: me.id,
+      },
+    });
+
+    console.log(response);
+
+    return { doIFollow: !!response };
   }
 }

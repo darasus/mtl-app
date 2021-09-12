@@ -23,6 +23,9 @@ import { fetchUserPosts } from "../../request/fetchUserPosts";
 import { useMeQuery } from "../../hooks/useMeQuery";
 import { useFollowMutation } from "../../hooks/useFollowMutation";
 import { useFollowersCountQuery } from "../../hooks/useFollowersCountQuery";
+import { useUnfollowMutation } from "../../hooks/useUnfollowMutation";
+import { useDoIFollowUserQuery } from "../../hooks/useDoIFollowUserQuery";
+import { UserGroupIcon } from "@heroicons/react/outline";
 
 const UserPage: React.FC = () => {
   const router = useRouter();
@@ -31,10 +34,18 @@ const UserPage: React.FC = () => {
   const me = useMeQuery();
   const posts = useUserPostsQuery(userId);
   const followMutation = useFollowMutation();
+  const unfollowMutation = useUnfollowMutation();
   const followersCount = useFollowersCountQuery(userId);
+  const doIFollowUser = useDoIFollowUserQuery(userId);
 
   const handleFollow = () => {
     followMutation.mutateAsync({
+      userId: user.data?.id!,
+    });
+  };
+
+  const handleUnfollow = () => {
+    unfollowMutation.mutateAsync({
       userId: user.data?.id!,
     });
   };
@@ -44,11 +55,11 @@ const UserPage: React.FC = () => {
   return (
     <Layout>
       <Grid
-        templateRows="repeat(2, 1fr)"
-        templateColumns="repeat(5, 1fr)"
+        // templateRows="repeat(2, 1fr)"
+        templateColumns="repeat(12, 1fr)"
         gap={4}
       >
-        <GridItem rowSpan={2} colSpan={1}>
+        <GridItem colSpan={3}>
           <Box marginBottom="size-100">
             <Flex flexDirection="column">
               <Box
@@ -69,13 +80,32 @@ const UserPage: React.FC = () => {
                   alt="Avatar"
                 />
               </Box>
-              <Text fontWeight="bold">{user.data.name}</Text>
-              <Text fontWeight="bold">{`Number of followers: ${followersCount.data}`}</Text>
+              <Text fontWeight="bold" fontSize="2xl" mb={1}>
+                {user.data.name}
+              </Text>
+              {doIFollowUser.data ? (
+                <Button variant="outline" mb={1} onClick={handleUnfollow}>
+                  Unfollow
+                </Button>
+              ) : (
+                <Button variant="outline" mb={1} onClick={handleFollow}>
+                  Follow
+                </Button>
+              )}
+              <Flex alignItems="center">
+                <Text mr={1} color="gray.500">
+                  <UserGroupIcon className="gray.500" width="20" height="20" />
+                </Text>
+                <Text
+                  fontWeight="bold"
+                  fontSize="sm"
+                  color="gray.500"
+                >{`${followersCount.data} followers`}</Text>
+              </Flex>
             </Flex>
-            <Button onClick={handleFollow}>Follow</Button>
           </Box>
         </GridItem>
-        <GridItem colSpan={4}>
+        <GridItem colSpan={9}>
           <Box>
             <Heading>Latest libraries:</Heading>
             {posts.data?.map((post) => (
