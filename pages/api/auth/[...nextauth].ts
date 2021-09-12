@@ -12,6 +12,7 @@ const options = {
     Providers.GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
+      scope: "read:user, user:email",
     }),
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
