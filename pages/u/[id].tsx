@@ -37,6 +37,7 @@ const UserPage: React.FC = () => {
   const unfollowMutation = useUnfollowMutation();
   const followersCount = useFollowersCountQuery(userId);
   const doIFollowUser = useDoIFollowUserQuery(userId);
+  const isMyPage = me.data?.id === userId;
 
   const handleFollow = () => {
     followMutation.mutateAsync({
@@ -49,6 +50,28 @@ const UserPage: React.FC = () => {
       userId: user.data?.id!,
     });
   };
+
+  const followButton = !isMyPage ? (
+    doIFollowUser.data ? (
+      <Button
+        variant="outline"
+        mb={1}
+        onClick={handleUnfollow}
+        disabled={unfollowMutation.isLoading}
+      >
+        Unfollow
+      </Button>
+    ) : (
+      <Button
+        variant="outline"
+        mb={1}
+        onClick={handleFollow}
+        disabled={followMutation.isLoading}
+      >
+        Follow
+      </Button>
+    )
+  ) : null;
 
   if (!user.data || !posts.data) return null;
 
@@ -83,15 +106,7 @@ const UserPage: React.FC = () => {
               <Text fontWeight="bold" fontSize="2xl" mb={1}>
                 {user.data.name}
               </Text>
-              {doIFollowUser.data ? (
-                <Button variant="outline" mb={1} onClick={handleUnfollow}>
-                  Unfollow
-                </Button>
-              ) : (
-                <Button variant="outline" mb={1} onClick={handleFollow}>
-                  Follow
-                </Button>
-              )}
+              {followButton}
               <Flex alignItems="center">
                 <Text mr={1} color="gray.500">
                   <UserGroupIcon className="gray.500" width="20" height="20" />
