@@ -1,6 +1,5 @@
 import React from "react";
 import { GetServerSideProps } from "next";
-import { Layout } from "../../components/Layout";
 import { Post } from "../../components/Post";
 import {
   Box,
@@ -26,6 +25,7 @@ import { useFollowersCountQuery } from "../../hooks/useFollowersCountQuery";
 import { useUnfollowMutation } from "../../hooks/useUnfollowMutation";
 import { useDoIFollowUserQuery } from "../../hooks/useDoIFollowUserQuery";
 import { UserGroupIcon } from "@heroicons/react/outline";
+import { Layout } from "../../layouts/Layout";
 
 const UserPage: React.FC = () => {
   const router = useRouter();

@@ -11,10 +11,12 @@ import {
   ChatIcon,
   ShareIcon,
   DocumentDuplicateIcon,
+  PhotographIcon,
 } from "@heroicons/react/outline";
 import { PostUserPreview } from "../PostUserPreview";
 import { useColors } from "../../hooks/useColors";
 import { ActionMenu } from "./ActionMenu";
+import { paramCase } from "change-case";
 
 interface Props {
   post: PostType;
@@ -105,6 +107,18 @@ export const Post: React.FC<Props> = React.memo(function Post({
               mr={2}
             >
               <Text>{isCopied ? "Copied!" : "Copy"}</Text>
+            </Button>
+            <Button
+              leftIcon={<PhotographIcon width="20" height="20" />}
+              disabled={isCopied}
+              variant="ghost"
+              size="sm"
+              mr={2}
+              as="a"
+              download={paramCase(post.title)}
+              href={`/api/post/${post.id}/screenshot`}
+            >
+              <Text>Screenshot</Text>
             </Button>
             <Box flexGrow={1} />
             <ActionMenu isMyPost={isMyPost} post={post} />

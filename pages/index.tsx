@@ -1,6 +1,5 @@
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
-import { Layout } from "../components/Layout";
 import { Post } from "../components/Post";
 import { Box } from "@chakra-ui/react";
 import React from "react";
@@ -8,6 +7,7 @@ import { dehydrate } from "react-query/hydration";
 import { fetchFeed } from "../request/fetchFeed";
 import { useFeedQuery } from "../hooks/useFeedQuery";
 import { useMeQuery } from "../hooks/useMeQuery";
+import { Layout } from "../layouts/Layout";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();

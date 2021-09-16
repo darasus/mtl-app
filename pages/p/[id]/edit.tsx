@@ -9,7 +9,6 @@ import {
   Flex,
   Text,
 } from "@chakra-ui/react";
-import { Layout } from "../../../components/Layout";
 import { dehydrate } from "react-query/hydration";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
@@ -20,6 +19,7 @@ import { Controller, useForm } from "react-hook-form";
 import { CodeEditor } from "../../../components/CodeEditor";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Layout } from "../../../layouts/Layout";
 
 interface Form {
   title: string;

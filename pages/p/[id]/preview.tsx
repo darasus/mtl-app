@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { fetchPost } from "../../../request/fetchPost";
 import { dehydrate } from "react-query/hydration";
 import { useMeQuery } from "../../../hooks/useMeQuery";
-import { Layout } from "../../../layouts/Layout";
+import { PreviewLayout } from "../../../layouts/PreviewLayout";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -17,11 +17,11 @@ const PostPage: React.FC = () => {
   if (!post.data) return null;
 
   return (
-    <Layout>
+    <PreviewLayout>
       <main>
         <Post post={post.data} isMyPost={post.data.authorId === me.data?.id} />
       </main>
-    </Layout>
+    </PreviewLayout>
   );
 };
 
