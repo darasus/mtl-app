@@ -19,7 +19,11 @@ const PostPage: React.FC = () => {
   return (
     <PreviewLayout>
       <main>
-        <Post post={post.data} isMyPost={post.data.authorId === me.data?.id} />
+        <Post
+          post={post.data}
+          isMyPost={post.data.authorId === me.data?.id}
+          showActionMenu={false}
+        />
       </main>
     </PreviewLayout>
   );

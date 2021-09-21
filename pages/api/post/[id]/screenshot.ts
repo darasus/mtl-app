@@ -18,7 +18,8 @@ export default async function handle(
     const page = await browser.newPage();
     await page.setViewport({ width: 1200, height: 630 });
     await page.goto(`http://localhost:3000/p/${req.query.id}/preview`);
-    await page.waitFor(2000);
+    await page.waitForSelector('[data-testid="post-title"]');
+    await page.waitFor(100);
     const screenshot = await page.screenshot({
       type: "png",
       path: "./screenshot.png",
