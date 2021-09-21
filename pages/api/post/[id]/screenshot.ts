@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import puppeteer from "puppeteer";
+import chromium from "chrome-aws-lambda";
 
 export default async function handle(
   req: NextApiRequest,
@@ -12,7 +12,7 @@ export default async function handle(
   );
 
   let browser = null;
-  browser = await puppeteer.launch({ headless: true });
+  browser = await chromium.puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 630 });
   await page.goto(`http://localhost:3000/p/${req.query.id}/preview`);
