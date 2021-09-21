@@ -22,7 +22,6 @@ export default async function handle(
     await page.waitFor(100);
     const screenshot = await page.screenshot({
       type: "png",
-      path: "./screenshot.png",
       encoding: "binary",
     });
     res.statusCode = 200;
