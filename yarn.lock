@@ -2033,6 +2033,13 @@
   "resolved" "https://registry.npmjs.org/chownr/-/chownr-1.1.4.tgz"
   "version" "1.1.4"
 
+"chrome-aws-lambda@^10.1.0":
+  "integrity" "sha512-NZQVf+J4kqG4sVhRm3WNmOfzY0OtTSm+S8rg77pwePa9RCYHzhnzRs8YvNI6L9tALIW6RpmefWiPURt3vURXcw=="
+  "resolved" "https://registry.npmjs.org/chrome-aws-lambda/-/chrome-aws-lambda-10.1.0.tgz"
+  "version" "10.1.0"
+  dependencies:
+    "lambdafs" "^2.0.3"
+
 "chrome-trace-event@^1.0.2":
   "integrity" "sha512-p3KULyQg4S7NIHixdwbGX+nFHkoBiA4YQmyWtjb8XngSKV124nJmRysgAeujbUVb15vh+RvFUfCPqU7rXk+hZg=="
   "resolved" "https://registry.npmjs.org/chrome-trace-event/-/chrome-trace-event-1.0.3.tgz"
@@ -3208,6 +3215,9 @@
   dependencies:
     "postcss" "^6.0.1"
 
+"ieee754@^1.1.13":
+  "version" "1.2.1"
+
 "ieee754@^1.1.4", "ieee754@^1.2.1":
   "integrity" "sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="
   "resolved" "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
@@ -3734,6 +3744,13 @@
   "resolved" "https://registry.npmjs.org/kind-of/-/kind-of-6.0.3.tgz"
   "version" "6.0.3"
 
+"lambdafs@^2.0.3":
+  "integrity" "sha512-5YWwZA/QKk09GdfcJ/ABVO+bpFoGlnTBa5jmyM8Kt9yIzl2lDDVBPLK+Aenq2UEcuDpqxXIYI5zLB7VZNepTrg=="
+  "resolved" "https://registry.npmjs.org/lambdafs/-/lambdafs-2.0.3.tgz"
+  "version" "2.0.3"
+  dependencies:
+    "tar-fs" "^2.1.1"
+
 "lines-and-columns@^1.1.6":
   "integrity" "sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA="
   "resolved" "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.1.6.tgz"
@@ -4080,6 +4097,9 @@
   dependencies:
     "for-in" "^1.0.2"
     "is-extendable" "^1.0.1"
+
+"mkdirp-classic@^0.5.2":
+  "version" "0.5.3"
 
 "mkdirp@^0.5.1":
   "integrity" "sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ=="
@@ -4942,6 +4962,24 @@
   "integrity" "sha1-llOgNvt8HuQjQvIyXM7v6jkmxI0="
   "resolved" "https://registry.npmjs.org/punycode/-/punycode-1.3.2.tgz"
   "version" "1.3.2"
+
+"puppeteer-core@^10.1.0":
+  "integrity" "sha512-c1COxSnfynsE6Mtt+dW0t3TITjF9Ku4dnJbFMDDVhLQuMTYSpz4rkSP37qvzcSo3k02/Ac3GYWk0/ncp6DKZNA=="
+  "resolved" "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-10.2.0.tgz"
+  "version" "10.2.0"
+  dependencies:
+    "debug" "4.3.1"
+    "devtools-protocol" "0.0.901419"
+    "extract-zip" "2.0.1"
+    "https-proxy-agent" "5.0.0"
+    "node-fetch" "2.6.1"
+    "pkg-dir" "4.2.0"
+    "progress" "2.0.1"
+    "proxy-from-env" "1.1.0"
+    "rimraf" "3.0.2"
+    "tar-fs" "2.0.0"
+    "unbzip2-stream" "1.3.3"
+    "ws" "7.4.6"
 
 "puppeteer@^10.2.0":
   "integrity" "sha512-OR2CCHRashF+f30+LBOtAjK6sNtz2HEyTr5FqAvhf8lR/qB3uBRoIZOwQKgwoyZnMBsxX7ZdazlyBgGjpnkiMw=="
@@ -5881,6 +5919,14 @@
   "resolved" "https://registry.npmjs.org/tapable/-/tapable-1.1.3.tgz"
   "version" "1.1.3"
 
+"tar-fs@^2.1.1":
+  "version" "2.1.1"
+  dependencies:
+    "chownr" "^1.1.1"
+    "mkdirp-classic" "^0.5.2"
+    "pump" "^3.0.0"
+    "tar-stream" "^2.1.4"
+
 "tar-fs@2.0.0":
   "integrity" "sha512-vaY0obB6Om/fso8a8vakQBzwholQ7v5+uy+tF3Ozvxv1KNezmVQAiWtcNmMHFSFPqL3dJA8ha6gdtFbfX9mcxA=="
   "resolved" "https://registry.npmjs.org/tar-fs/-/tar-fs-2.0.0.tgz"
@@ -5894,6 +5940,15 @@
 "tar-stream@^2.0.0":
   "integrity" "sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ=="
   "resolved" "https://registry.npmjs.org/tar-stream/-/tar-stream-2.2.0.tgz"
+  "version" "2.2.0"
+  dependencies:
+    "bl" "^4.0.3"
+    "end-of-stream" "^1.4.1"
+    "fs-constants" "^1.0.0"
+    "inherits" "^2.0.3"
+    "readable-stream" "^3.1.1"
+
+"tar-stream@^2.1.4":
   "version" "2.2.0"
   dependencies:
     "bl" "^4.0.3"
