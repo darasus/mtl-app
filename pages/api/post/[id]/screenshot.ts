@@ -12,7 +12,6 @@ export default async function handle(
   );
 
   let browser = null;
-
   browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 630 });
