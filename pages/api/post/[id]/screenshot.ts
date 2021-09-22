@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import puppeteer from "puppeteer-core";
+const chrome = require("chrome-aws-lambda");
+const puppeteer = require("puppeteer-core");
 
 export default async function handle(
   req: NextApiRequest,
@@ -12,12 +13,16 @@ export default async function handle(
   );
 
   let browser = null;
-  browser = await puppeteer.launch({ headless: true });
+  browser = await puppeteer.launch({
+    headless: true,
+    args: chrome.args,
+    executablePath: await chrome.executablePath,
+  });
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 630 });
-  await page.goto(`http://localhost:3000/p/${req.query.id}/preview`);
-  await page.waitForSelector('[data-testid="post-title"]');
-  await page.waitFor(1000);
+  await page.goto(`${process.env.NEXTAUTH_URL}/p/${req.query.id}/preview`, {
+    waitUntil: "networkidle0",
+  });
   const screenshot = await page.screenshot({
     type: "png",
     encoding: "binary",
