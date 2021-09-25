@@ -10,6 +10,7 @@ import { Session } from "next-auth";
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];
   comments: Prisma.Comment[];
+  commentsCount: number;
 };
 
 const postQueryIncludeFragment = {
@@ -80,14 +81,13 @@ export class PostService {
   }
 
   preparePost = (post: InputPost, session: Session | null): Post => {
-    const likes = post.likes.length;
     const isLikedByMe = post.likes.some(
       (like: any) => like.author?.email === session?.user?.email
     );
 
     return {
       ...R.omit(["likes"], post),
-      likes,
+      likesCount: post.likes.length,
       isLikedByMe,
     };
   };
@@ -98,10 +98,21 @@ export class PostService {
       where: {
         published: true,
       },
+      orderBy: [
+        {
+          id: "desc",
+        },
+      ],
       ...postQueryIncludeFragment,
     });
 
-    return posts.map((post) => this.preparePost(post, session));
+    return posts
+      .map((post) => ({
+        ...post,
+        commentsCount: post.comments.length,
+        comments: post.comments.splice(-3),
+      }))
+      .map((post) => this.preparePost(post, session));
   }
 
   async fetchUserPosts(): Promise<Post[]> {
@@ -113,7 +124,16 @@ export class PostService {
       ...postQueryIncludeFragment,
     });
 
-    return posts.map((post) => this.preparePost(post, session));
+    return posts.map((post) =>
+      this.preparePost(
+        {
+          ...post,
+          commentsCount: post.comments.length,
+          comments: post.comments.slice(-3),
+        },
+        session
+      )
+    );
   }
 
   async addComment() {
@@ -175,7 +195,7 @@ export class PostService {
       ...postQueryIncludeFragment,
     });
 
-    return this.preparePost(post, session);
+    return this.preparePost({ ...post, commentsCount: 0 }, session);
   }
 
   async savePost() {
@@ -204,7 +224,14 @@ export class PostService {
 
     if (!post) return null;
 
-    return this.preparePost(post, session);
+    return this.preparePost(
+      {
+        ...post,
+        commentsCount: post.comments.length,
+        comments: post.comments.slice(-3),
+      },
+      session
+    );
   }
 
   async deletePost() {

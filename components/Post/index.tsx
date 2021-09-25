@@ -12,6 +12,7 @@ import {
   ShareIcon,
   DocumentDuplicateIcon,
   PhotographIcon,
+  ThumbUpIcon,
 } from "@heroicons/react/outline";
 import { PostUserPreview } from "../PostUserPreview";
 import { useColors } from "../../hooks/useColors";
@@ -30,17 +31,11 @@ export const Post: React.FC<Props> = React.memo(function Post({
   isMyPost,
   showActionMenu = true,
 }) {
-  const router = useRouter();
   const { borderColor } = useColors();
-  const [commentsVisible, setCommentsVisible] = React.useState(false);
 
   const [isCopied, copy] = useCopyClipboard(post.content || "", {
     successDuration: 3000,
   });
-
-  const handleCommentClick = React.useCallback(() => {
-    setCommentsVisible(!commentsVisible);
-  }, [commentsVisible]);
 
   const handleClipboardCopy = React.useCallback(() => copy(), [copy]);
 
@@ -72,9 +67,24 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 {post.author && <PostUserPreview user={post.author} />}
               </Box>
               <Box mr={2}>
-                <Text fontSize="sm">{`${
-                  post.published ? "Published" : "Draft"
-                }`}</Text>
+                <Flex color="gray.500">
+                  <Flex mr={2}>
+                    <Box mr={1}>
+                      <ThumbUpIcon width="20" height="20" />
+                    </Box>
+                    <Box>
+                      <Text fontSize="sm">{`${post.likesCount} likes`}</Text>
+                    </Box>
+                  </Flex>
+                  <Flex>
+                    <Box mr={1}>
+                      <ChatIcon width="20" height="20" />
+                    </Box>
+                    <Box>
+                      <Text fontSize="sm">{`${post.commentsCount} comments`}</Text>
+                    </Box>
+                  </Flex>
+                </Flex>
               </Box>
             </Flex>
           </Box>
@@ -92,15 +102,6 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Box mr="2">
                   <LikeButton post={post} />
                 </Box>
-                <Button
-                  leftIcon={<ChatIcon width="20" height="20" />}
-                  onClick={handleCommentClick}
-                  variant="ghost"
-                  size="sm"
-                  mr={2}
-                >
-                  <Text>{`Comment (${post.comments.length})`}</Text>
-                </Button>
                 <Button
                   leftIcon={<ShareIcon width="20" height="20" />}
                   onClick={handleTweetClick}
@@ -137,11 +138,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               </Flex>
             </Box>
             <Box>
-              {commentsVisible && (
-                <Box>
-                  <PostComments post={post} />
-                </Box>
-              )}
+              <PostComments post={post} />
             </Box>
           </>
         )}
