@@ -111,7 +111,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                 )}
               />
             </Box>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" variant="outline" disabled={isLoading}>
               Submit
             </Button>
           </Flex>
