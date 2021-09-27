@@ -13,6 +13,27 @@ type InputPost = Prisma.Post & {
   commentsCount: number;
 };
 
+const commentSelect = {
+  id: true,
+  content: true,
+  createdAt: true,
+  postId: true,
+  updatedAt: true,
+  authorId: true,
+  author: {
+    select: {
+      id: true,
+      name: true,
+      userName: true,
+      image: true,
+      emailVerified: true,
+      createdAt: true,
+      email: true,
+      updatedAt: true,
+    },
+  },
+};
+
 const postQueryIncludeFragment = {
   include: {
     author: {
@@ -50,24 +71,7 @@ const postQueryIncludeFragment = {
     },
     comments: {
       select: {
-        id: true,
-        content: true,
-        createdAt: true,
-        postId: true,
-        updatedAt: true,
-        authorId: true,
-        author: {
-          select: {
-            id: true,
-            name: true,
-            userName: true,
-            image: true,
-            emailVerified: true,
-            createdAt: true,
-            email: true,
-            updatedAt: true,
-          },
-        },
+        ...commentSelect,
       },
     },
   },
@@ -248,5 +252,20 @@ export class PostService {
         author: { connect: { email: session?.user?.email! } },
       },
     });
+  }
+
+  async fetchPostComments({ postId, take }: { postId: number; take?: number }) {
+    return prisma.comment
+      .findMany({
+        where: {
+          postId,
+        },
+        take: take || 25,
+        orderBy: { createdAt: "desc" },
+        select: {
+          ...commentSelect,
+        },
+      })
+      .then((res) => res.reverse());
   }
 }

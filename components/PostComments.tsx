@@ -1,8 +1,19 @@
-import { Button, Flex, Text, Box, Textarea, Input } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Text,
+  Box,
+  Textarea,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Spinner,
+} from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useColors } from "../hooks/useColors";
+import { useCommentsQuery } from "../hooks/useCommentsQuery";
 import { useMeQuery } from "../hooks/useMeQuery";
 import { usePostComment } from "../hooks/usePostComment";
 import { Post } from "../types/Post";
@@ -12,17 +23,40 @@ interface Props {
 }
 
 export const PostComments: React.FC<Props> = ({ post }) => {
+  const [commentCount, setCommentCount] = React.useState(3);
+  const comments = useCommentsQuery({
+    postId: post.id,
+    enabled: commentCount > 3,
+    take: commentCount,
+  });
   const me = useMeQuery();
   const { borderColor, darkerBgColor } = useColors();
-  const { commentPost, isLoading } = usePostComment();
+  const { commentPost, isLoading: isSubmittingComment } = usePostComment();
   const { control, handleSubmit, reset } = useForm({
     defaultValues: { comment: "" },
   });
 
+  const getHasMoreComments = () => {
+    if (comments.data?.length) {
+      return post.commentsCount > comments.data.length;
+    }
+
+    return post.commentsCount > post.comments.length;
+  };
+
   const submit = handleSubmit(async (data) => {
     await commentPost(post.id, data.comment);
     reset();
+    setCommentCount((state) => state + 1);
   });
+
+  const handleLoadMoreComments = React.useCallback(() => {
+    setCommentCount((state) => state + 5);
+  }, []);
+
+  const hasComments =
+    (comments.data?.length && comments.data.length > 0) ||
+    post.comments.length > 0;
 
   if (!me.data) return null;
   if (!me.data.image) return null;
@@ -36,12 +70,23 @@ export const PostComments: React.FC<Props> = ({ post }) => {
         borderTopWidth="thin"
         borderBottomWidth="thin"
       >
-        {post.comments.length === 0 && (
-          <Text fontSize="sm">No comments yet...</Text>
+        {!hasComments && <Text fontSize="sm">No comments yet...</Text>}
+        {getHasMoreComments() && (
+          <Flex justifyContent="center" mb={2}>
+            <Button
+              onClick={handleLoadMoreComments}
+              isLoading={comments.isLoading}
+              variant="ghost"
+              size="xs"
+            >
+              Load more...
+            </Button>
+          </Flex>
         )}
-        {post.comments.map((comment, i) => {
+        {(comments.data || post.comments).map((comment, i) => {
           if (!comment.author) return null;
           if (!comment.author.image) return null;
+
           return (
             <Flex
               key={comment.id}
@@ -92,28 +137,35 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                 alt="Avatar"
               />
             </Box>
-            <Box flexGrow={1} mr={2}>
+            <Box flexGrow={1}>
               <Controller
                 name="comment"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    width="100%"
-                    autoComplete="false"
-                    disabled={isLoading}
-                    name={field.name}
-                    onBlur={field.onBlur}
-                    value={field.value}
-                    aria-label="comment field"
-                    onChange={(value) => field.onChange(value)}
-                    placeholder="Type your comment here..."
-                  />
+                  <InputGroup>
+                    <Input
+                      width="100%"
+                      autoComplete="false"
+                      disabled={isSubmittingComment}
+                      name={field.name}
+                      onBlur={field.onBlur}
+                      value={field.value}
+                      aria-label="comment field"
+                      onChange={(value) => field.onChange(value)}
+                      placeholder="Type your comment here..."
+                      required
+                      autocomplete="off"
+                    />
+                    {isSubmittingComment && (
+                      <InputRightElement
+                        pointerEvents="none"
+                        children={<Spinner color="gray.300" size="xs" />}
+                      />
+                    )}
+                  </InputGroup>
                 )}
               />
             </Box>
-            <Button type="submit" variant="outline" disabled={isLoading}>
-              Submit
-            </Button>
           </Flex>
         </Box>
       </form>
