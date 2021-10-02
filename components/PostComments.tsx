@@ -3,11 +3,11 @@ import {
   Flex,
   Text,
   Box,
-  Textarea,
   Input,
   InputGroup,
   InputRightElement,
   Spinner,
+  IconButton,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
@@ -17,6 +17,8 @@ import { useCommentsQuery } from "../hooks/useCommentsQuery";
 import { useMeQuery } from "../hooks/useMeQuery";
 import { usePostComment } from "../hooks/usePostComment";
 import { Post } from "../types/Post";
+import { TrashIcon } from "@heroicons/react/outline";
+import { useDeleteCommentMutation } from "../hooks/useDeleteCommentMutation";
 
 interface Props {
   post: Post;
@@ -32,6 +34,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
   const me = useMeQuery();
   const { borderColor, darkerBgColor } = useColors();
   const { commentPost, isLoading: isSubmittingComment } = usePostComment();
+  const { mutateAsync: deleteComment } = useDeleteCommentMutation();
   const { control, handleSubmit, reset } = useForm({
     defaultValues: { comment: "" },
   });
@@ -43,6 +46,11 @@ export const PostComments: React.FC<Props> = ({ post }) => {
 
     return post.commentsCount > post.comments.length;
   };
+
+  const handleDeleteComment = React.useCallback(async (commentId: number) => {
+    await deleteComment({ commentId });
+    await comments.refetch();
+  }, []);
 
   const submit = handleSubmit(async (data) => {
     await commentPost(post.id, data.comment);
@@ -88,34 +96,51 @@ export const PostComments: React.FC<Props> = ({ post }) => {
           if (!comment.author.image) return null;
 
           return (
-            <Flex
+            <Box
               key={comment.id}
               marginBottom={post.comments.length === i + 1 ? 0 : 2}
             >
-              <Box
-                width={7}
-                height={7}
-                borderRadius={100}
-                overflow="hidden"
-                boxShadow="base"
-                mr={2}
-              >
-                <Image
-                  src={comment.author.image}
-                  width="100"
-                  height="100"
-                  alt="Avatar"
-                />
-              </Box>
-              <Box mt={1}>
-                <Flex>
-                  <Text fontSize="sm" color="gray.400">{`${
-                    comment.author.name
-                  } - ${new Date(comment.createdAt).toDateString()}`}</Text>
+              <Flex mt={1} flexDirection="column">
+                <Flex alignItems="center">
+                  <Box
+                    width={5}
+                    height={5}
+                    borderRadius={100}
+                    overflow="hidden"
+                    boxShadow="base"
+                    mr={2}
+                  >
+                    <Image
+                      src={comment.author.image}
+                      width="100"
+                      height="100"
+                      alt="Avatar"
+                    />
+                  </Box>
+                  <Box mr={2}>
+                    <Text fontSize="sm" color="gray.400">{`${
+                      comment.author.name
+                    } - ${new Date(comment.createdAt).toDateString()}`}</Text>
+                  </Box>
+                  {me.data.id === comment.author.id && (
+                    <Flex>
+                      <IconButton
+                        size="xs"
+                        variant="ghost"
+                        aria-label="Delete comment"
+                        onClick={() => handleDeleteComment(comment.id)}
+                        icon={
+                          <Box color="gray.400">
+                            <TrashIcon width="15" height="15" />
+                          </Box>
+                        }
+                      />
+                    </Flex>
+                  )}
                 </Flex>
                 <Text fontSize="sm">{comment.content}</Text>
-              </Box>
-            </Flex>
+              </Flex>
+            </Box>
           );
         })}
       </Box>
