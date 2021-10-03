@@ -1,14 +1,19 @@
-import { Comment } from "@prisma/client";
 import axios from "axios";
-import { Post } from "../types/Post";
+import qs from "query-string";
+import { CommentService } from "../services/api/CommentService";
+
+type Response = ReturnType<CommentService["getCommentsByPostId"]>;
 
 export const fetchComments = ({
   postId,
   take,
+  skip,
 }: {
   postId: number;
   take?: number;
-}): Promise<Post["comments"]> =>
-  axios(`/api/post/${postId}/comments${take ? `?take=${take}` : ""}`).then(
-    (res) => res.data
-  );
+  skip?: number;
+}): Promise<Response> => {
+  const query = qs.stringify({ take, skip });
+
+  return axios(`/api/post/${postId}/comments?${query}`).then((res) => res.data);
+};

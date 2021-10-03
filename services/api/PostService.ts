@@ -6,75 +6,14 @@ import * as R from "ramda";
 import invariant from "invariant";
 import Prisma from ".prisma/client";
 import { Session } from "next-auth";
+import { authorFragment } from "../fragments/authorFragment";
+import { likeFragment } from "../fragments/likeFragment";
+import { commentFragment } from "../fragments/commentFragment";
 
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];
   comments: Prisma.Comment[];
   commentsCount: number;
-};
-
-const commentSelect = {
-  id: true,
-  content: true,
-  createdAt: true,
-  postId: true,
-  updatedAt: true,
-  authorId: true,
-  author: {
-    select: {
-      id: true,
-      name: true,
-      userName: true,
-      image: true,
-      emailVerified: true,
-      createdAt: true,
-      email: true,
-      updatedAt: true,
-    },
-  },
-};
-
-const postQueryIncludeFragment = {
-  include: {
-    author: {
-      select: {
-        name: true,
-        email: true,
-        id: true,
-        userName: true,
-        updatedAt: true,
-        emailVerified: true,
-        createdAt: true,
-        image: true,
-      },
-    },
-    likes: {
-      select: {
-        id: true,
-        postId: true,
-        createdAt: true,
-        updatedAt: true,
-        authorId: true,
-        author: {
-          select: {
-            id: true,
-            name: true,
-            userName: true,
-            image: true,
-            emailVerified: true,
-            createdAt: true,
-            email: true,
-            updatedAt: true,
-          },
-        },
-      },
-    },
-    comments: {
-      select: {
-        ...commentSelect,
-      },
-    },
-  },
 };
 
 export class PostService {
@@ -107,7 +46,17 @@ export class PostService {
           id: "desc",
         },
       ],
-      ...postQueryIncludeFragment,
+      include: {
+        author: {
+          select: authorFragment,
+        },
+        likes: {
+          select: likeFragment,
+        },
+        comments: {
+          select: commentFragment,
+        },
+      },
     });
 
     return posts
@@ -125,7 +74,17 @@ export class PostService {
       where: {
         authorId: Number(this.req.query.id),
       },
-      ...postQueryIncludeFragment,
+      include: {
+        author: {
+          select: authorFragment,
+        },
+        likes: {
+          select: likeFragment,
+        },
+        comments: {
+          select: commentFragment,
+        },
+      },
     });
 
     return posts.map((post) =>
@@ -138,18 +97,6 @@ export class PostService {
         session
       )
     );
-  }
-
-  async addComment() {
-    const session = await getSession({ req: this.req });
-
-    await prisma.comment.create({
-      data: {
-        content: this.req.body.content,
-        post: { connect: { id: Number(this.req.query.id) } },
-        author: { connect: { email: session?.user?.email! } },
-      },
-    });
   }
 
   async updatePost() {
@@ -196,7 +143,17 @@ export class PostService {
         published: true,
         author: { connect: { email: session?.user?.email as string } },
       },
-      ...postQueryIncludeFragment,
+      include: {
+        author: {
+          select: authorFragment,
+        },
+        likes: {
+          select: likeFragment,
+        },
+        comments: {
+          select: commentFragment,
+        },
+      },
     });
 
     return this.preparePost({ ...post, commentsCount: 0 }, session);
@@ -213,7 +170,17 @@ export class PostService {
         published: false,
         author: { connect: { email: session?.user?.email as string } },
       },
-      ...postQueryIncludeFragment,
+      include: {
+        author: {
+          select: authorFragment,
+        },
+        likes: {
+          select: likeFragment,
+        },
+        comments: {
+          select: commentFragment,
+        },
+      },
     });
   }
 
@@ -223,7 +190,17 @@ export class PostService {
       where: {
         id: Number(this.req.query.id),
       },
-      ...postQueryIncludeFragment,
+      include: {
+        author: {
+          select: authorFragment,
+        },
+        likes: {
+          select: likeFragment,
+        },
+        comments: {
+          select: commentFragment,
+        },
+      },
     });
 
     if (!post) return null;
@@ -252,20 +229,5 @@ export class PostService {
         author: { connect: { email: session?.user?.email! } },
       },
     });
-  }
-
-  async fetchPostComments({ postId, take }: { postId: number; take?: number }) {
-    return prisma.comment
-      .findMany({
-        where: {
-          postId,
-        },
-        take: take || 25,
-        orderBy: { createdAt: "desc" },
-        select: {
-          ...commentSelect,
-        },
-      })
-      .then((res) => res.reverse());
   }
 }

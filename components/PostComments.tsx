@@ -40,8 +40,8 @@ export const PostComments: React.FC<Props> = ({ post }) => {
   });
 
   const getHasMoreComments = () => {
-    if (comments.data?.length) {
-      return post.commentsCount > comments.data.length;
+    if (comments.data?.items?.length) {
+      return post.commentsCount > comments.data.items.length;
     }
 
     return post.commentsCount > post.comments.length;
@@ -63,7 +63,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
   }, []);
 
   const hasComments =
-    (comments.data?.length && comments.data.length > 0) ||
+    (comments.data?.items?.length && comments.data.items.length > 0) ||
     post.comments.length > 0;
 
   if (!me.data) return null;
@@ -91,7 +91,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
             </Button>
           </Flex>
         )}
-        {(comments.data || post.comments).map((comment, i) => {
+        {(comments.data?.items || post.comments).map((comment, i) => {
           if (!comment.author) return null;
           if (!comment.author.image) return null;
 

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import invariant from "invariant";
 import { PostService } from "../../../../services/api/PostService";
+import { CommentService } from "../../../../services/api/CommentService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -14,10 +15,11 @@ export default async function handle(
   invariant(typeof Number(req.query.id) === "number", "Comment id is missing");
 
   try {
-    const postService = new PostService({ req });
-    const comments = await postService.fetchPostComments({
+    const postService = new CommentService({});
+    const comments = await postService.getCommentsByPostId({
       postId: Number(req.query.id),
       take: Number(req.query.take),
+      skip: Number(req.query.skip || 0),
     });
     res.json(comments);
   } catch (error) {

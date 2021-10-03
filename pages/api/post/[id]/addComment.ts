@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
-import prisma from "../../../../lib/prisma";
 import invariant from "invariant";
-import { PostService } from "../../../../services/api/PostService";
+import { CommentService } from "../../../../services/api/CommentService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -24,8 +23,11 @@ export default async function handle(
   }
 
   try {
-    const postService = new PostService({ req });
-    await postService.addComment();
+    const postService = new CommentService({ session });
+    await postService.addComment({
+      content: String(req.body.content),
+      postId: Number(req.query.id),
+    });
     res.json({ status: "success" });
   } catch (error) {
     return error;

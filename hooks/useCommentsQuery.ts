@@ -19,7 +19,7 @@ export const useCommentsQuery = ({
 
   return useQuery(
     createUseCommentsQueryCacheKey(postId, take),
-    () => fetchComments({ postId, take }),
+    () => fetchComments({ postId, take }).then((res) => res),
     {
       enabled: !!postId && innerEnabled,
       keepPreviousData: true,
