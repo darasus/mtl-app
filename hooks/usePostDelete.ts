@@ -1,5 +1,5 @@
 import React from "react";
-import { usePostDeleteMutation } from "./usePostDeleteMutation";
+import { usePostDeleteMutation } from "./mutation/usePostDeleteMutation";
 
 export const usePostDelete = (id: number) => {
   const deletePostMutation = usePostDeleteMutation(id);

@@ -1,7 +1,7 @@
 import React from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import { syntaxStylesDark, syntaxStylesLight } from "../constants/codeTheme";
-import { useColorMode, useToken } from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { useColors } from "../hooks/useColors";
 
 interface Props {

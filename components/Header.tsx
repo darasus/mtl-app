@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { signOut } from "next-auth/client";
 import Image from "next/image";
 import { UserPreview } from "./UserPreview";
-import { useMeQuery } from "../hooks/useMeQuery";
+import { useMeQuery } from "../hooks/query/useMeQuery";
 import {
   Button,
   Flex,

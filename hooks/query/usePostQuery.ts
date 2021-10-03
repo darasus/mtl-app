@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchPost } from "../request/fetchPost";
+import { fetchPost } from "../../request/fetchPost";
 
 const createUsePostQueryCacheKey = (id: number) => ["post", id];
 

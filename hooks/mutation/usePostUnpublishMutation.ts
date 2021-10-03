@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
-import { Post } from "../types/Post";
+import { Post } from "../../types/Post";
 
 export const usePostUnpublishMutation = (id: number) => {
   const queryClient = useQueryClient();

@@ -1,5 +1,5 @@
 import React from "react";
-import { usePostLikeMutation } from "./usePostLikeMutation";
+import { usePostLikeMutation } from "./mutation/usePostLikeMutation";
 
 export const usePostLike = () => {
   const likePostMutation = usePostLikeMutation();

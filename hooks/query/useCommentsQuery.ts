@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchComments } from "../request/fetchComments";
+import { fetchComments } from "../../request/fetchComments";
 
 export const createUseCommentsQueryCacheKey = (
   postId: number,

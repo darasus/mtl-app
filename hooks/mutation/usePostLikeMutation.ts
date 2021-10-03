@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
-import { likePost } from "../request/likePost";
-import { createUseFeedQueryCacheKey } from "./useFeedQuery";
+import { likePost } from "../../request/likePost";
+import { createUseFeedQueryCacheKey } from "../query/useFeedQuery";
 
 export const usePostLikeMutation = () => {
   const queryClient = useQueryClient();

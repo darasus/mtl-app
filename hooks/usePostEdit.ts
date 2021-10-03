@@ -1,5 +1,5 @@
 import React from "react";
-import { usePostEditMutation } from "./usePostEditMutation";
+import { usePostEditMutation } from "./mutation/usePostEditMutation";
 
 interface Data {
   title: string;

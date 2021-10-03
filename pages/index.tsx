@@ -5,8 +5,8 @@ import { Box } from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import { fetchFeed } from "../request/fetchFeed";
-import { useFeedQuery } from "../hooks/useFeedQuery";
-import { useMeQuery } from "../hooks/useMeQuery";
+import { useFeedQuery } from "../hooks/query/useFeedQuery";
+import { useMeQuery } from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
 
 const Index: React.FC = () => {

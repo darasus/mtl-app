@@ -1,5 +1,5 @@
 import React from "react";
-import { usePostUnpublishMutation } from "./usePostUnpublishMutation";
+import { usePostUnpublishMutation } from "./mutation/usePostUnpublishMutation";
 
 export const usePostUnpublish = (id: number) => {
   const unpublishPostMutation = usePostUnpublishMutation(id);

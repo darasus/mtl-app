@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import { fetchFeed } from "../request/fetchFeed";
+import { fetchFeed } from "../../request/fetchFeed";
 import { createUseCommentsQueryCacheKey } from "./useCommentsQuery";
 
 export const createUseFeedQueryCacheKey = () => "feed";

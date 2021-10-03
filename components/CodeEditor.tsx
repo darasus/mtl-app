@@ -1,6 +1,5 @@
 import React from "react";
 import dynamic from "next/dynamic";
-import { EditorProps } from "@monaco-editor/react";
 
 const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 

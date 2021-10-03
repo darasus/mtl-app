@@ -13,8 +13,8 @@ import Image from "next/image";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useColors } from "../hooks/useColors";
-import { useCommentsQuery } from "../hooks/useCommentsQuery";
-import { useMeQuery } from "../hooks/useMeQuery";
+import { useCommentsQuery } from "../hooks/query/useCommentsQuery";
+import { useMeQuery } from "../hooks/query/useMeQuery";
 import { usePostComment } from "../hooks/usePostComment";
 import { Post } from "../types/Post";
 import { TrashIcon } from "@heroicons/react/outline";
@@ -170,7 +170,6 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                   <InputGroup>
                     <Input
                       width="100%"
-                      autoComplete="false"
                       disabled={isSubmittingComment}
                       name={field.name}
                       onBlur={field.onBlur}
@@ -179,7 +178,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                       onChange={(value) => field.onChange(value)}
                       placeholder="Type your comment here..."
                       required
-                      autocomplete="off"
+                      autoComplete="off"
                     />
                     {isSubmittingComment && (
                       <InputRightElement

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { doIFollowUser } from "../request/doIFollowUser";
+import { doIFollowUser } from "../../request/doIFollowUser";
 
 export const createUseDoIFollowUserQueryQueryCache = (userId: number) => [
   "doIFollowUser",

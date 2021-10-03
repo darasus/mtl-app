@@ -13,7 +13,7 @@ import { dehydrate } from "react-query/hydration";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { fetchPost } from "../../../request/fetchPost";
-import { usePostQuery } from "../../../hooks/usePostQuery";
+import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { usePostEdit } from "../../../hooks/usePostEdit";
 import { Controller, useForm } from "react-hook-form";
 import { CodeEditor } from "../../../components/CodeEditor";

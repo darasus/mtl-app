@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
-import { Post } from "../types/Post";
+import { Post } from "../../types/Post";
 
 interface Variables {
   title: string;

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
-import { addComment } from "../request/addComment";
-import { createUseFeedQueryCacheKey } from "./useFeedQuery";
+import { addComment } from "../../request/addComment";
+import { createUseFeedQueryCacheKey } from "../query/useFeedQuery";
 
 export const usePostCommentMutation = () => {
   const queryClient = useQueryClient();

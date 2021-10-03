@@ -2,11 +2,11 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { Post } from "../../../components/Post";
 import { QueryClient } from "react-query";
-import { usePostQuery } from "../../../hooks/usePostQuery";
+import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { useRouter } from "next/router";
 import { fetchPost } from "../../../request/fetchPost";
 import { dehydrate } from "react-query/hydration";
-import { useMeQuery } from "../../../hooks/useMeQuery";
+import { useMeQuery } from "../../../hooks/query/useMeQuery";
 import { PreviewLayout } from "../../../layouts/PreviewLayout";
 
 const PostPage: React.FC = () => {

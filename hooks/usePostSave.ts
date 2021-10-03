@@ -1,5 +1,5 @@
 import React from "react";
-import { usePostSaveMutation } from "./usePostSaveMutation";
+import { usePostSaveMutation } from "./mutation/usePostSaveMutation";
 
 interface Data {
   title: string;

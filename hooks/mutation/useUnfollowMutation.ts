@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
-import { unfollowUser } from "../request/unfollowUser";
-import { createUseDoIFollowUserQueryQueryCache } from "./useDoIFollowUserQuery";
-import { createUseFollowersCountQueryCacheKey } from "./useFollowersCountQuery";
+import { unfollowUser } from "../../request/unfollowUser";
+import { createUseDoIFollowUserQueryQueryCache } from "../query/useDoIFollowUserQuery";
+import { createUseFollowersCountQueryCacheKey } from "../query/useFollowersCountQuery";
 
 export const useUnfollowMutation = () => {
   const qc = useQueryClient();

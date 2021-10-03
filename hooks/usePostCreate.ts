@@ -2,8 +2,8 @@ import axios from "axios";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Post } from "../types/Post";
-import { usePostCreateMutation } from "./usePostCreateMutation";
-import { usePostSaveMutation } from "./usePostSaveMutation";
+import { usePostCreateMutation } from "./mutation/usePostCreateMutation";
+import { usePostSaveMutation } from "./mutation/usePostSaveMutation";
 
 interface Data {
   title: string;
