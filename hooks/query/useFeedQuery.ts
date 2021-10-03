@@ -11,13 +11,9 @@ export const useFeedQuery = () => {
     onSuccess(data) {
       data.forEach((item) => {
         queryClient.setQueryData(createUseCommentsQueryCacheKey(item.id, 3), {
-          pages: [
-            {
-              items: item.comments,
-              count: item.comments.length,
-              total: item.commentsCount,
-            },
-          ],
+          items: item.comments,
+          count: item.comments.length,
+          total: item.commentsCount,
         });
       });
     },

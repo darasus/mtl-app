@@ -40,11 +40,10 @@ export const PostComments: React.FC<Props> = ({ post }) => {
   });
 
   const getHasMoreComments = () => {
-    if (comments.data?.items?.length) {
-      return post.commentsCount > comments.data.items.length;
+    if (comments.data?.count && comments.data?.total) {
+      return comments.data?.count < comments.data?.total;
     }
-
-    return post.commentsCount > post.comments.length;
+    return false;
   };
 
   const handleDeleteComment = React.useCallback(async (commentId: number) => {
@@ -63,8 +62,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
   }, []);
 
   const hasComments =
-    (comments.data?.items?.length && comments.data.items.length > 0) ||
-    post.comments.length > 0;
+    comments.data?.items?.length && comments.data.items.length > 0;
 
   if (!me.data) return null;
   if (!me.data.image) return null;
@@ -91,14 +89,14 @@ export const PostComments: React.FC<Props> = ({ post }) => {
             </Button>
           </Flex>
         )}
-        {(comments.data?.items || post.comments).map((comment, i) => {
+        {comments.data?.items?.map((comment, i) => {
           if (!comment.author) return null;
           if (!comment.author.image) return null;
 
           return (
             <Box
               key={comment.id}
-              marginBottom={post.comments.length === i + 1 ? 0 : 2}
+              marginBottom={comments.data.items.length === i + 1 ? 0 : 2}
             >
               <Flex mt={1} flexDirection="column">
                 <Flex alignItems="center">
