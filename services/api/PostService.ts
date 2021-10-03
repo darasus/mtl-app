@@ -220,14 +220,4 @@ export class PostService {
       where: { id: Number(this.req.query.id) },
     });
   }
-
-  async likePost() {
-    const session = await getSession({ req: this.req });
-    await prisma.like.create({
-      data: {
-        post: { connect: { id: Number(this.req.query.id) } },
-        author: { connect: { email: session?.user?.email! } },
-      },
-    });
-  }
 }

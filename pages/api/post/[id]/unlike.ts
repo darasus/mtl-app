@@ -29,11 +29,11 @@ export default async function handle(
     const likeService = new LikeService({ session });
     const post = await postService.fetchPost();
 
-    if (post?.isLikedByMe) {
-      res.status(400).json({ message: "Post is already liked by you" });
+    if (!post?.isLikedByMe) {
+      res.status(400).json({ message: "Post is not liked by you yet" });
     }
 
-    await likeService.likePost(Number(req.query.id));
+    await likeService.unlikePost(Number(req.query.id));
     res.json({ status: "success" });
   } catch (error) {
     return error;

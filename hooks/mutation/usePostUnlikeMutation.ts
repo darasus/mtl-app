@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "react-query";
-import { likePost } from "../../request/likePost";
+import { unlikePost } from "../../request/unlikePost";
 import { createUseFeedQueryCacheKey } from "../query/useFeedQuery";
 
-export const usePostLikeMutation = () => {
+export const usePostUnlikeMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<unknown, unknown, { postId: number }>(
-    ({ postId }) => likePost(postId),
+    ({ postId }) => unlikePost(postId),
     {
       onSettled() {
         queryClient.invalidateQueries(createUseFeedQueryCacheKey());
