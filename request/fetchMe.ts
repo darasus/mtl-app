@@ -1,5 +1,5 @@
-import axios from "axios";
+import { request } from "../lib/request";
 import { User } from "../types/User";
 
 export const fetchMe = (): Promise<User> =>
-  axios(`/api/me`).then((res) => res.data);
+  request(`/api/me`).then((res) => res.data);

@@ -1,5 +1,5 @@
-import axios from "axios";
 import qs from "query-string";
+import { request } from "../lib/request";
 import { CommentService } from "../services/api/CommentService";
 
 type Response = ReturnType<CommentService["getCommentsByPostId"]>;
@@ -15,5 +15,7 @@ export const fetchComments = ({
 }): Promise<Response> => {
   const query = qs.stringify({ take, skip });
 
-  return axios(`/api/post/${postId}/comments?${query}`).then((res) => res.data);
+  return request(`/api/post/${postId}/comments?${query}`).then(
+    (res) => res.data
+  );
 };

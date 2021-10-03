@@ -1,6 +1,5 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/client";
 import { UserService } from "../../../../services/api/UserService";
 
 export default async function handle(
@@ -11,11 +10,10 @@ export default async function handle(
     req.method === "GET",
     `The HTTP ${req.method} method is not supported at this route.`
   );
-
-  const session = await getSession({ req });
+  invariant(typeof req.query.id === "string", "User ID is not provided");
 
   try {
-    const userService = new UserService({ session });
+    const userService = new UserService();
     const user = await userService.getUserById(Number(req.query.id));
     res.json(user);
   } catch (error) {

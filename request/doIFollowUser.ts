@@ -1,4 +1,4 @@
-import axios from "axios";
+import { request } from "../lib/request";
 
 export const doIFollowUser = (userId: number): Promise<any> =>
-  axios(`/api/user/${userId}/follow`, {}).then((res) => res.data);
+  request(`/api/user/${userId}/follow`).then((res) => res.data);

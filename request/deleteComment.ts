@@ -1,6 +1,6 @@
-import axios from "axios";
+import { request } from "../lib/request";
 
 export const deleteComment = (commentId: number): Promise<void> =>
-  axios(`/api/comment/${commentId}`, {
+  request(`/api/comment/${commentId}`, {
     method: "DELETE",
   }).then((res) => res.data);

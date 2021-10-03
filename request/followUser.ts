@@ -1,6 +1,6 @@
-import axios from "axios";
+import { request } from "../lib/request";
 
 export const followUser = (userId: number): Promise<any> =>
-  axios(`/api/user/${userId}/follow`, {
+  request(`/api/user/${userId}/follow`, {
     method: "POST",
   }).then((res) => res.data);

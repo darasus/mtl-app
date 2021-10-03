@@ -2,6 +2,7 @@ import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import { UserService } from "../../services/api/UserService";
+import { UserSessionService } from "../../services/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -14,17 +15,11 @@ export default async function handle(
 
   const session = await getSession({ req });
 
-  if (!session) {
-    res.status(401);
-    res.send({
-      error: "Not authorized",
-    });
-  }
+  invariant(session, "Session is not found");
 
   try {
-    const userService = new UserService({ session });
-    const me = await userService.getUserByEmail(session?.user?.email!);
-    res.send(me);
+    const userService = await new UserSessionService(session).get();
+    res.send(userService);
   } catch (error) {
     return error;
   }

@@ -17,11 +17,9 @@ export default async function handle(
   const session = await getSession({ req });
 
   if (!session) {
-    return res.status(401);
-  }
-
-  if (!session?.user?.email) {
-    return res.status(401);
+    return res
+      .status(401)
+      .json({ hasError: true, status: 401, message: "Session is not found" });
   }
 
   try {

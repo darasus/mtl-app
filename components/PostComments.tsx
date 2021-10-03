@@ -64,18 +64,9 @@ export const PostComments: React.FC<Props> = ({ post }) => {
   const hasComments =
     comments.data?.items?.length && comments.data.items.length > 0;
 
-  if (!me.data) return null;
-  if (!me.data.image) return null;
-
   return (
     <>
-      <Box
-        p={3}
-        backgroundColor={darkerBgColor}
-        borderColor={borderColor}
-        borderTopWidth="thin"
-        borderBottomWidth="thin"
-      >
+      <Box p={3} backgroundColor={darkerBgColor}>
         {!hasComments && <Text fontSize="sm">No comments yet...</Text>}
         {getHasMoreComments() && (
           <Flex justifyContent="center" mb={2}>
@@ -120,7 +111,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                       comment.author.name
                     } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                   </Box>
-                  {me.data.id === comment.author.id && (
+                  {me.data?.id === comment.author.id && (
                     <Flex>
                       <IconButton
                         size="xs"
@@ -142,55 +133,66 @@ export const PostComments: React.FC<Props> = ({ post }) => {
           );
         })}
       </Box>
-      <form onSubmit={submit}>
-        <Box p={3}>
-          <Flex>
-            <Box
-              width={7}
-              height={7}
-              borderRadius={100}
-              overflow="hidden"
-              boxShadow="base"
-              mr={2}
-            >
-              <Image
-                src={me.data.image}
-                width="100"
-                height="100"
-                alt="Avatar"
-              />
-            </Box>
-            <Box flexGrow={1}>
-              <Controller
-                name="comment"
-                control={control}
-                render={({ field }) => (
-                  <InputGroup>
-                    <Input
-                      width="100%"
-                      disabled={isSubmittingComment}
-                      name={field.name}
-                      onBlur={field.onBlur}
-                      value={field.value}
-                      aria-label="comment field"
-                      onChange={(value) => field.onChange(value)}
-                      placeholder="Type your comment here..."
-                      required
-                      autoComplete="off"
+      {me.data && (
+        <>
+          <Box
+            borderColor={borderColor}
+            borderTopWidth="thin"
+            borderBottomWidth="thin"
+          />
+          <form onSubmit={submit}>
+            <Box p={3}>
+              <Flex>
+                {me.data?.image && (
+                  <Box
+                    width={7}
+                    height={7}
+                    borderRadius={100}
+                    overflow="hidden"
+                    boxShadow="base"
+                    mr={2}
+                  >
+                    <Image
+                      src={me.data?.image}
+                      width="100"
+                      height="100"
+                      alt="Avatar"
                     />
-                    {isSubmittingComment && (
-                      <InputRightElement
-                        pointerEvents="none"
-                        children={<Spinner color="gray.300" size="xs" />}
-                      />
-                    )}
-                  </InputGroup>
+                  </Box>
                 )}
-              />
+                <Box flexGrow={1}>
+                  <Controller
+                    name="comment"
+                    control={control}
+                    render={({ field }) => (
+                      <InputGroup>
+                        <Input
+                          width="100%"
+                          disabled={isSubmittingComment}
+                          name={field.name}
+                          onBlur={field.onBlur}
+                          value={field.value}
+                          aria-label="comment field"
+                          onChange={(value) => field.onChange(value)}
+                          placeholder="Type your comment here..."
+                          required
+                          autoComplete="off"
+                        />
+                        {isSubmittingComment && (
+                          <InputRightElement
+                            pointerEvents="none"
+                            children={<Spinner color="gray.300" size="xs" />}
+                          />
+                        )}
+                      </InputGroup>
+                    )}
+                  />
+                </Box>
+              </Flex>
             </Box>
-          </Flex>
-        </Box>
-      </form>
+          </form>
+        </>
+      )}
     </>
   );
 };

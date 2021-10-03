@@ -1,6 +1,6 @@
-import axios from "axios";
+import { request } from "../lib/request";
 
 export const unfollowUser = (userId: number): Promise<any> =>
-  axios(`/api/user/${userId}/unfollow`, {
+  request(`/api/user/${userId}/unfollow`, {
     method: "POST",
   }).then((res) => res.data);

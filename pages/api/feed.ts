@@ -1,8 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../lib/prisma";
 import { PostService } from "../../services/api/PostService";
-import { Post } from "../../types/Post";
 
 export default async function handle(
   req: NextApiRequest,
