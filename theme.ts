@@ -36,10 +36,16 @@ export const theme = extendTheme({
         fontFamily: "Merriweather",
       },
     },
-    MenuItem: {
+    Menu: {
       baseStyle: {
-        background: "white",
-        color: "black",
+        list: {
+          bg: "black",
+          color: "gray.600",
+          borderColor: "gray.900",
+        },
+        item: {
+          fontSize: "sm",
+        },
       },
     },
   },
