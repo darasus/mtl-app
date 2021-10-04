@@ -20,6 +20,7 @@ import { CodeEditor } from "../../../components/CodeEditor";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Layout } from "../../../layouts/Layout";
+import { useColors } from "../../../hooks/useColors";
 
 interface Form {
   title: string;
@@ -34,6 +35,7 @@ const schema = yup.object().shape({
 });
 
 const EditPostPage: React.FC = () => {
+  const { secondaryTextColor } = useColors();
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
   const { editPost, isLoading } = usePostEdit(post.data?.id as number);
@@ -46,8 +48,6 @@ const EditPostPage: React.FC = () => {
   } = useForm<Form>({
     resolver: yupResolver(schema),
   });
-
-  console.log(errors);
 
   React.useEffect(() => {
     if (!post.data) return;
@@ -70,7 +70,7 @@ const EditPostPage: React.FC = () => {
         <form onSubmit={submit}>
           <Heading mb={2}>{`Edit: ${post.data?.title}`}</Heading>
           <Box mb={3}>
-            <Text mr={1} color="gray.500" mb={2}>
+            <Text mr={1} color={secondaryTextColor} mb={2}>
               Title
             </Text>
             {errors.title?.message && (
@@ -82,7 +82,7 @@ const EditPostPage: React.FC = () => {
           </Box>
           <Box mb={3}>
             <Flex>
-              <Text color="gray.500">Description</Text>
+              <Text color={secondaryTextColor}>Description</Text>
               {errors.description?.message && (
                 <Text color="red.500" mb={2}>
                   {errors.description?.message}
@@ -95,7 +95,7 @@ const EditPostPage: React.FC = () => {
             />
           </Box>
           <Box mb={3}>
-            <Text color="gray.500">Little JavaScript library</Text>
+            <Text color={secondaryTextColor}>Little JavaScript library</Text>
             {errors.content?.message && (
               <Text color="red.500" mb={2}>
                 {errors.content?.message}

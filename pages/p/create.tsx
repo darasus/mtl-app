@@ -15,6 +15,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { usePostCreate } from "../../hooks/usePostCreate";
 import { Layout } from "../../layouts/Layout";
+import { useColors } from "../../hooks/useColors";
 
 interface Form {
   title: string;
@@ -29,6 +30,7 @@ const schema = yup.object().shape({
 });
 
 const CreatePostPage: React.FC = () => {
+  const { secondaryTextColor } = useColors();
   const router = useRouter();
   const { createPost, isLoading } = usePostCreate();
   const {
@@ -52,7 +54,7 @@ const CreatePostPage: React.FC = () => {
         <form onSubmit={submit}>
           <Heading mb={2}>Create new javascript library</Heading>
           <Box mb={3}>
-            <Text mr={1} color="gray.500" mb={2}>
+            <Text mr={1} color={secondaryTextColor} mb={2}>
               Title
             </Text>
             {errors.title?.message && (
@@ -64,7 +66,7 @@ const CreatePostPage: React.FC = () => {
           </Box>
           <Box mb={3}>
             <Flex>
-              <Text color="gray.500">Description</Text>
+              <Text color={secondaryTextColor}>Description</Text>
               {errors.description?.message && (
                 <Text color="red.500" mb={2}>
                   {errors.description?.message}
@@ -77,7 +79,7 @@ const CreatePostPage: React.FC = () => {
             />
           </Box>
           <Box mb={3}>
-            <Text color="gray.500">Little JavaScript library</Text>
+            <Text color={secondaryTextColor}>Little JavaScript library</Text>
             {errors.content?.message && (
               <Text color="red.500" mb={2}>
                 {errors.content?.message}

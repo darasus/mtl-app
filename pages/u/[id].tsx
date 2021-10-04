@@ -26,8 +26,10 @@ import { useUnfollowMutation } from "../../hooks/mutation/useUnfollowMutation";
 import { useDoIFollowUserQuery } from "../../hooks/query/useDoIFollowUserQuery";
 import { UserGroupIcon } from "@heroicons/react/outline";
 import { Layout } from "../../layouts/Layout";
+import { useColors } from "../../hooks/useColors";
 
 const UserPage: React.FC = () => {
+  const { secondaryTextColor } = useColors();
   const router = useRouter();
   const userId = Number(router.query.id);
   const user = useUserQuery(userId);
@@ -108,13 +110,17 @@ const UserPage: React.FC = () => {
               </Text>
               {followButton}
               <Flex alignItems="center">
-                <Text mr={1} color="gray.500">
-                  <UserGroupIcon className="gray.500" width="20" height="20" />
+                <Text mr={1} color={secondaryTextColor}>
+                  <UserGroupIcon
+                    className={secondaryTextColor}
+                    width="20"
+                    height="20"
+                  />
                 </Text>
                 <Text
                   fontWeight="bold"
                   fontSize="sm"
-                  color="gray.500"
+                  color={secondaryTextColor}
                 >{`${followersCount.data} followers`}</Text>
               </Flex>
             </Flex>

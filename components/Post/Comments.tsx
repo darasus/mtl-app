@@ -12,19 +12,19 @@ import {
 import Image from "next/image";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useColors } from "../hooks/useColors";
-import { useCommentsQuery } from "../hooks/query/useCommentsQuery";
-import { useMeQuery } from "../hooks/query/useMeQuery";
-import { usePostComment } from "../hooks/usePostComment";
-import { Post } from "../types/Post";
+import { useColors } from "../../hooks/useColors";
+import { useCommentsQuery } from "../../hooks/query/useCommentsQuery";
+import { useMeQuery } from "../../hooks/query/useMeQuery";
+import { usePostComment } from "../../hooks/usePostComment";
+import { Post } from "../../types/Post";
 import { TrashIcon } from "@heroicons/react/outline";
-import { useDeleteCommentMutation } from "../hooks/useDeleteCommentMutation";
+import { useDeleteCommentMutation } from "../../hooks/useDeleteCommentMutation";
 
 interface Props {
   post: Post;
 }
 
-export const PostComments: React.FC<Props> = ({ post }) => {
+export const Comments: React.FC<Props> = ({ post }) => {
   const [commentCount, setCommentCount] = React.useState(3);
   const comments = useCommentsQuery({
     postId: post.id,
@@ -32,7 +32,12 @@ export const PostComments: React.FC<Props> = ({ post }) => {
     take: commentCount,
   });
   const me = useMeQuery();
-  const { borderColor, darkerBgColor } = useColors();
+  const {
+    borderColor,
+    darkerBgColor,
+    secondaryTextColor,
+    secondaryButtonTextColor,
+  } = useColors();
   const { commentPost, isLoading: isSubmittingComment } = usePostComment();
   const { mutateAsync: deleteComment } = useDeleteCommentMutation();
   const { control, handleSubmit, reset } = useForm({
@@ -66,8 +71,12 @@ export const PostComments: React.FC<Props> = ({ post }) => {
 
   return (
     <>
-      <Box p={3} backgroundColor={darkerBgColor}>
-        {!hasComments && <Text fontSize="sm">No comments yet...</Text>}
+      <Box p={3} borderColor={borderColor} borderTopWidth="thin">
+        {!hasComments && (
+          <Text color={secondaryTextColor} fontSize="sm">
+            No comments yet...
+          </Text>
+        )}
         {getHasMoreComments() && (
           <Flex justifyContent="center" mb={2}>
             <Button
@@ -75,6 +84,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
               isLoading={comments.isLoading}
               variant="ghost"
               size="xs"
+              color={secondaryButtonTextColor}
             >
               Load more...
             </Button>
@@ -107,7 +117,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                     />
                   </Box>
                   <Box mr={2}>
-                    <Text fontSize="sm" color="gray.400">{`${
+                    <Text fontSize="sm" color={secondaryTextColor}>{`${
                       comment.author.name
                     } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                   </Box>
@@ -119,7 +129,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                         aria-label="Delete comment"
                         onClick={() => handleDeleteComment(comment.id)}
                         icon={
-                          <Box color="gray.400">
+                          <Box color={secondaryButtonTextColor}>
                             <TrashIcon width="15" height="15" />
                           </Box>
                         }
@@ -127,7 +137,11 @@ export const PostComments: React.FC<Props> = ({ post }) => {
                     </Flex>
                   )}
                 </Flex>
-                <Text fontSize="sm">{comment.content}</Text>
+                <Box ml={7}>
+                  <Text color={secondaryTextColor} fontSize="sm">
+                    {comment.content}
+                  </Text>
+                </Box>
               </Flex>
             </Box>
           );
@@ -135,11 +149,7 @@ export const PostComments: React.FC<Props> = ({ post }) => {
       </Box>
       {me.data && (
         <>
-          <Box
-            borderColor={borderColor}
-            borderTopWidth="thin"
-            borderBottomWidth="thin"
-          />
+          <Box borderColor={borderColor} borderBottomWidth="thin" />
           <form onSubmit={submit}>
             <Box p={3}>
               <Flex>

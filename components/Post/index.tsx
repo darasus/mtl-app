@@ -1,24 +1,20 @@
 import React from "react";
 import { Markdown } from "../Markdown";
 import { Flex, Box, Text, Button, useColorMode } from "@chakra-ui/react";
-import { RouterLink } from "../RouterLinkt";
 import useCopyClipboard from "../../hooks/useClipboard";
 import { Post as PostType } from "../../types/Post";
 import { Syntax } from "../Syntax";
 import { LikeButton } from "./LikeButton";
-import { PostComments } from "../PostComments";
+import { Comments } from "./Comments";
 import {
-  ChatIcon,
   ShareIcon,
   DocumentDuplicateIcon,
   PhotographIcon,
-  ThumbUpIcon,
 } from "@heroicons/react/outline";
-import { PostUserPreview } from "../PostUserPreview";
 import { useColors } from "../../hooks/useColors";
 import { ActionMenu } from "./ActionMenu";
 import { paramCase } from "change-case";
-import { useRouter } from "next/router";
+import { Header } from "./Header";
 
 interface Props {
   post: PostType;
@@ -31,7 +27,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
   isMyPost,
   showActionMenu = true,
 }) {
-  const { borderColor } = useColors();
+  const { borderColor, secondaryButtonTextColor } = useColors();
 
   const [isCopied, copy] = useCopyClipboard(post.content || "", {
     successDuration: 3000,
@@ -51,42 +47,8 @@ export const Post: React.FC<Props> = React.memo(function Post({
     <Box borderColor={borderColor} borderWidth="thin">
       <Flex flexDirection="column">
         <Box>
-          <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
-            <Flex alignItems="center">
-              <Box mr={2}>
-                <RouterLink href={`/p/${post.id}`}>
-                  <Text fontSize="sm" data-testid="post-title">
-                    {post.title}
-                  </Text>
-                </RouterLink>
-              </Box>
-              <Box mr={2}>
-                <Text fontSize="sm">by</Text>
-              </Box>
-              <Box mr={2}>
-                {post.author && <PostUserPreview user={post.author} />}
-              </Box>
-              <Box mr={2}>
-                <Flex color="gray.500">
-                  <Flex mr={2}>
-                    <Box mr={1}>
-                      <ThumbUpIcon width="20" height="20" />
-                    </Box>
-                    <Box>
-                      <Text fontSize="sm">{`${post.likesCount} likes`}</Text>
-                    </Box>
-                  </Flex>
-                  <Flex>
-                    <Box mr={1}>
-                      <ChatIcon width="20" height="20" />
-                    </Box>
-                    <Box>
-                      <Text fontSize="sm">{`${post.commentsCount} comments`}</Text>
-                    </Box>
-                  </Flex>
-                </Flex>
-              </Box>
-            </Flex>
+          <Box borderColor={borderColor} borderBottomWidth="thin">
+            <Header post={post} />
           </Box>
           <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
             <Flex flexDirection="column">
@@ -103,33 +65,35 @@ export const Post: React.FC<Props> = React.memo(function Post({
                   <LikeButton post={post} />
                 </Box>
                 <Button
-                  leftIcon={<ShareIcon width="20" height="20" />}
+                  leftIcon={<ShareIcon width="15" height="15" />}
                   onClick={handleTweetClick}
                   variant="ghost"
-                  size="sm"
+                  size="xs"
                   mr={2}
+                  color={secondaryButtonTextColor}
                 >
                   <Text>Tweet</Text>
                 </Button>
                 <Button
-                  leftIcon={<DocumentDuplicateIcon width="20" height="20" />}
+                  leftIcon={<DocumentDuplicateIcon width="15" height="15" />}
                   onClick={handleClipboardCopy}
                   disabled={isCopied}
                   variant="ghost"
-                  size="sm"
+                  size="xs"
                   mr={2}
+                  color={secondaryButtonTextColor}
                 >
                   <Text>{isCopied ? "Copied!" : "Copy"}</Text>
                 </Button>
                 <Button
-                  leftIcon={<PhotographIcon width="20" height="20" />}
-                  disabled={isCopied}
+                  leftIcon={<PhotographIcon width="15" height="15" />}
                   variant="ghost"
-                  size="sm"
+                  size="xs"
                   mr={2}
                   as="a"
                   download={paramCase(post.title)}
                   href={`/api/post/${post.id}/screenshot`}
+                  color={secondaryButtonTextColor}
                 >
                   <Text>Screenshot</Text>
                 </Button>
@@ -138,7 +102,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               </Flex>
             </Box>
             <Box>
-              <PostComments post={post} />
+              <Comments post={post} />
             </Box>
           </>
         )}

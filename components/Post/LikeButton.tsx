@@ -4,12 +4,14 @@ import { usePostLike } from "../../hooks/usePostLike";
 import { Post } from "../../types/Post";
 import { ThumbUpIcon } from "@heroicons/react/outline";
 import { usePostUnlike } from "../../hooks/usePostUnlike";
+import { useColors } from "../../hooks/useColors";
 
 interface Props {
   post: Post;
 }
 
 export const LikeButton: React.FC<Props> = ({ post }) => {
+  const { secondaryButtonTextColor } = useColors();
   const { likePost, isLoading: likeIsLoading } = usePostLike();
   const { unlikePost, isLoading: unlikeIsLoading } = usePostUnlike();
   const handleLikeClick = React.useCallback(() => likePost(post.id), []);
@@ -17,11 +19,12 @@ export const LikeButton: React.FC<Props> = ({ post }) => {
 
   return (
     <Button
-      leftIcon={<ThumbUpIcon width="20" height="20" />}
+      leftIcon={<ThumbUpIcon width="15" height="15" />}
       onClick={post.isLikedByMe ? handleUnlikeClick : handleLikeClick}
       disabled={likeIsLoading || unlikeIsLoading}
-      size="sm"
+      size="xs"
       variant="ghost"
+      color={secondaryButtonTextColor}
     >
       <Text>{`${post.isLikedByMe ? "Unlike" : "Like"}`}</Text>
     </Button>

@@ -18,6 +18,7 @@ import { Post } from "../../types/Post";
 import { usePostDelete } from "../../hooks/usePostDelete";
 import { usePostUnpublish } from "../../hooks/usePostUnpublish";
 import { usePostPublish } from "../../hooks/usePostPublish";
+import { useColors } from "../../hooks/useColors";
 
 interface Props {
   isMyPost: boolean;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
+  const { secondaryButtonTextColor } = useColors();
   const router = useRouter();
   const { deletePost, isLoading: isDeleting } = usePostDelete(post.id);
   const { unpublishPost, isLoading: isUnpublishing } = usePostUnpublish(
@@ -55,13 +57,15 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
       <MenuButton
         as={IconButton}
         aria-label="Options"
-        icon={<DotsVerticalIcon width="20" height="20" />}
+        icon={<DotsVerticalIcon width="15" height="15" />}
         variant="ghost"
+        size="xs"
+        color={secondaryButtonTextColor}
       />
       <MenuList>
         <MenuItem
           onClick={handleEditClick}
-          icon={<PencilAltIcon width="20" height="20" />}
+          icon={<PencilAltIcon width="15" height="15" />}
         >
           Edit
         </MenuItem>
@@ -69,7 +73,7 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
           <MenuItem
             onClick={handleUnpublishPost}
             disabled={isUnpublishing}
-            icon={<CloudDownloadIcon width="20" height="20" />}
+            icon={<CloudDownloadIcon width="15" height="15" />}
           >
             Unpublish
           </MenuItem>
@@ -77,7 +81,7 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
           <MenuItem
             onClick={handlepublishPost}
             disabled={isPublishing}
-            icon={<CloudUploadIcon width="20" height="20" />}
+            icon={<CloudUploadIcon width="15" height="15" />}
           >
             Publish
           </MenuItem>
@@ -85,7 +89,7 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
         <MenuItem
           onClick={handleDeletePost}
           disabled={isDeleting}
-          icon={<TrashIcon width="20" height="20" />}
+          icon={<TrashIcon width="15" height="15" />}
         >
           Remove
         </MenuItem>
@@ -99,7 +103,7 @@ const ActionButton = React.forwardRef<HTMLButtonElement>((props, ref) => {
     <IconButton
       ref={ref}
       aria-label="menu icon"
-      icon={<DotsVerticalIcon width="20" height="20" />}
+      icon={<DotsVerticalIcon width="15" height="15" />}
       variant="ghost"
       {...props}
     />
