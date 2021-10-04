@@ -40,7 +40,6 @@ export const theme = extendTheme({
       baseStyle: {
         list: {
           bg: "black",
-          color: "gray.600",
           borderColor: "gray.900",
         },
         item: {

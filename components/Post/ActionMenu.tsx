@@ -60,7 +60,6 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
         icon={<DotsVerticalIcon width="15" height="15" />}
         variant="ghost"
         size="xs"
-        color={secondaryButtonTextColor}
       />
       <MenuList>
         <MenuItem

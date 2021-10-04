@@ -24,7 +24,6 @@ export const LikeButton: React.FC<Props> = ({ post }) => {
       disabled={likeIsLoading || unlikeIsLoading}
       size="xs"
       variant="ghost"
-      color={secondaryButtonTextColor}
     >
       <Text>{`${post.isLikedByMe ? "Unlike" : "Like"}`}</Text>
     </Button>

@@ -17,7 +17,7 @@ export const useColors = () => {
   );
 
   const secondaryTextColor = React.useMemo(
-    () => (isDark ? "gray.600" : "gray.600"),
+    () => (isDark ? "gray.500" : "gray.600"),
     [colorMode]
   );
 

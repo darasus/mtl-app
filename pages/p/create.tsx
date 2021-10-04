@@ -44,7 +44,6 @@ const CreatePostPage: React.FC = () => {
 
   const submit = handleSubmit(async (data) => {
     const post = await createPost(data);
-    console.log(post);
     await router.push(`/p/${post.id}`);
   });
 

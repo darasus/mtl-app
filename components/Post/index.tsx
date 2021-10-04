@@ -70,7 +70,6 @@ export const Post: React.FC<Props> = React.memo(function Post({
                   variant="ghost"
                   size="xs"
                   mr={2}
-                  color={secondaryButtonTextColor}
                 >
                   <Text>Tweet</Text>
                 </Button>
@@ -81,7 +80,6 @@ export const Post: React.FC<Props> = React.memo(function Post({
                   variant="ghost"
                   size="xs"
                   mr={2}
-                  color={secondaryButtonTextColor}
                 >
                   <Text>{isCopied ? "Copied!" : "Copy"}</Text>
                 </Button>
@@ -93,7 +91,6 @@ export const Post: React.FC<Props> = React.memo(function Post({
                   as="a"
                   download={paramCase(post.title)}
                   href={`/api/post/${post.id}/screenshot`}
-                  color={secondaryButtonTextColor}
                 >
                   <Text>Screenshot</Text>
                 </Button>

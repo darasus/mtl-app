@@ -84,7 +84,6 @@ export const Comments: React.FC<Props> = ({ post }) => {
               isLoading={comments.isLoading}
               variant="ghost"
               size="xs"
-              color={secondaryButtonTextColor}
             >
               Load more...
             </Button>
@@ -138,9 +137,7 @@ export const Comments: React.FC<Props> = ({ post }) => {
                   )}
                 </Flex>
                 <Box ml={7}>
-                  <Text color={secondaryTextColor} fontSize="sm">
-                    {comment.content}
-                  </Text>
+                  <Text fontSize="sm">{comment.content}</Text>
                 </Box>
               </Flex>
             </Box>

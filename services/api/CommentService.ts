@@ -64,8 +64,6 @@ export class CommentService {
       }),
     ]);
 
-    console.log(items);
-
     return { items, count, total };
   }
 

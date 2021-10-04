@@ -23,8 +23,6 @@ export default async function handle(
 
     const isMyComment = await commentService.isMyComment(Number(req.query.id));
 
-    console.log(isMyComment);
-
     if (!isMyComment) {
       return res.status(403).send({
         status: 403,
