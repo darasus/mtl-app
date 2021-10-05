@@ -18,9 +18,9 @@ import {
 } from "@chakra-ui/react";
 import {
   PlusSmIcon,
-  LogoutIcon,
   UserIcon,
   PlusCircleIcon,
+  LogoutIcon,
 } from "@heroicons/react/outline";
 
 export const Header: React.FC = () => {
