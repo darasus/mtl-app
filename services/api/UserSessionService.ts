@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import { Session } from "next-auth";
 import prisma from "../../lib/prisma";
+import { User } from "../../types/User";
 import { userFragment } from "../fragments/userFragment";
 
 export class UserSessionService {
@@ -10,7 +11,7 @@ export class UserSessionService {
     this.session = session;
   }
 
-  async get() {
+  async get(): Promise<User> {
     const user = await prisma.user.findUnique({
       where: {
         email: this.session?.user?.email!,

@@ -26,16 +26,3 @@ const PostPage: React.FC = () => {
 };
 
 export default PostPage;
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["post", params?.id], () =>
-    fetchPost(Number(params?.id))
-  );
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};

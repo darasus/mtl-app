@@ -8,6 +8,7 @@ export const useFeedQuery = () => {
   const queryClient = useQueryClient();
 
   return useQuery(createUseFeedQueryCacheKey(), fetchFeed, {
+    staleTime: 1000 * 60 * 5,
     onSuccess(data) {
       data.forEach((item) => {
         queryClient.setQueryData(createUseCommentsQueryCacheKey(item.id, 3), {

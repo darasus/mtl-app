@@ -4,10 +4,20 @@ import { Post } from "../components/Post";
 import { Box, Flex, Heading, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
-import { fetchFeed } from "../request/fetchFeed";
-import { useFeedQuery } from "../hooks/query/useFeedQuery";
-import { useMeQuery } from "../hooks/query/useMeQuery";
+import {
+  createUseFeedQueryCacheKey,
+  useFeedQuery,
+} from "../hooks/query/useFeedQuery";
+import {
+  createUseMeQueryCacheKey,
+  useMeQuery,
+} from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
+import { UserSessionService } from "../services/api/UserSessionService";
+import { getSession } from "next-auth/client";
+import { FeedService } from "../services/api/FeedService";
+import { User } from "../types/User";
+import { prefetchMe } from "../services/utils/prefetchMe";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
@@ -36,9 +46,14 @@ const Index: React.FC = () => {
 
 export default Index;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery("feed", fetchFeed);
+  const me = await prefetchMe(ctx, queryClient);
+  const feedService = new FeedService();
+
+  await queryClient.prefetchQuery(createUseFeedQueryCacheKey(), () =>
+    feedService.fetchFeed(me?.id || undefined)
+  );
 
   return {
     props: {
