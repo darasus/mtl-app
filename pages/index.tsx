@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { Post } from "../components/Post";
-import { Box, Flex, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Heading, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import { fetchFeed } from "../request/fetchFeed";
@@ -16,6 +16,9 @@ const Index: React.FC = () => {
   return (
     <Layout>
       <main>
+        <Heading mb={10} variant="section-heading">
+          Latest libraries
+        </Heading>
         {feed.isLoading && (
           <Flex justifyContent="center" mt={5} mb={5}>
             <Spinner />

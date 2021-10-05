@@ -128,7 +128,9 @@ const UserPage: React.FC = () => {
         </GridItem>
         <GridItem colSpan={9}>
           <Box>
-            <Heading>Latest libraries:</Heading>
+            <Heading mb={10} variant="section-heading">
+              My libraries
+            </Heading>
             {posts.data?.map((post) => (
               <Box key={post.id} mb={6}>
                 <Post post={post} isMyPost={post.authorId === me.data?.id} />

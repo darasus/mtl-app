@@ -42,8 +42,11 @@ export const theme = extendTheme({
   },
   components: {
     Heading: {
-      baseStyle: {
-        fontFamily: "Merriweather",
+      variants: {
+        "section-heading": {
+          borderBottom: `3px solid ${token.color.brand}`,
+          paddingBottom: "0.5rem",
+        },
       },
     },
     Menu: {
@@ -58,6 +61,11 @@ export const theme = extendTheme({
       }),
     },
     Input: {
+      defaultProps: {
+        focusBorderColor: token.color.brand + "50",
+      },
+    },
+    Textarea: {
       defaultProps: {
         focusBorderColor: token.color.brand + "50",
       },

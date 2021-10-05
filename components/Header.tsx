@@ -47,15 +47,17 @@ export const Header: React.FC = () => {
         {me.data ? (
           <>
             <Box mr={4}>
-              <Button
-                size="sm"
-                variant="outline"
-                color="brand"
-                borderColor="brand"
-                leftIcon={<PlusCircleIcon width="15" height="15" />}
-              >
-                Create
-              </Button>
+              <Link href="/p/create">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  color="brand"
+                  borderColor="brand"
+                  leftIcon={<PlusCircleIcon width="15" height="15" />}
+                >
+                  Create
+                </Button>
+              </Link>
             </Box>
             <Flex alignItems="center">
               <Menu>

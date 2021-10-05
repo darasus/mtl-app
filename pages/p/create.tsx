@@ -51,7 +51,9 @@ const CreatePostPage: React.FC = () => {
     <Layout>
       <Box>
         <form onSubmit={submit}>
-          <Heading mb={2}>Create new javascript library</Heading>
+          <Heading mb={10} variant="section-heading">
+            Create new javascript library
+          </Heading>
           <Box mb={3}>
             <Text mr={1} color={secondaryTextColor} mb={2}>
               Title

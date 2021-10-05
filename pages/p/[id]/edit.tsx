@@ -68,7 +68,10 @@ const EditPostPage: React.FC = () => {
     <Layout>
       <Box>
         <form onSubmit={submit}>
-          <Heading mb={2}>{`Edit: ${post.data?.title}`}</Heading>
+          <Heading
+            mb={2}
+            variant="section-heading"
+          >{`Edit: ${post.data?.title}`}</Heading>
           <Box mb={3}>
             <Text mr={1} color={secondaryTextColor} mb={2}>
               Title
