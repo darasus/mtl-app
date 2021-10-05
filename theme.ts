@@ -4,10 +4,19 @@ const config: ThemeConfig = {
   useSystemColorMode: true,
 };
 
+const token = {
+  color: {
+    brand: "#6d28d9",
+  },
+};
+
 export const theme = extendTheme({
   config,
+  shadows: {
+    outline: `0 0 0 2px ${token.color.brand + "50"}`,
+  },
   colors: {
-    brand: "#f7df1e",
+    brand: token.color.brand,
     gray: {
       50: "#fafafa",
       100: "#f5f5f5",
@@ -29,6 +38,7 @@ export const theme = extendTheme({
         background: props.colorMode === "dark" ? "black" : "white",
       },
     }),
+    focusBorderColor: "brand.500",
   },
   components: {
     Heading: {
@@ -37,14 +47,19 @@ export const theme = extendTheme({
       },
     },
     Menu: {
-      baseStyle: {
+      baseStyle: (props) => ({
         list: {
-          bg: "black",
-          borderColor: "gray.900",
+          bg: props.colorMode === "dark" ? "black" : "white",
+          borderColor: props.colorMode === "dark" ? "gray.900" : "gray.200",
         },
         item: {
           fontSize: "sm",
         },
+      }),
+    },
+    Input: {
+      defaultProps: {
+        focusBorderColor: token.color.brand + "50",
       },
     },
   },

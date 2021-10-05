@@ -14,7 +14,7 @@ export const Layout: React.FC<Props> = (props) => {
     <>
       <Flex flexDirection="column" width="100%" alignItems="center">
         <Flex flexDirection="column" width="100%" maxWidth={960} flexShrink={0}>
-          <Box paddingY="size-200">
+          <Box paddingY="size-200" mb={6}>
             <Header />
           </Box>
           <Box marginBottom="size-200">{props.children}</Box>

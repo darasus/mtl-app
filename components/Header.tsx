@@ -16,7 +16,12 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { PlusSmIcon, LogoutIcon, UserIcon } from "@heroicons/react/outline";
+import {
+  PlusSmIcon,
+  LogoutIcon,
+  UserIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/outline";
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -33,39 +38,52 @@ export const Header: React.FC = () => {
                 src={
                   colorMode === "dark" ? "/logo-light.svg" : "/logo-dark.svg"
                 }
-                height="40"
-                width={170}
+                height="30"
+                width={130}
               />
             </ChakraLink>
           </Link>
         </Flex>
         {me.data ? (
-          <Flex alignItems="center">
-            <Menu>
-              <MenuButton as={UserPreview} aria-label="Options" />
-              <MenuList>
-                <MenuItem
-                  icon={<UserIcon width="20" height="20" />}
-                  onClick={() => router.push(`/u/${me.data?.id}`)}
-                >
-                  Profile
-                </MenuItem>
-                <MenuItem
-                  icon={<PlusSmIcon width="20" height="20" />}
-                  onClick={() => router.push("/p/create")}
-                >
-                  New post
-                </MenuItem>
-                <MenuItem
-                  color="red.500"
-                  icon={<LogoutIcon width="20" height="20" />}
-                  onClick={() => signOut()}
-                >
-                  Logout
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          </Flex>
+          <>
+            <Box mr={4}>
+              <Button
+                size="sm"
+                variant="outline"
+                color="brand"
+                borderColor="brand"
+                leftIcon={<PlusCircleIcon width="15" height="15" />}
+              >
+                Create
+              </Button>
+            </Box>
+            <Flex alignItems="center">
+              <Menu>
+                <MenuButton as={UserPreview} aria-label="Options" />
+                <MenuList>
+                  <MenuItem
+                    icon={<UserIcon width="20" height="20" />}
+                    onClick={() => router.push(`/u/${me.data?.id}`)}
+                  >
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    icon={<PlusSmIcon width="20" height="20" />}
+                    onClick={() => router.push("/p/create")}
+                  >
+                    New post
+                  </MenuItem>
+                  <MenuItem
+                    color="red.500"
+                    icon={<LogoutIcon width="20" height="20" />}
+                    onClick={() => signOut()}
+                  >
+                    Logout
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
+          </>
         ) : (
           <Flex>
             <Button
