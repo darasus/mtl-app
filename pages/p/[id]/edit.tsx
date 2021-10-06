@@ -21,6 +21,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Layout } from "../../../layouts/Layout";
 import { useColors } from "../../../hooks/useColors";
+import { prefetchMe } from "../../../services/utils/prefetchMe";
 
 interface Form {
   title: string;
@@ -131,14 +132,13 @@ const EditPostPage: React.FC = () => {
 
 export default EditPostPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["post", context.query.id], () =>
-    fetchPost(Number(context.query.id))
-  );
+  await prefetchMe(ctx, queryClient);
 
   return {
     props: {
+      cookies: ctx.req.headers.cookie ?? "",
       dehydratedState: dehydrate(queryClient),
     },
   };

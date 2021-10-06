@@ -8,6 +8,7 @@ import { fetchPost } from "../../../request/fetchPost";
 import { dehydrate } from "react-query/hydration";
 import { useMeQuery } from "../../../hooks/query/useMeQuery";
 import { PreviewLayout } from "../../../layouts/PreviewLayout";
+import { prefetchMe } from "../../../services/utils/prefetchMe";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -31,14 +32,13 @@ const PostPage: React.FC = () => {
 
 export default PostPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["post", params?.id], () =>
-    fetchPost(Number(params?.id))
-  );
+  await prefetchMe(ctx, queryClient);
 
   return {
     props: {
+      cookies: ctx.req.headers.cookie ?? "",
       dehydratedState: dehydrate(queryClient),
     },
   };

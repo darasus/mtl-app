@@ -27,6 +27,7 @@ import { useDoIFollowUserQuery } from "../../hooks/query/useDoIFollowUserQuery";
 import { UserGroupIcon } from "@heroicons/react/outline";
 import { Layout } from "../../layouts/Layout";
 import { useColors } from "../../hooks/useColors";
+import { prefetchMe } from "../../services/utils/prefetchMe";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
@@ -75,8 +76,6 @@ const UserPage: React.FC = () => {
     )
   ) : null;
 
-  if (!user.data || !posts.data) return null;
-
   return (
     <Layout>
       <Grid
@@ -86,44 +85,46 @@ const UserPage: React.FC = () => {
       >
         <GridItem colSpan={3}>
           <Box marginBottom="size-100">
-            <Flex flexDirection="column">
-              <Box
-                width={150}
-                height={150}
-                overflow="hidden"
-                marginBottom="size-100"
-                borderRadius="100"
-                borderWidth="thick"
-                borderColor="brand"
-                boxShadow="base"
-                mb={2}
-              >
-                <Image
-                  src={user.data?.image as string}
-                  width="500"
-                  height="500"
-                  alt="Avatar"
-                />
-              </Box>
-              <Text fontWeight="bold" fontSize="2xl" mb={1}>
-                {user.data.name}
-              </Text>
-              {followButton}
-              <Flex alignItems="center">
-                <Text mr={1} color={secondaryTextColor}>
-                  <UserGroupIcon
-                    className={secondaryTextColor}
-                    width="20"
-                    height="20"
+            {user.data && (
+              <Flex flexDirection="column">
+                <Box
+                  width={150}
+                  height={150}
+                  overflow="hidden"
+                  marginBottom="size-100"
+                  borderRadius="100"
+                  borderWidth="thick"
+                  borderColor="brand"
+                  boxShadow="base"
+                  mb={2}
+                >
+                  <Image
+                    src={user.data?.image as string}
+                    width="500"
+                    height="500"
+                    alt="Avatar"
                   />
+                </Box>
+                <Text fontWeight="bold" fontSize="2xl" mb={1}>
+                  {user.data?.name}
                 </Text>
-                <Text
-                  fontWeight="bold"
-                  fontSize="sm"
-                  color={secondaryTextColor}
-                >{`${followersCount.data} followers`}</Text>
+                {followButton}
+                <Flex alignItems="center">
+                  <Text mr={1} color={secondaryTextColor}>
+                    <UserGroupIcon
+                      className={secondaryTextColor}
+                      width="20"
+                      height="20"
+                    />
+                  </Text>
+                  <Text
+                    fontWeight="bold"
+                    fontSize="sm"
+                    color={secondaryTextColor}
+                  >{`${followersCount.data} followers`}</Text>
+                </Flex>
               </Flex>
-            </Flex>
+            )}
           </Box>
         </GridItem>
         <GridItem colSpan={9}>
@@ -145,21 +146,23 @@ const UserPage: React.FC = () => {
 
 export default UserPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
+  await prefetchMe(ctx, queryClient);
+  const session = await getSession(ctx);
 
   if (session) {
-    await queryClient.prefetchQuery(["user", context.query.id], () =>
-      fetchUser(Number(context.query.id))
+    await queryClient.prefetchQuery(["user", ctx.query.id], () =>
+      fetchUser(Number(ctx.query.id))
     );
-    await queryClient.prefetchQuery(["feed", context.query.id], () =>
-      fetchUserPosts(Number(context.query.id))
+    await queryClient.prefetchQuery(["feed", ctx.query.id], () =>
+      fetchUserPosts(Number(ctx.query.id))
     );
   }
 
   return {
     props: {
+      cookies: ctx.req.headers.cookie ?? "",
       dehydratedState: dehydrate(queryClient),
     },
   };

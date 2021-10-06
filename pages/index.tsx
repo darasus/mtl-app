@@ -57,6 +57,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
+      cookies: ctx.req.headers.cookie ?? "",
       dehydratedState: dehydrate(queryClient),
     },
   };

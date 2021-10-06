@@ -16,6 +16,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { usePostCreate } from "../../hooks/usePostCreate";
 import { Layout } from "../../layouts/Layout";
 import { useColors } from "../../hooks/useColors";
+import { GetServerSideProps } from "next";
+import { prefetchMe } from "../../services/utils/prefetchMe";
+import { QueryClient } from "react-query";
 
 interface Form {
   title: string;
@@ -112,3 +115,14 @@ const CreatePostPage: React.FC = () => {
 };
 
 export default CreatePostPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const queryClient = new QueryClient();
+  await prefetchMe(ctx, queryClient);
+
+  return {
+    props: {
+      cookies: ctx.req.headers.cookie ?? "",
+    },
+  };
+};

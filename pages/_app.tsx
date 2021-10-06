@@ -4,7 +4,11 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { ChakraProvider } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  cookieStorageManager,
+  localStorageManager,
+} from "@chakra-ui/react";
 import { theme } from "../theme";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -13,11 +17,16 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     queryClientRef.current = new QueryClient();
   }
 
+  const colorModeManager =
+    typeof pageProps.cookies === "string"
+      ? cookieStorageManager(pageProps.cookies)
+      : localStorageManager;
+
   return (
     <AuthProvider session={pageProps.session}>
       <QueryClientProvider client={queryClientRef.current}>
         <Hydrate state={pageProps.dehydratedState}>
-          <ChakraProvider theme={theme}>
+          <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
             <Component {...pageProps} />
           </ChakraProvider>
         </Hydrate>
