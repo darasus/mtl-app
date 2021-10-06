@@ -21,7 +21,7 @@ export default async function handle(
 
   try {
     const postService = new PostService({ req });
-    await postService.deletePost();
+    await postService.deletePost(Number(req.query.id));
     res.json({ status: "success" });
   } catch (error) {
     return error;

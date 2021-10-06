@@ -151,9 +151,19 @@ export class PostService {
     );
   }
 
-  async deletePost() {
+  async deletePost(postId: number) {
+    await prisma.like.deleteMany({
+      where: {
+        postId,
+      },
+    });
+    await prisma.comment.deleteMany({
+      where: {
+        postId,
+      },
+    });
     await prisma.post.delete({
-      where: { id: Number(this.req.query.id) },
+      where: { id: postId },
     });
   }
 }

@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
+import { createUseFeedQueryCacheKey } from "../query/useFeedQuery";
+import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 
 export const usePostDeleteMutation = (id: number) => {
   const queryClient = useQueryClient();
@@ -10,9 +12,9 @@ export const usePostDeleteMutation = (id: number) => {
         method: "DELETE",
       }),
     {
-      async onSettled(_, __, id) {
-        await queryClient.invalidateQueries(["post", id]);
-        await queryClient.invalidateQueries("feed");
+      async onSettled() {
+        await queryClient.invalidateQueries(createUsePostQueryCacheKey(id));
+        await queryClient.invalidateQueries(createUseFeedQueryCacheKey());
       },
     }
   );
