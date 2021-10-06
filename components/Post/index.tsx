@@ -20,6 +20,7 @@ interface Props {
   post: PostType;
   isMyPost: boolean;
   showActionMenu?: boolean;
+  isPostLoading?: boolean;
 }
 
 export const Post: React.FC<Props> = React.memo(function Post({
@@ -27,7 +28,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
   isMyPost,
   showActionMenu = true,
 }) {
-  const { borderColor, secondaryButtonTextColor } = useColors();
+  const { borderColor } = useColors();
 
   const [isCopied, copy] = useCopyClipboard(post.content || "", {
     successDuration: 3000,

@@ -21,6 +21,7 @@ const PostPage: React.FC = () => {
           <Post
             post={post.data}
             isMyPost={post.data.authorId === me.data?.id}
+            isPostLoading={post.isFetching}
           />
         )}
       </main>
