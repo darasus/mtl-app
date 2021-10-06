@@ -8,6 +8,7 @@ import {
   Grid,
   GridItem,
   Heading,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 import Image from "next/image";
@@ -78,13 +79,14 @@ const UserPage: React.FC = () => {
 
   return (
     <Layout>
-      <Grid
-        // templateRows="repeat(2, 1fr)"
-        templateColumns="repeat(12, 1fr)"
-        gap={4}
-      >
+      <Grid templateColumns="repeat(12, 1fr)" gap={4}>
         <GridItem colSpan={3}>
           <Box marginBottom="size-100">
+            {user.isLoading && (
+              <Flex justifyContent="center">
+                <Spinner />
+              </Flex>
+            )}
             {user.data && (
               <Flex flexDirection="column">
                 <Box
@@ -132,6 +134,11 @@ const UserPage: React.FC = () => {
             <Heading mb={10} variant="section-heading">
               My libraries
             </Heading>
+            {posts.isLoading && (
+              <Flex justifyContent="center">
+                <Spinner />
+              </Flex>
+            )}
             {posts.data?.map((post) => (
               <Box key={post.id} mb={6}>
                 <Post post={post} isMyPost={post.authorId === me.data?.id} />
