@@ -9,6 +9,7 @@ import { Session } from "next-auth";
 import { authorFragment } from "../fragments/authorFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
+import { preparePost } from "../utils/preparePost";
 
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];
@@ -17,67 +18,63 @@ type InputPost = Prisma.Post & {
 };
 
 export class PostService {
-  req: NextApiRequest;
-
-  constructor({ req }: { req: NextApiRequest }) {
-    this.req = req;
-  }
-
-  preparePost = (post: InputPost, session: Session | null): Post => {
-    const isLikedByMe = post.likes.some(
-      (like: any) => like.author?.email === session?.user?.email
-    );
-
-    return {
-      ...R.omit(["likes"], post),
-      likesCount: post.likes.length,
-      isLikedByMe,
-    };
-  };
-
-  async updatePost() {
-    const { title, content, description, published = true } = this.req.body;
+  async updatePost(
+    {
+      title,
+      content,
+      description,
+    }: {
+      title: string;
+      content: string;
+      description: string;
+    },
+    postId: number
+  ) {
     await prisma.post.update({
       where: {
-        id: Number(this.req.query.id),
+        id: postId,
       },
       data: {
         title,
         content,
         description,
-        published,
       },
     });
   }
 
-  async unpublishPost() {
+  async unpublishPost(postId: number) {
     await prisma.post.update({
-      where: { id: Number(this.req.query.id) },
+      where: { id: postId },
       data: {
         published: false,
       },
     });
   }
 
-  async publishPost() {
+  async publishPost(postId: number) {
     await prisma.post.update({
-      where: { id: Number(this.req.query.id) },
+      where: { id: postId },
       data: {
         published: true,
       },
     });
   }
 
-  async createPost() {
-    const session = await getSession({ req: this.req });
-    const { title, content, description } = this.req.body;
+  async createPost(
+    {
+      title,
+      content,
+      description,
+    }: { title: string; content: string; description: string },
+    userId: number
+  ) {
     const post = await prisma.post.create({
       data: {
         title,
         content,
         description,
         published: true,
-        author: { connect: { email: session?.user?.email as string } },
+        author: { connect: { id: userId } },
       },
       include: {
         author: {
@@ -92,19 +89,24 @@ export class PostService {
       },
     });
 
-    return this.preparePost({ ...post, commentsCount: 0 }, session);
+    return preparePost({ ...post, commentsCount: 0 }, userId);
   }
 
-  async savePost() {
-    const session = await getSession({ req: this.req });
-    const { title, content, description } = this.req.body;
+  async savePost(
+    {
+      title,
+      content,
+      description,
+    }: { title: string; content: string; description: string },
+    userId: number
+  ) {
     await prisma.post.create({
       data: {
         title,
         content,
         description,
         published: false,
-        author: { connect: { email: session?.user?.email as string } },
+        author: { connect: { id: userId } },
       },
       include: {
         author: {
@@ -120,11 +122,10 @@ export class PostService {
     });
   }
 
-  async fetchPost(): Promise<Post | null> {
-    const session = await getSession({ req: this.req });
+  async fetchPost(postId: number, userId?: number): Promise<Post | null> {
     const post = await prisma.post.findUnique({
       where: {
-        id: Number(this.req.query.id),
+        id: postId,
       },
       include: {
         author: {
@@ -141,13 +142,13 @@ export class PostService {
 
     if (!post) return null;
 
-    return this.preparePost(
+    return preparePost(
       {
         ...post,
         commentsCount: post.comments.length,
         comments: post.comments.slice(-3),
       },
-      session
+      userId
     );
   }
 

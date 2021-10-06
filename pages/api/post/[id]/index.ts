@@ -3,19 +3,28 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import prisma from "../../../../lib/prisma";
 import { PostService } from "../../../../services/api/PostService";
+import { UserSessionService } from "../../../../services/api/UserSessionService";
 import { Post } from "../../../../types/Post";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  invariant(
+    req.method === "GET",
+    `The HTTP ${req.method} method is not supported at this route.`
+  );
+
+  const session = await getSession({ req });
+
   try {
-    invariant(
-      req.method === "GET",
-      `The HTTP ${req.method} method is not supported at this route.`
-    );
-    const postService = new PostService({ req });
-    const post = await postService.fetchPost();
+    let userId = undefined;
+    if (session) {
+      const userService = await new UserSessionService(session).get();
+      userId = userService.id;
+    }
+    const postService = new PostService();
+    const post = await postService.fetchPost(Number(req.query.id), userId);
     res.json(post);
   } catch (error) {
     return error;

@@ -8,6 +8,7 @@ import { Layout } from "../../../layouts/Layout";
 import { QueryClient } from "react-query";
 import { prefetchMe } from "../../../services/utils/prefetchMe";
 import { dehydrate } from "react-query/hydration";
+import { Flex, Spinner } from "@chakra-ui/react";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -17,6 +18,11 @@ const PostPage: React.FC = () => {
   return (
     <Layout>
       <main>
+        {post.isLoading && (
+          <Flex justifyContent="center" mt={5} mb={5}>
+            <Spinner />
+          </Flex>
+        )}
         {post.data && (
           <Post
             post={post.data}

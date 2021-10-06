@@ -2,6 +2,7 @@ import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import { PostService } from "../../../../services/api/PostService";
+import { UserSessionService } from "../../../../services/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -19,8 +20,8 @@ export default async function handle(
   }
 
   try {
-    const postService = new PostService({ req });
-    await postService.unpublishPost();
+    const postService = new PostService();
+    await postService.unpublishPost(Number(req.query.id));
     res.json({ status: "success" });
   } catch (error) {
     return error;

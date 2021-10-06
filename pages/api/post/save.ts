@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import { PostService } from "../../../services/api/PostService";
 import invariant from "invariant";
+import { UserSessionService } from "../../../services/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -19,8 +20,21 @@ export default async function handle(
   }
 
   try {
-    const postService = new PostService({ req });
-    await postService.savePost();
+    let userId = undefined;
+    if (session) {
+      const userService = await new UserSessionService(session).get();
+      userId = userService.id;
+    }
+    invariant(userId, "userId is undefined");
+    const postService = new PostService();
+    await postService.savePost(
+      {
+        title: req.body.title,
+        content: req.body.content,
+        description: req.body.description,
+      },
+      userId
+    );
     res.json({ status: "success" });
   } catch (error) {
     return error;

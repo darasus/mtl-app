@@ -20,7 +20,7 @@ export default async function handle(
   }
 
   try {
-    const postService = new PostService({ req });
+    const postService = new PostService();
     await postService.deletePost(Number(req.query.id));
     res.json({ status: "success" });
   } catch (error) {

@@ -4,6 +4,7 @@ import prisma from "../../../../lib/prisma";
 import invariant from "invariant";
 import { PostService } from "../../../../services/api/PostService";
 import { LikeService } from "../../../../services/api/LikeService";
+import { UserSessionService } from "../../../../services/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -23,9 +24,14 @@ export default async function handle(
   }
 
   try {
-    const postService = new PostService({ req });
+    let userId = undefined;
+    if (session) {
+      const userService = await new UserSessionService(session).get();
+      userId = userService.id;
+    }
+    const postService = new PostService();
     const likeService = new LikeService({ session });
-    const post = await postService.fetchPost();
+    const post = await postService.fetchPost(Number(req.query.id), userId);
 
     if (post?.isLikedByMe) {
       res.status(400).json({ message: "Post is already liked by you" });

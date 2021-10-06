@@ -35,6 +35,11 @@ export class UserService {
       where: {
         authorId: userId,
       },
+      orderBy: [
+        {
+          id: "desc",
+        },
+      ],
       include: {
         author: {
           select: authorFragment,

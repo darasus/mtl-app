@@ -19,8 +19,8 @@ export default async function handle(
   }
 
   try {
-    const postService = new PostService({ req });
-    await postService.publishPost();
+    const postService = new PostService();
+    await postService.publishPost(Number(req.query.id));
     res.json({ status: "success" });
   } catch (error) {
     return error;
