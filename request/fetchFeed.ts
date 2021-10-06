@@ -1,5 +1,10 @@
 import { request } from "../lib/request";
-import { Post } from "../types/Post";
+import { FetchFeedResponse } from "../services/api/FeedService";
+import qs from "query-string";
 
-export const fetchFeed = (): Promise<Post[]> =>
-  request("/api/feed").then((res) => res.data);
+export const fetchFeed = ({
+  cursor,
+}: {
+  cursor?: number;
+}): Promise<FetchFeedResponse> =>
+  request(`/api/feed?${qs.stringify({ cursor })}`).then((res) => res.data);

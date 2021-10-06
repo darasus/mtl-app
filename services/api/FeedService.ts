@@ -1,5 +1,3 @@
-import { NextApiRequest } from "next";
-import { getSession } from "next-auth/client";
 import prisma from "../../lib/prisma";
 import { Post } from "../../types/Post";
 import * as R from "ramda";
@@ -12,6 +10,13 @@ type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];
   comments: Prisma.Comment[];
   commentsCount: number;
+};
+
+export type FetchFeedResponse = {
+  items: Post[];
+  count: number;
+  cursor: number;
+  total: number;
 };
 
 export class FeedService {
@@ -27,16 +32,39 @@ export class FeedService {
     };
   };
 
-  async fetchFeed(userId: number | undefined): Promise<Post[]> {
-    const posts = await prisma.post.findMany({
+  async fetchFeed({
+    userId,
+    take = 25,
+    cursor,
+  }: {
+    userId?: number;
+    take?: number;
+    cursor?: number;
+  }): Promise<FetchFeedResponse> {
+    const query = {
       where: {
         published: true,
       },
+    } as const;
+    const total = await prisma.post.count({
+      ...query,
+    });
+    const posts = await prisma.post.findMany({
+      ...query,
       orderBy: [
         {
           id: "desc",
         },
       ],
+      ...(cursor
+        ? {
+            cursor: {
+              id: cursor,
+            },
+          }
+        : {}),
+      take,
+      skip: cursor ? 1 : 0,
       include: {
         author: {
           select: authorFragment,
@@ -50,12 +78,20 @@ export class FeedService {
       },
     });
 
-    return posts
-      .map((post) => ({
-        ...post,
-        commentsCount: post.comments.length,
-        comments: post.comments.splice(-3),
-      }))
-      .map((post) => this.preparePost(post, userId));
+    const lastPostInResults = posts[posts.length - 1];
+    const newCursor = lastPostInResults.id;
+
+    return {
+      items: posts
+        .map((post) => ({
+          ...post,
+          commentsCount: post.comments.length,
+          comments: post.comments.splice(-3),
+        }))
+        .map((post) => this.preparePost(post, userId)),
+      count: posts.length,
+      cursor: newCursor,
+      total,
+    };
   }
 }

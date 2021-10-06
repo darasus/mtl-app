@@ -1,22 +1,16 @@
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { Post } from "../components/Post";
-import { Box, Flex, Heading, Spinner } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import {
   createUseFeedQueryCacheKey,
   useFeedQuery,
 } from "../hooks/query/useFeedQuery";
-import {
-  createUseMeQueryCacheKey,
-  useMeQuery,
-} from "../hooks/query/useMeQuery";
+import { useMeQuery } from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
-import { UserSessionService } from "../services/api/UserSessionService";
-import { getSession } from "next-auth/client";
 import { FeedService } from "../services/api/FeedService";
-import { User } from "../types/User";
 import { prefetchMe } from "../services/utils/prefetchMe";
 
 const Index: React.FC = () => {
@@ -34,11 +28,29 @@ const Index: React.FC = () => {
             <Spinner />
           </Flex>
         )}
-        {feed.data?.map((post) => (
-          <Box key={post.id} mb={6}>
-            <Post post={post} isMyPost={post.authorId === me.data?.id} />
-          </Box>
-        ))}
+        {feed.data?.pages.map((page) => {
+          return page.items.map((post) => {
+            return (
+              <Box key={post.id} mb={6}>
+                <Post post={post} isMyPost={post.authorId === me.data?.id} />
+              </Box>
+            );
+          });
+        })}
+        {feed.hasNextPage && (
+          <Flex justifyContent="center">
+            <Button
+              color="brand"
+              borderColor="brand"
+              variant="outline"
+              size="sm"
+              isLoading={feed.isFetchingNextPage}
+              onClick={() => feed.fetchNextPage()}
+            >
+              Load more
+            </Button>
+          </Flex>
+        )}
       </main>
     </Layout>
   );
@@ -51,9 +63,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const me = await prefetchMe(ctx, queryClient);
   const feedService = new FeedService();
 
-  await queryClient.prefetchQuery(createUseFeedQueryCacheKey(), () =>
-    feedService.fetchFeed(me?.id || undefined)
-  );
+  await queryClient.prefetchQuery(createUseFeedQueryCacheKey(), async () => {
+    const page = await feedService.fetchFeed({
+      userId: me?.id || undefined,
+    });
+    return {
+      pages: [page],
+    };
+  });
 
   return {
     props: {
