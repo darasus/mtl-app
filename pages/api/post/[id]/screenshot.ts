@@ -1,7 +1,8 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-const chrome = require("chrome-aws-lambda");
-const puppeteer = require("puppeteer-core");
+import chrome from "chrome-aws-lambda";
+import puppeteerCore from "puppeteer-core";
+import puppeteer from "puppeteer";
 
 export default async function handle(
   req: NextApiRequest,
@@ -11,26 +12,32 @@ export default async function handle(
     req.method === "GET",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  const isLocalhost = req.headers.host === "localhost:3000";
 
   let browser = null;
-  browser = await puppeteer.launch({
+  browser = await (isLocalhost ? puppeteer : puppeteerCore).launch({
     headless: true,
-    args: chrome.args,
-    executablePath: await chrome.executablePath,
+    ...(isLocalhost
+      ? {}
+      : { args: chrome.args, executablePath: await chrome.executablePath }),
   });
   const page = await browser.newPage();
   await page.setViewport({
     width: Number(req.query.width) || 1200,
     height: Number(req.query.height) || 630,
   });
-  await page.goto(`${process.env.NEXTAUTH_URL}/p/${req.query.id}/preview`, {
-    waitUntil: "networkidle0",
-  });
+  await page.goto(
+    `${process.env.NEXTAUTH_URL}/p/${req.query.id}/preview`,
+    isLocalhost
+      ? undefined
+      : {
+          waitUntil: "networkidle0",
+        }
+  );
   const screenshot = await page.screenshot({
     type: "png",
     encoding: "binary",
   });
   res.statusCode = 200;
-  res.setHeader("Content-Type", "image/png");
   return res.end(screenshot);
 }

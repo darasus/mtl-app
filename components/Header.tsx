@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/client";
-import Image from "next/image";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/query/useMeQuery";
 import {
@@ -10,7 +9,6 @@ import {
   Flex,
   Box,
   Link as ChakraLink,
-  useColorMode,
   Menu,
   MenuButton,
   MenuItem,
@@ -22,11 +20,11 @@ import {
   PlusCircleIcon,
   LogoutIcon,
 } from "@heroicons/react/outline";
+import { Logo } from "./Logo";
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const me = useMeQuery();
-  const { colorMode } = useColorMode();
 
   return (
     <Box py="6" cursor="pointer">
@@ -34,13 +32,7 @@ export const Header: React.FC = () => {
         <Flex flexGrow={1}>
           <Link href="/" passHref>
             <ChakraLink display="block">
-              <Image
-                src={
-                  colorMode === "dark" ? "/logo-light.svg" : "/logo-dark.svg"
-                }
-                height="30"
-                width={130}
-              />
+              <Logo />
             </ChakraLink>
           </Link>
         </Flex>
@@ -89,10 +81,10 @@ export const Header: React.FC = () => {
         ) : (
           <Flex>
             <Button
-              variant="cta"
-              onClick={() => router.push("/api/auth/signin")}
+              variant="outline"
+              onClick={() => router.push("/auth/signin")}
             >
-              Log in
+              Sign in
             </Button>
           </Flex>
         )}
