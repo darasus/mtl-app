@@ -8,9 +8,10 @@ import { useColors } from "../../hooks/useColors";
 
 interface Props {
   post: PostType;
+  showMetaInfo?: boolean;
 }
 
-export const Header: React.FC<Props> = ({ post }) => {
+export const Header: React.FC<Props> = ({ post, showMetaInfo = true }) => {
   const { secondaryTextColor } = useColors();
 
   return (
@@ -29,26 +30,28 @@ export const Header: React.FC<Props> = ({ post }) => {
         <Box mr={2}>
           {post.author && <PostUserPreview user={post.author} />}
         </Box>
-        <Box mr={2}>
-          <Flex color={secondaryTextColor}>
-            <Flex mr={2} alignItems="center">
-              <Box mr={1}>
-                <ThumbUpIcon width="15" height="15" />
-              </Box>
-              <Box>
-                <Text fontSize="sm">{`${post.likesCount} likes`}</Text>
-              </Box>
+        {showMetaInfo && (
+          <Box mr={2}>
+            <Flex color={secondaryTextColor}>
+              <Flex mr={2} alignItems="center">
+                <Box mr={1}>
+                  <ThumbUpIcon width="15" height="15" />
+                </Box>
+                <Box>
+                  <Text fontSize="sm">{`${post.likesCount} likes`}</Text>
+                </Box>
+              </Flex>
+              <Flex alignItems="center">
+                <Box mr={1}>
+                  <ChatIcon width="15" height="15" />
+                </Box>
+                <Box>
+                  <Text fontSize="sm">{`${post.commentsCount} comments`}</Text>
+                </Box>
+              </Flex>
             </Flex>
-            <Flex alignItems="center">
-              <Box mr={1}>
-                <ChatIcon width="15" height="15" />
-              </Box>
-              <Box>
-                <Text fontSize="sm">{`${post.commentsCount} comments`}</Text>
-              </Box>
-            </Flex>
-          </Flex>
-        </Box>
+          </Box>
+        )}
       </Flex>
     </Box>
   );

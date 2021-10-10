@@ -15,11 +15,13 @@ import { useColors } from "../../hooks/useColors";
 import { ActionMenu } from "./ActionMenu";
 import { paramCase } from "change-case";
 import { Header } from "./Header";
+import { ScreenshotButton } from "./ScreenshotButton";
 
 interface Props {
   post: PostType;
   isMyPost: boolean;
   showActionMenu?: boolean;
+  showMetaInfo?: boolean;
   isPostLoading?: boolean;
 }
 
@@ -27,6 +29,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
   post,
   isMyPost,
   showActionMenu = true,
+  showMetaInfo = true,
 }) {
   const { borderColor } = useColors();
 
@@ -49,7 +52,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
       <Flex flexDirection="column">
         <Box>
           <Box borderColor={borderColor} borderBottomWidth="thin">
-            <Header post={post} />
+            <Header post={post} showMetaInfo={showMetaInfo} />
           </Box>
           <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
             <Flex flexDirection="column">
@@ -84,17 +87,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 >
                   <Text>{isCopied ? "Copied!" : "Copy"}</Text>
                 </Button>
-                <Button
-                  leftIcon={<PhotographIcon width="15" height="15" />}
-                  variant="ghost"
-                  size="xs"
-                  mr={2}
-                  as="a"
-                  download={paramCase(post.title)}
-                  href={`/api/post/${post.id}/screenshot`}
-                >
-                  <Text>Screenshot</Text>
-                </Button>
+                <ScreenshotButton title={post.title} postId={post.id} />
                 <Box flexGrow={1} />
                 <ActionMenu isMyPost={isMyPost} post={post} />
               </Flex>

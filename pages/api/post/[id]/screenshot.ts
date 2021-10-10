@@ -19,7 +19,10 @@ export default async function handle(
     executablePath: await chrome.executablePath,
   });
   const page = await browser.newPage();
-  await page.setViewport({ width: 1200, height: 630 });
+  await page.setViewport({
+    width: Number(req.query.width) || 1200,
+    height: Number(req.query.height) || 630,
+  });
   await page.goto(`${process.env.NEXTAUTH_URL}/p/${req.query.id}/preview`, {
     waitUntil: "networkidle0",
   });
