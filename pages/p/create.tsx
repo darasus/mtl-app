@@ -19,6 +19,7 @@ import { useColors } from "../../hooks/useColors";
 import { GetServerSideProps } from "next";
 import { prefetchMe } from "../../services/utils/prefetchMe";
 import { QueryClient } from "react-query";
+import { dehydrate } from "react-query/hydration";
 
 interface Form {
   title: string;
@@ -123,6 +124,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       cookies: ctx.req.headers.cookie ?? "",
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };

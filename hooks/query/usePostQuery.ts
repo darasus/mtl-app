@@ -10,6 +10,7 @@ export const usePostQuery = (id: number) => {
   return useQuery(createUsePostQueryCacheKey(id), () => fetchPost(id), {
     enabled: !!id,
     onSuccess(data) {
+      console.log({ data });
       if (data) {
         queryClient.setQueryData(createUseCommentsQueryCacheKey(id, 3), {
           items: data.comments,

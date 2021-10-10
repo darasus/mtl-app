@@ -21,10 +21,10 @@ const selectQueryFragment = {
 };
 
 export class UserService {
-  async getUserById(id: number) {
+  async getUserById(userId: number) {
     return prisma.user.findUnique({
       where: {
-        id,
+        id: userId,
       },
       ...selectQueryFragment,
     });

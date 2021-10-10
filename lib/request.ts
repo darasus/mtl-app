@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const createRequest = () => {
-  const client = axios.create();
+  const client = axios.create({
+    baseURL: process.env.NEXTAUTH_URL,
+  });
 
   client.interceptors.response.use(
     function (response) {

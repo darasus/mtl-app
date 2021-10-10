@@ -1,7 +1,10 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import { Post } from "../../../components/Post";
-import { usePostQuery } from "../../../hooks/query/usePostQuery";
+import {
+  createUsePostQueryCacheKey,
+  usePostQuery,
+} from "../../../hooks/query/usePostQuery";
 import { useRouter } from "next/router";
 import { useMeQuery } from "../../../hooks/query/useMeQuery";
 import { Layout } from "../../../layouts/Layout";
@@ -9,6 +12,7 @@ import { QueryClient } from "react-query";
 import { prefetchMe } from "../../../services/utils/prefetchMe";
 import { dehydrate } from "react-query/hydration";
 import { Flex, Spinner } from "@chakra-ui/react";
+import { fetchPost } from "../../../request/fetchPost";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -39,7 +43,13 @@ export default PostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await prefetchMe(ctx, queryClient);
+  const postId = Number(ctx.query.id);
+  await Promise.all([
+    prefetchMe(ctx, queryClient),
+    queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
+      fetchPost(postId)
+    ),
+  ]);
 
   return {
     props: {

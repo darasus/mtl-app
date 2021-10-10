@@ -1,6 +1,5 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PostService } from "../../../../services/api/PostService";
 import { UserService } from "../../../../services/api/UserService";
 
 export default async function handle(
@@ -11,6 +10,7 @@ export default async function handle(
     req.method === "GET",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  invariant(typeof req.query.id === "string", "User ID is not provided");
 
   try {
     const userService = new UserService();

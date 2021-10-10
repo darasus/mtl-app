@@ -16,9 +16,15 @@ import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { fetchUser } from "../../request/fetchUser";
-import { useUserQuery } from "../../hooks/query/useUserQuery";
+import {
+  createUseUserQueryCacheKey,
+  useUserQuery,
+} from "../../hooks/query/useUserQuery";
 import { useRouter } from "next/router";
-import { useUserPostsQuery } from "../../hooks/query/useUserPostsQuery";
+import {
+  createUseUserPostsQueryCacheKey,
+  useUserPostsQuery,
+} from "../../hooks/query/useUserPostsQuery";
 import { fetchUserPosts } from "../../request/fetchUserPosts";
 import { useMeQuery } from "../../hooks/query/useMeQuery";
 import { useFollowMutation } from "../../hooks/useFollowMutation";
@@ -155,17 +161,17 @@ export default UserPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await prefetchMe(ctx, queryClient);
-  const session = await getSession(ctx);
+  const userId = Number(ctx.query.id);
 
-  if (session) {
-    await queryClient.prefetchQuery(["user", ctx.query.id], () =>
-      fetchUser(Number(ctx.query.id))
-    );
-    await queryClient.prefetchQuery(["feed", ctx.query.id], () =>
-      fetchUserPosts(Number(ctx.query.id))
-    );
-  }
+  await Promise.all([
+    prefetchMe(ctx, queryClient),
+    queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
+      fetchUser(userId)
+    ),
+    queryClient.prefetchQuery(createUseUserPostsQueryCacheKey(userId), () =>
+      fetchUserPosts(userId)
+    ),
+  ]);
 
   return {
     props: {

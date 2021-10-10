@@ -1,10 +1,8 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
-import prisma from "../../../../lib/prisma";
 import { PostService } from "../../../../services/api/PostService";
 import { UserSessionService } from "../../../../services/api/UserSessionService";
-import { Post } from "../../../../types/Post";
 
 export default async function handle(
   req: NextApiRequest,
