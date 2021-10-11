@@ -29,7 +29,9 @@ export default async function handle(
   await page.goto(
     `${process.env.NEXTAUTH_URL}/p/${req.query.id}/preview`,
     isLocalhost
-      ? undefined
+      ? {
+          waitUntil: "networkidle2",
+        }
       : {
           waitUntil: "networkidle0",
         }

@@ -42,7 +42,6 @@ const SignIn: React.FC<Props> = ({ providers }) => {
   const [me] = useSession();
   const router = useRouter();
   const callbackUrl = router.query.callbackUrl as string | undefined;
-  console.log(callbackUrl);
 
   React.useEffect(() => {
     if (me) {
