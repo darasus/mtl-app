@@ -1,4 +1,11 @@
-import { Button, Flex, Center, Box } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Center,
+  Box,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import {
   ClientSafeProvider,
@@ -6,6 +13,7 @@ import {
   signIn,
   useSession,
 } from "next-auth/client";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { Logo } from "../../components/Logo";
@@ -14,6 +22,22 @@ interface Props {
   providers: Record<string, ClientSafeProvider>;
 }
 
+const BrandLogo = ({ name }: { name: string }) => {
+  const { colorMode } = useColorMode();
+
+  return (
+    <Image
+      src={
+        colorMode === "dark"
+          ? `/${name}-logo-light.svg`
+          : `/${name}-logo-dark.svg`
+      }
+      height={23}
+      width={23}
+    />
+  );
+};
+
 const SignIn: React.FC<Props> = ({ providers }) => {
   const [me] = useSession();
   const router = useRouter();
@@ -21,7 +45,7 @@ const SignIn: React.FC<Props> = ({ providers }) => {
   console.log(callbackUrl);
 
   React.useEffect(() => {
-    if (me && callbackUrl) {
+    if (me) {
       router.push(callbackUrl ? callbackUrl : "/");
     }
   }, [me]);
@@ -37,7 +61,10 @@ const SignIn: React.FC<Props> = ({ providers }) => {
         {Object.values(providers).map((provider) => (
           <div key={provider.name}>
             <Button variant="outline" onClick={() => signIn(provider.id)}>
-              Sign in with {provider.name}
+              <Flex alignItems="center">
+                <Text mr={2}>Sign in with</Text>
+                <BrandLogo name={provider.name} />
+              </Flex>
             </Button>
           </div>
         ))}
