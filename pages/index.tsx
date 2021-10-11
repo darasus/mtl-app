@@ -1,15 +1,7 @@
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { Post } from "../components/Post";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Center, Flex, Heading, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import {
@@ -22,6 +14,7 @@ import { FeedService } from "../services/api/FeedService";
 import { prefetchMe } from "../services/utils/prefetchMe";
 import { useSession } from "next-auth/client";
 import { useRouter } from "next/router";
+import { Head } from "../components/Head";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
@@ -30,68 +23,71 @@ const Index: React.FC = () => {
   const router = useRouter();
 
   return (
-    <Layout>
-      <main>
-        {!session && (
-          <Center height="50vh">
-            <Flex alignItems="center" direction="column">
-              <Flex>
-                <Heading size="3xl" mr={3}>
-                  This is
+    <>
+      <Head />
+      <Layout>
+        <main>
+          {!session && (
+            <Center height="50vh">
+              <Flex alignItems="center" direction="column">
+                <Flex>
+                  <Heading size="3xl" mr={3}>
+                    This is
+                  </Heading>
+                  <Heading size="3xl" color="brand">
+                    My Tiny Library
+                  </Heading>
+                </Flex>
+                <Box mb={3} />
+                <Heading size="xl">
+                  The best way to share your code with your peers
                 </Heading>
-                <Heading size="3xl" color="brand">
-                  My Tiny Library
-                </Heading>
+                <Box mb={5} />
+                <Button
+                  variant="outline"
+                  borderColor="brand"
+                  color="brand"
+                  onClick={() => router.push("/auth/signin")}
+                >
+                  Sign in
+                </Button>
               </Flex>
-              <Box mb={3} />
-              <Heading size="xl">
-                The best way to share your code with your peers
-              </Heading>
-              <Box mb={5} />
+            </Center>
+          )}
+          <Heading mb={10} variant="section-heading">
+            Latest libraries
+          </Heading>
+          {feed.isLoading && (
+            <Flex justifyContent="center" mt={5} mb={5}>
+              <Spinner />
+            </Flex>
+          )}
+          {feed.data?.pages.map((page) => {
+            return page.items.map((post) => {
+              return (
+                <Box key={post.id} mb={6}>
+                  <Post post={post} isMyPost={post.authorId === me.data?.id} />
+                </Box>
+              );
+            });
+          })}
+          {feed.hasNextPage && (
+            <Flex justifyContent="center">
               <Button
-                variant="outline"
-                borderColor="brand"
                 color="brand"
-                onClick={() => router.push("/auth/signin")}
+                borderColor="brand"
+                variant="outline"
+                size="sm"
+                isLoading={feed.isFetchingNextPage}
+                onClick={() => feed.fetchNextPage()}
               >
-                Sign in
+                Load more
               </Button>
             </Flex>
-          </Center>
-        )}
-        <Heading mb={10} variant="section-heading">
-          Latest libraries
-        </Heading>
-        {feed.isLoading && (
-          <Flex justifyContent="center" mt={5} mb={5}>
-            <Spinner />
-          </Flex>
-        )}
-        {feed.data?.pages.map((page) => {
-          return page.items.map((post) => {
-            return (
-              <Box key={post.id} mb={6}>
-                <Post post={post} isMyPost={post.authorId === me.data?.id} />
-              </Box>
-            );
-          });
-        })}
-        {feed.hasNextPage && (
-          <Flex justifyContent="center">
-            <Button
-              color="brand"
-              borderColor="brand"
-              variant="outline"
-              size="sm"
-              isLoading={feed.isFetchingNextPage}
-              onClick={() => feed.fetchNextPage()}
-            >
-              Load more
-            </Button>
-          </Flex>
-        )}
-      </main>
-    </Layout>
+          )}
+        </main>
+      </Layout>
+    </>
   );
 };
 

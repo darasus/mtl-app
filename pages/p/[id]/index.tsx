@@ -13,6 +13,7 @@ import { prefetchMe } from "../../../services/utils/prefetchMe";
 import { dehydrate } from "react-query/hydration";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { fetchPost } from "../../../request/fetchPost";
+import { Head } from "../../../components/Head";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -20,22 +21,25 @@ const PostPage: React.FC = () => {
   const me = useMeQuery();
 
   return (
-    <Layout>
-      <main>
-        {post.isLoading && (
-          <Flex justifyContent="center" mt={5} mb={5}>
-            <Spinner />
-          </Flex>
-        )}
-        {post.data && (
-          <Post
-            post={post.data}
-            isMyPost={post.data.authorId === me.data?.id}
-            isPostLoading={post.isFetching}
-          />
-        )}
-      </main>
-    </Layout>
+    <>
+      <Head title={post.data?.title!} />
+      <Layout>
+        <main>
+          {post.isLoading && (
+            <Flex justifyContent="center" mt={5} mb={5}>
+              <Spinner />
+            </Flex>
+          )}
+          {post.data && (
+            <Post
+              post={post.data}
+              isMyPost={post.data.authorId === me.data?.id}
+              isPostLoading={post.isFetching}
+            />
+          )}
+        </main>
+      </Layout>
+    </>
   );
 };
 
