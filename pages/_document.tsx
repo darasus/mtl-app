@@ -31,6 +31,12 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap"
+            rel="stylesheet"
+          />
           {process.env.VERCEL_ENV === "production" && (
             <>
               <script

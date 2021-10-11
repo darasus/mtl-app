@@ -42,6 +42,9 @@ export const theme = extendTheme({
   },
   components: {
     Heading: {
+      baseStyle: {
+        fontFamily: "Bree Serif, serif",
+      },
       variants: {
         "section-heading": {
           borderBottom: `3px solid ${token.color.brand}`,

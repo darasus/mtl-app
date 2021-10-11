@@ -79,14 +79,18 @@ export const Header: React.FC = () => {
             </Flex>
           </>
         ) : (
-          <Flex>
-            <Button
-              variant="outline"
-              onClick={() => router.push("/auth/signin")}
-            >
-              Sign in
-            </Button>
-          </Flex>
+          router.pathname !== "/" && (
+            <Flex>
+              <Button
+                variant="outline"
+                onClick={() => router.push("/auth/signin")}
+                borderColor="brand"
+                color="brand"
+              >
+                Sign in
+              </Button>
+            </Flex>
+          )
         )}
       </Flex>
     </Box>

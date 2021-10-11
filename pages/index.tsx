@@ -1,7 +1,15 @@
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { Post } from "../components/Post";
-import { Box, Button, Flex, Heading, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import {
@@ -12,14 +20,45 @@ import { useMeQuery } from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
 import { FeedService } from "../services/api/FeedService";
 import { prefetchMe } from "../services/utils/prefetchMe";
+import { useSession } from "next-auth/client";
+import { useRouter } from "next/router";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
   const me = useMeQuery();
+  const [session] = useSession();
+  const router = useRouter();
 
   return (
     <Layout>
       <main>
+        {!session && (
+          <Center height="50vh">
+            <Flex alignItems="center" direction="column">
+              <Flex>
+                <Heading size="3xl" mr={3}>
+                  This is
+                </Heading>
+                <Heading size="3xl" color="brand">
+                  My Tiny Library
+                </Heading>
+              </Flex>
+              <Box mb={3} />
+              <Heading size="xl">
+                The best way to share your code with your peers
+              </Heading>
+              <Box mb={5} />
+              <Button
+                variant="outline"
+                borderColor="brand"
+                color="brand"
+                onClick={() => router.push("/auth/signin")}
+              >
+                Sign in
+              </Button>
+            </Flex>
+          </Center>
+        )}
         <Heading mb={10} variant="section-heading">
           Latest libraries
         </Heading>
