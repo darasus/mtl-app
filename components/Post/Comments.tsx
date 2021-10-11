@@ -32,12 +32,8 @@ export const Comments: React.FC<Props> = ({ post }) => {
     take: commentCount,
   });
   const me = useMeQuery();
-  const {
-    borderColor,
-    darkerBgColor,
-    secondaryTextColor,
-    secondaryButtonTextColor,
-  } = useColors();
+  const { borderColor, secondaryTextColor, secondaryButtonTextColor } =
+    useColors();
   const { commentPost, isLoading: isSubmittingComment } = usePostComment();
   const { mutateAsync: deleteComment } = useDeleteCommentMutation();
   const { control, handleSubmit, reset } = useForm({
@@ -81,7 +77,8 @@ export const Comments: React.FC<Props> = ({ post }) => {
           <Flex justifyContent="center" mb={2}>
             <Button
               onClick={handleLoadMoreComments}
-              isLoading={comments.isLoading}
+              isLoading={comments.isFetching}
+              loadingText={"Load more..."}
               variant="ghost"
               size="xs"
             >

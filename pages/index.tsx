@@ -79,7 +79,7 @@ const Index: React.FC = () => {
                 isLoading={feed.isFetchingNextPage}
                 onClick={() => feed.fetchNextPage()}
               >
-                Load more
+                Load more...
               </Button>
             </Flex>
           )}
