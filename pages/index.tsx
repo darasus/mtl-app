@@ -12,14 +12,12 @@ import { useMeQuery } from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
 import { FeedService } from "../services/api/FeedService";
 import { prefetchMe } from "../services/utils/prefetchMe";
-import { useSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import { Head } from "../components/Head";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
   const me = useMeQuery();
-  const [session] = useSession();
   const router = useRouter();
 
   return (
@@ -27,7 +25,7 @@ const Index: React.FC = () => {
       <Head />
       <Layout>
         <main>
-          {!session && (
+          {!me.data && (
             <Center height="50vh">
               <Flex alignItems="center" direction="column">
                 <Flex>
