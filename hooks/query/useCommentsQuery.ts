@@ -1,10 +1,14 @@
 import { useQuery } from "react-query";
 import { fetchComments } from "../../request/fetchComments";
 
-export const createUseCommentsQueryCacheKey = (
-  postId: number,
-  take: number | undefined = 3
-) => ["comments", postId, take];
+export const commentsKey = {
+  base: ["comments"],
+  postComments: (postId: number) => [...commentsKey.base, { postId }],
+  postCommentsWithTake: (postId: number, take?: number) => [
+    ...commentsKey.postComments(postId),
+    { take },
+  ],
+} as const;
 
 export const useCommentsQuery = ({
   postId,
@@ -18,7 +22,7 @@ export const useCommentsQuery = ({
   const innerEnabled = typeof enabled === "boolean" ? enabled : true;
 
   return useQuery(
-    createUseCommentsQueryCacheKey(postId, take),
+    commentsKey.postCommentsWithTake(postId, take),
     () => fetchComments({ postId, take }).then((res) => res),
     {
       enabled: !!postId && innerEnabled,

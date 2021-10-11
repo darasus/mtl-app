@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQueryClient } from "react-query";
 import { fetchFeed } from "../../request/fetchFeed";
-import { createUseCommentsQueryCacheKey } from "./useCommentsQuery";
+import { commentsKey } from "./useCommentsQuery";
 import { createUsePostQueryCacheKey } from "./usePostQuery";
 
 export const createUseFeedQueryCacheKey = () => ["feed"];
@@ -26,7 +26,7 @@ export const useFeedQuery = () => {
           page.items.forEach((item) => {
             queryClient.setQueryData(createUsePostQueryCacheKey(item.id), item);
             queryClient.setQueryData(
-              createUseCommentsQueryCacheKey(item.id, 3),
+              commentsKey.postCommentsWithTake(item.id, 3),
               {
                 items: item.comments,
                 count: item.comments.length,

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteComment } from "../../request/deleteComment";
-import { createUseCommentsQueryCacheKey } from "../query/useCommentsQuery";
+import { commentsKey } from "../query/useCommentsQuery";
 import { createUseFeedQueryCacheKey } from "../query/useFeedQuery";
 import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 
@@ -14,12 +14,12 @@ export const useDeleteCommentMutation = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries(createUseFeedQueryCacheKey());
+        queryClient.invalidateQueries(commentsKey.base);
 
         const postId = Number(router.query.id);
 
         if (postId) {
           queryClient.invalidateQueries(createUsePostQueryCacheKey(postId));
-          queryClient.invalidateQueries(["comments"], { exact: false });
         }
       },
     }

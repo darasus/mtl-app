@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "react-query";
 import { fetchPost } from "../../request/fetchPost";
-import { createUseCommentsQueryCacheKey } from "./useCommentsQuery";
+import { commentsKey } from "./useCommentsQuery";
 
 export const createUsePostQueryCacheKey = (id: number) => ["post", id];
 
@@ -11,7 +11,7 @@ export const usePostQuery = (id: number) => {
     enabled: !!id,
     onSuccess(data) {
       if (data) {
-        queryClient.setQueryData(createUseCommentsQueryCacheKey(id, 3), {
+        queryClient.setQueryData(commentsKey.postCommentsWithTake(id, 3), {
           items: data.comments,
           count: data.comments.length,
           total: data.commentsCount,

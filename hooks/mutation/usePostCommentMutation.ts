@@ -13,10 +13,11 @@ export const usePostCommentMutation = () => {
     {
       onSuccess() {
         queryClient.invalidateQueries(createUseFeedQueryCacheKey());
-        if (router.query.id) {
-          queryClient.invalidateQueries(
-            createUsePostQueryCacheKey(Number(router.query.id))
-          );
+
+        const postId = Number(router.query.id);
+
+        if (postId) {
+          queryClient.invalidateQueries(createUsePostQueryCacheKey(postId));
         }
       },
     }
