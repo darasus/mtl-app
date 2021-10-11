@@ -27,7 +27,7 @@ import {
 } from "../../hooks/query/useUserPostsQuery";
 import { fetchUserPosts } from "../../request/fetchUserPosts";
 import { useMeQuery } from "../../hooks/query/useMeQuery";
-import { useFollowMutation } from "../../hooks/useFollowMutation";
+import { useFollowMutation } from "../../hooks/mutation/useFollowMutation";
 import { useFollowersCountQuery } from "../../hooks/query/useFollowersCountQuery";
 import { useUnfollowMutation } from "../../hooks/mutation/useUnfollowMutation";
 import { useDoIFollowUserQuery } from "../../hooks/query/useDoIFollowUserQuery";

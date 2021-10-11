@@ -17,8 +17,7 @@ import { useCommentsQuery } from "../../hooks/query/useCommentsQuery";
 import { useMeQuery } from "../../hooks/query/useMeQuery";
 import { usePostComment } from "../../hooks/usePostComment";
 import { Post } from "../../types/Post";
-import { TrashIcon } from "@heroicons/react/outline";
-import { useDeleteCommentMutation } from "../../hooks/useDeleteCommentMutation";
+import { DeleteCommentButton } from "./DeleteCommentButton";
 
 interface Props {
   post: Post;
@@ -32,10 +31,8 @@ export const Comments: React.FC<Props> = ({ post }) => {
     take: commentCount,
   });
   const me = useMeQuery();
-  const { borderColor, secondaryTextColor, secondaryButtonTextColor } =
-    useColors();
+  const { borderColor, secondaryTextColor } = useColors();
   const { commentPost, isLoading: isSubmittingComment } = usePostComment();
-  const { mutateAsync: deleteComment } = useDeleteCommentMutation();
   const { control, handleSubmit, reset } = useForm({
     defaultValues: { comment: "" },
   });
@@ -46,11 +43,6 @@ export const Comments: React.FC<Props> = ({ post }) => {
     }
     return false;
   };
-
-  const handleDeleteComment = React.useCallback(async (commentId: number) => {
-    await deleteComment({ commentId });
-    await comments.refetch();
-  }, []);
 
   const submit = handleSubmit(async (data) => {
     await commentPost(post.id, data.comment);
@@ -118,19 +110,7 @@ export const Comments: React.FC<Props> = ({ post }) => {
                     } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                   </Box>
                   {me.data?.id === comment.author.id && (
-                    <Flex>
-                      <IconButton
-                        size="xs"
-                        variant="ghost"
-                        aria-label="Delete comment"
-                        onClick={() => handleDeleteComment(comment.id)}
-                        icon={
-                          <Box color={secondaryButtonTextColor}>
-                            <TrashIcon width="15" height="15" />
-                          </Box>
-                        }
-                      />
-                    </Flex>
+                    <DeleteCommentButton commentId={comment.id} />
                   )}
                 </Flex>
                 <Box ml={7}>

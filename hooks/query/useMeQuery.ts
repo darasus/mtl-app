@@ -9,6 +9,7 @@ export const useMeQuery = () => {
 
   return useQuery(createUseMeQueryCacheKey(), fetchMe, {
     staleTime: 1000 * 60 * 5,
+    keepPreviousData: true,
     enabled: !!session,
   });
 };
