@@ -11,7 +11,7 @@ export const usePostQuery = (id: number) => {
     enabled: !!id,
     cacheTime: 1000 * 60 * 60,
     onSuccess(data) {
-      if (data) {
+      if (data && data.comments.length > 0) {
         queryClient.setQueryData(commentsKey.postComments(data.id), {
           pages: [
             {
