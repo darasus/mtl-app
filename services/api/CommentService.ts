@@ -32,39 +32,48 @@ export class CommentService {
 
   async getCommentsByPostId({
     postId,
-    take,
-    skip,
+    take = 25,
+    cursor,
   }: {
     postId: number;
     take?: number;
-    skip?: number;
+    cursor?: number;
   }) {
     const baseQuery = {
       where: {
         postId,
       },
-      orderBy: { createdAt: "desc" },
-      take: take || 25,
-      skip: skip || 0,
     } as const;
-    const [items, count, total] = await Promise.all([
+    const [items, total] = await Promise.all([
       prisma.comment
         .findMany({
           ...baseQuery,
+          ...(cursor
+            ? {
+                cursor: {
+                  id: cursor,
+                },
+              }
+            : {}),
+          take,
+          skip: cursor ? 1 : 0,
+          orderBy: { id: "desc" },
           select: commentFragment,
         })
         .then((res) => res.reverse()),
       prisma.comment.count({
         ...baseQuery,
       }),
-      prisma.comment.count({
-        ...baseQuery,
-        take: undefined,
-        skip: undefined,
-      }),
     ]);
+    const lastCommentInResults = items[0];
+    const newCursor = lastCommentInResults.id;
 
-    return { items, count, total };
+    return {
+      items,
+      count: items.length,
+      total,
+      cursor: newCursor,
+    };
   }
 
   async addComment({ content, postId }: { content: string; postId: number }) {

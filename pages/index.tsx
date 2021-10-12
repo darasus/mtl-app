@@ -14,6 +14,7 @@ import { FeedService } from "../services/api/FeedService";
 import { prefetchMe } from "../services/utils/prefetchMe";
 import { useRouter } from "next/router";
 import { Head } from "../components/Head";
+import { commentsKey } from "../hooks/query/useCommentsQuery";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
@@ -95,14 +96,27 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
   const me = await prefetchMe(ctx, queryClient);
   const feedService = new FeedService();
+  const page = await feedService.fetchFeed({
+    userId: me?.id || undefined,
+  });
 
-  await queryClient.prefetchQuery(createUseFeedQueryCacheKey(), async () => {
-    const page = await feedService.fetchFeed({
-      userId: me?.id || undefined,
-    });
-    return {
+  await queryClient.prefetchQuery(createUseFeedQueryCacheKey(), () =>
+    Promise.resolve({
       pages: [page],
-    };
+    })
+  );
+
+  await page.items.forEach(async (post) => {
+    await queryClient.setQueryData(commentsKey.postComments(post.id), {
+      pages: [
+        {
+          items: post.comments,
+          count: post.comments.length,
+          total: post.commentsCount,
+          cursor: post.comments[0].id,
+        },
+      ],
+    });
   });
 
   return {

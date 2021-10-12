@@ -21,18 +21,21 @@ export const useFeedQuery = () => {
 
         return lastPage.cursor;
       },
+      staleTime: 1000 * 60 * 60,
       onSuccess(data) {
         data.pages.forEach((page) => {
           page.items.forEach((item) => {
             queryClient.setQueryData(createUsePostQueryCacheKey(item.id), item);
-            queryClient.setQueryData(
-              commentsKey.postCommentsWithTake(item.id, 3),
-              {
-                items: item.comments,
-                count: item.comments.length,
-                total: item.commentsCount,
-              }
-            );
+            queryClient.setQueryData(commentsKey.postComments(item.id), {
+              pages: [
+                {
+                  items: item.comments,
+                  count: item.comments.length,
+                  total: item.commentsCount,
+                  cursor: item.comments[0].id,
+                },
+              ],
+            });
           });
         });
       },

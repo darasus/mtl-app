@@ -24,11 +24,10 @@ interface Props {
 }
 
 export const Comments: React.FC<Props> = ({ post }) => {
-  const [commentCount, setCommentCount] = React.useState(3);
+  const commentsQueryEnabled = !post.comments.length;
   const comments = useCommentsQuery({
     postId: post.id,
-    enabled: commentCount > 3,
-    take: commentCount,
+    enabled: commentsQueryEnabled,
   });
   const me = useMeQuery();
   const { borderColor, secondaryTextColor } = useColors();
@@ -37,25 +36,21 @@ export const Comments: React.FC<Props> = ({ post }) => {
     defaultValues: { comment: "" },
   });
 
-  const getHasMoreComments = () => {
-    if (comments.data?.count && comments.data?.total) {
-      return comments.data?.count < comments.data?.total;
-    }
-    return false;
-  };
-
   const submit = handleSubmit(async (data) => {
-    await commentPost(post.id, data.comment);
     reset();
-    setCommentCount((state) => state + 1);
+    await commentPost(post.id, data.comment);
   });
 
-  const handleLoadMoreComments = React.useCallback(() => {
-    setCommentCount((state) => state + 5);
-  }, []);
-
   const hasComments =
-    comments.data?.items?.length && comments.data.items.length > 0;
+    comments.data?.pages[0].items?.length &&
+    comments.data?.pages[0].items.length > 0;
+
+  const commentItems =
+    comments.data?.pages.reduce((acc, next) => {
+      return [...acc, ...next.items].sort((a, b) => {
+        return a.id - b.id;
+      });
+    }, [] as Post["comments"]) || [];
 
   return (
     <>
@@ -65,10 +60,10 @@ export const Comments: React.FC<Props> = ({ post }) => {
             No comments yet...
           </Text>
         )}
-        {getHasMoreComments() && (
+        {comments.hasNextPage && (
           <Flex justifyContent="center" mb={2}>
             <Button
-              onClick={handleLoadMoreComments}
+              onClick={() => comments.fetchNextPage()}
               isLoading={comments.isFetching}
               loadingText={"Load more..."}
               variant="ghost"
@@ -78,15 +73,12 @@ export const Comments: React.FC<Props> = ({ post }) => {
             </Button>
           </Flex>
         )}
-        {comments.data?.items?.map((comment, i) => {
+        {commentItems.map((comment, i) => {
           if (!comment.author) return null;
           if (!comment.author.image) return null;
 
           return (
-            <Box
-              key={comment.id}
-              marginBottom={comments.data.items.length === i + 1 ? 0 : 2}
-            >
+            <Box key={comment.id}>
               <Flex mt={1} flexDirection="column">
                 <Flex alignItems="center">
                   <Box
@@ -149,26 +141,17 @@ export const Comments: React.FC<Props> = ({ post }) => {
                     name="comment"
                     control={control}
                     render={({ field }) => (
-                      <InputGroup>
-                        <Input
-                          width="100%"
-                          disabled={isSubmittingComment}
-                          name={field.name}
-                          onBlur={field.onBlur}
-                          value={field.value}
-                          aria-label="comment field"
-                          onChange={(value) => field.onChange(value)}
-                          placeholder="Type your comment here..."
-                          required
-                          autoComplete="off"
-                        />
-                        {isSubmittingComment && (
-                          <InputRightElement
-                            pointerEvents="none"
-                            children={<Spinner color="gray.300" size="xs" />}
-                          />
-                        )}
-                      </InputGroup>
+                      <Input
+                        width="100%"
+                        name={field.name}
+                        onBlur={field.onBlur}
+                        value={field.value}
+                        aria-label="comment field"
+                        onChange={(value) => field.onChange(value)}
+                        placeholder="Type your comment here..."
+                        required
+                        autoComplete="off"
+                      />
                     )}
                   />
                 </Box>

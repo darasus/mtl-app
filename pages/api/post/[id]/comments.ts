@@ -18,8 +18,8 @@ export default async function handle(
     const postService = new CommentService({});
     const comments = await postService.getCommentsByPostId({
       postId: Number(req.query.id),
-      take: Number(req.query.take),
-      skip: Number(req.query.skip || 0),
+      take: Number(req.query.take) || undefined,
+      cursor: Number(req.query.cursor) || undefined,
     });
     res.json(comments);
   } catch (error) {

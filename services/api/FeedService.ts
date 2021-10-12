@@ -73,6 +73,11 @@ export class FeedService {
           select: likeFragment,
         },
         comments: {
+          orderBy: [
+            {
+              id: "desc",
+            },
+          ],
           select: commentFragment,
         },
       },
@@ -86,7 +91,7 @@ export class FeedService {
         .map((post) => ({
           ...post,
           commentsCount: post.comments.length,
-          comments: post.comments.splice(-3),
+          comments: post.comments.reverse().splice(-5),
         }))
         .map((post) => this.preparePost(post, userId)),
       count: posts.length,

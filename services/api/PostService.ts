@@ -146,7 +146,7 @@ export class PostService {
       {
         ...post,
         commentsCount: post.comments.length,
-        comments: post.comments.slice(-3),
+        comments: post.comments.slice(-5),
       },
       userId
     );
