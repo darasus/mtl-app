@@ -1,10 +1,9 @@
-import { Button, Spinner, Text } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import React from "react";
-import { usePostLike } from "../../hooks/usePostLike";
+import { usePostLikeMutation } from "../../hooks/mutation/usePostLikeMutation";
 import { Post } from "../../types/Post";
 import { ThumbUpIcon } from "@heroicons/react/outline";
-import { usePostUnlike } from "../../hooks/usePostUnlike";
-import { usePostQuery } from "../../hooks/query/usePostQuery";
+import { usePostUnlikeMutation } from "../../hooks/mutation/usePostUnlikeMutation";
 
 interface Props {
   post: Post;
@@ -12,10 +11,17 @@ interface Props {
 }
 
 export const LikeButton: React.FC<Props> = ({ post, isPostLoading }) => {
-  const { likePost, isLoading: likeIsLoading } = usePostLike();
-  const { unlikePost, isLoading: unlikeIsLoading } = usePostUnlike();
-  const handleLikeClick = React.useCallback(() => likePost(post.id), []);
-  const handleUnlikeClick = React.useCallback(() => unlikePost(post.id), []);
+  const { mutate: likePost, isLoading: likeIsLoading } = usePostLikeMutation();
+  const { mutate: unlikePost, isLoading: unlikeIsLoading } =
+    usePostUnlikeMutation();
+  const handleLikeClick = React.useCallback(
+    () => likePost({ postId: post.id }),
+    [post.id, likePost]
+  );
+  const handleUnlikeClick = React.useCallback(
+    () => unlikePost({ postId: post.id }),
+    [post.id, unlikePost]
+  );
   const text = `${post.isLikedByMe ? "Unlike" : "Like"}`;
 
   return (
