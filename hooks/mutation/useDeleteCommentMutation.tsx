@@ -11,9 +11,9 @@ export const useDeleteCommentMutation = () => {
   return useMutation(
     ({ commentId }: { commentId: number; postId: number }) =>
       toast.promise(deleteComment(commentId), {
-        loading: <Text fontSize="sm">{"Posting comment..."}</Text>,
-        success: <Text fontSize="sm">{"Comment posted!"}</Text>,
-        error: <Text fontSize="sm">{"Comment is not posted."}</Text>,
+        loading: <Text fontSize="sm">{"Deleting comment..."}</Text>,
+        success: <Text fontSize="sm">{"Comment deleted!"}</Text>,
+        error: <Text fontSize="sm">{"Comment is not deleted."}</Text>,
       }),
     {
       onMutate: async ({ postId, commentId }) => {
