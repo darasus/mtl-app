@@ -9,6 +9,7 @@ export const PreviewLayout: React.FC<Props> = (props) => (
   <>
     <Flex
       width="100vw"
+      minHeight="100vh"
       justifyContent="center"
       alignItems="center"
       mt={20}

@@ -22,7 +22,7 @@ const PostPage: React.FC = () => {
     <PreviewLayout>
       <main>
         <Post
-          post={post.data}
+          postId={post.data.id}
           isMyPost={post.data.authorId === me.data?.id}
           showActionMenu={false}
           showMetaInfo={false}
