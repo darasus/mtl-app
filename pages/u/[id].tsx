@@ -150,7 +150,10 @@ const UserPage: React.FC = () => {
               )}
               {posts.data?.map((post) => (
                 <Box key={post.id} mb={6}>
-                  <Post post={post} isMyPost={post.authorId === me.data?.id} />
+                  <Post
+                    postId={post.id}
+                    isMyPost={post.authorId === me.data?.id}
+                  />
                 </Box>
               ))}
             </Box>
