@@ -8,15 +8,11 @@ import {
   ChakraProvider,
   cookieStorageManager,
   localStorageManager,
-  useColorMode,
-  useToken,
 } from "@chakra-ui/react";
 import { theme } from "../theme";
-import { Toaster, toast, resolveValue } from "react-hot-toast";
-import { useColors } from "../hooks/useColors";
+import { Toaster, toast } from "react-hot-toast";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const { borderColor } = useColors();
   const colorModeManager =
     typeof pageProps.cookies === "string"
       ? cookieStorageManager(pageProps.cookies)

@@ -32,12 +32,12 @@ export class CommentService {
 
   async getCommentsByPostId({
     postId,
-    take = 25,
-    cursor,
+    take = 5,
+    skip = 0,
   }: {
     postId: number;
     take?: number;
-    cursor?: number;
+    skip?: number;
   }) {
     const baseQuery = {
       where: {
@@ -48,15 +48,8 @@ export class CommentService {
       prisma.comment
         .findMany({
           ...baseQuery,
-          ...(cursor
-            ? {
-                cursor: {
-                  id: cursor,
-                },
-              }
-            : {}),
           take,
-          skip: cursor ? 1 : 0,
+          skip,
           orderBy: { id: "desc" },
           select: commentFragment,
         })
@@ -65,14 +58,11 @@ export class CommentService {
         ...baseQuery,
       }),
     ]);
-    const lastCommentInResults = items[0];
-    const newCursor = lastCommentInResults.id;
 
     return {
       items,
       count: items.length,
       total,
-      cursor: newCursor,
     };
   }
 

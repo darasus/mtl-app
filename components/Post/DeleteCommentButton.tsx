@@ -7,15 +7,16 @@ import { useCommentsQuery } from "../../hooks/query/useCommentsQuery";
 
 interface Props {
   commentId: number;
+  postId: number;
 }
 
-export const DeleteCommentButton: React.FC<Props> = ({ commentId }) => {
+export const DeleteCommentButton: React.FC<Props> = ({ commentId, postId }) => {
   const { secondaryButtonTextColor } = useColors();
   const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
     useDeleteCommentMutation();
 
   const handleDeleteComment = React.useCallback(async () => {
-    await deleteComment({ commentId });
+    await deleteComment({ commentId, postId });
   }, []);
 
   return (

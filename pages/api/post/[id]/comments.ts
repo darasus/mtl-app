@@ -19,7 +19,7 @@ export default async function handle(
     const comments = await postService.getCommentsByPostId({
       postId: Number(req.query.id),
       take: Number(req.query.take) || undefined,
-      cursor: Number(req.query.cursor) || undefined,
+      skip: Number(req.query.cursor) || undefined,
     });
     res.json(comments);
   } catch (error) {

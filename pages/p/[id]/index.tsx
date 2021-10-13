@@ -32,7 +32,7 @@ const PostPage: React.FC = () => {
           )}
           {post.data && (
             <Post
-              post={post.data}
+              postId={post.data.id}
               isMyPost={post.data.authorId === me.data?.id}
               isPostLoading={post.isFetching}
             />

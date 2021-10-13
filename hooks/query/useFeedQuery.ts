@@ -24,18 +24,29 @@ export const useFeedQuery = () => {
       staleTime: 1000 * 60 * 60,
       onSuccess(data) {
         data.pages.forEach((page) => {
-          page.items.forEach((item) => {
-            queryClient.setQueryData(createUsePostQueryCacheKey(item.id), item);
-            queryClient.setQueryData(commentsKey.postComments(item.id), {
-              pages: [
-                {
-                  items: item.comments,
-                  count: item.comments.length,
-                  total: item.commentsCount,
-                  cursor: item.comments[0].id,
-                },
-              ],
-            });
+          page.items.forEach((post) => {
+            const postCache = queryClient.getQueryData(
+              createUsePostQueryCacheKey(post.id)
+            );
+            const postCommentsCache = queryClient.getQueryData(
+              commentsKey.postComments(post.id)
+            );
+
+            if (!postCache) {
+              queryClient.setQueryData(
+                createUsePostQueryCacheKey(post.id),
+                post
+              );
+            }
+
+            if (!postCommentsCache) {
+              queryClient.setQueryData(commentsKey.postComments(post.id), {
+                items: post.comments,
+                count: post.comments.length,
+                total: post.commentsCount,
+                cursor: post.comments[0].id,
+              });
+            }
           });
         });
       },

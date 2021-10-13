@@ -7,13 +7,13 @@ type Response = ReturnType<CommentService["getCommentsByPostId"]>;
 export const fetchComments = ({
   postId,
   take,
-  cursor,
+  skip,
 }: {
   postId: number;
   take?: number;
-  cursor?: number;
+  skip?: number;
 }): Promise<Response> => {
-  const query = qs.stringify({ take, cursor });
+  const query = qs.stringify({ take, skip });
 
   return request(`/api/post/${postId}/comments?${query}`).then(
     (res) => res.data

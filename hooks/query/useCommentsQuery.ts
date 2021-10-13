@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "react-query";
+import { useQuery } from "react-query";
 import { fetchComments } from "../../request/fetchComments";
 
 export const commentsKey = {
@@ -8,28 +8,18 @@ export const commentsKey = {
 
 export const useCommentsQuery = ({
   postId,
-  enabled,
+  take,
 }: {
   postId: number;
-  enabled: boolean;
+  take: number;
 }) => {
-  return useInfiniteQuery(
+  return useQuery(
     commentsKey.postComments(postId),
-    ({ pageParam = undefined }) =>
-      fetchComments({ postId, take: 5, cursor: pageParam }).then((res) => res),
+    () => fetchComments({ postId, take }).then((res) => res),
     {
-      getNextPageParam: (lastPage, pages) => {
-        const localTotal = pages
-          .map((page) => page.count)
-          .reduce((prev, next) => prev + next, 0);
-
-        if (localTotal === lastPage.total) return undefined;
-
-        return lastPage.cursor;
-      },
-      enabled: !!postId && typeof enabled === "boolean" ? enabled : true,
+      enabled: !!postId,
       keepPreviousData: true,
-      cacheTime: 1000 * 60 * 60,
+      staleTime: 1000 * 60 * 60,
     }
   );
 };

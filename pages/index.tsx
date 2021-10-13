@@ -15,6 +15,7 @@ import { prefetchMe } from "../services/utils/prefetchMe";
 import { useRouter } from "next/router";
 import { Head } from "../components/Head";
 import { commentsKey } from "../hooks/query/useCommentsQuery";
+import { createUsePostQueryCacheKey } from "../hooks/query/usePostQuery";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
@@ -65,7 +66,10 @@ const Index: React.FC = () => {
             return page.items.map((post) => {
               return (
                 <Box key={post.id} mb={6}>
-                  <Post post={post} isMyPost={post.authorId === me.data?.id} />
+                  <Post
+                    postId={post.id}
+                    isMyPost={post.authorId === me.data?.id}
+                  />
                 </Box>
               );
             });
@@ -106,16 +110,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     })
   );
 
-  await page.items.forEach(async (post) => {
-    await queryClient.setQueryData(commentsKey.postComments(post.id), {
-      pages: [
-        {
-          items: post.comments,
-          count: post.comments.length,
-          total: post.commentsCount,
-          cursor: post.comments[0].id,
-        },
-      ],
+  page.items.forEach((post) => {
+    queryClient.setQueryData(createUsePostQueryCacheKey(post.id), post);
+    queryClient.setQueryData(commentsKey.postComments(post.id), {
+      items: post.comments,
+      count: post.comments.length,
+      total: post.commentsCount,
     });
   });
 

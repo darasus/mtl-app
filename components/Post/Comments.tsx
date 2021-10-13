@@ -1,56 +1,50 @@
-import {
-  Button,
-  Flex,
-  Text,
-  Box,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Spinner,
-  IconButton,
-} from "@chakra-ui/react";
+import { Button, Flex, Text, Box, Input } from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useColors } from "../../hooks/useColors";
 import { useCommentsQuery } from "../../hooks/query/useCommentsQuery";
 import { useMeQuery } from "../../hooks/query/useMeQuery";
-import { usePostComment } from "../../hooks/usePostComment";
-import { Post } from "../../types/Post";
 import { DeleteCommentButton } from "./DeleteCommentButton";
+import { useAddCommentMutation } from "../../hooks/mutation/useAddCommentMutation";
 
 interface Props {
-  post: Post;
+  postId: number;
 }
 
-export const Comments: React.FC<Props> = ({ post }) => {
-  const commentsQueryEnabled = !post.comments.length;
+export const Comments: React.FC<Props> = ({ postId }) => {
+  const [take, setTake] = React.useState(5);
   const comments = useCommentsQuery({
-    postId: post.id,
-    enabled: commentsQueryEnabled,
+    postId,
+    take,
   });
   const me = useMeQuery();
   const { borderColor, secondaryTextColor } = useColors();
-  const { commentPost, isLoading: isSubmittingComment } = usePostComment();
+  const { mutateAsync: commentPost } = useAddCommentMutation();
   const { control, handleSubmit, reset } = useForm({
     defaultValues: { comment: "" },
   });
 
-  const submit = handleSubmit(async (data) => {
-    reset();
-    await commentPost(post.id, data.comment);
-  });
+  const submit = React.useMemo(
+    () =>
+      handleSubmit(async (data) => {
+        reset();
+        setTake(take + 1);
+        await commentPost({ postId, content: data.comment, take });
+      }),
+    [handleSubmit, reset, commentPost, postId, take, setTake]
+  );
 
   const hasComments =
-    comments.data?.pages[0].items?.length &&
-    comments.data?.pages[0].items.length > 0;
+    comments.data?.items?.length && comments.data?.items.length > 0;
 
-  const commentItems =
-    comments.data?.pages.reduce((acc, next) => {
-      return [...acc, ...next.items].sort((a, b) => {
-        return a.id - b.id;
-      });
-    }, [] as Post["comments"]) || [];
+  const handleLoadMore = React.useCallback(() => {
+    setTake(take + 5);
+  }, [take, setTake]);
+
+  React.useEffect(() => {
+    comments.refetch();
+  }, [take]);
 
   return (
     <>
@@ -60,10 +54,10 @@ export const Comments: React.FC<Props> = ({ post }) => {
             No comments yet...
           </Text>
         )}
-        {comments.hasNextPage && (
+        {comments.data?.count !== comments.data?.total && (
           <Flex justifyContent="center" mb={2}>
             <Button
-              onClick={() => comments.fetchNextPage()}
+              onClick={handleLoadMore}
               isLoading={comments.isFetching}
               loadingText={"Load more..."}
               variant="ghost"
@@ -73,7 +67,7 @@ export const Comments: React.FC<Props> = ({ post }) => {
             </Button>
           </Flex>
         )}
-        {commentItems.map((comment, i) => {
+        {(comments.data?.items || []).map((comment, i) => {
           if (!comment.author) return null;
           if (!comment.author.image) return null;
 
@@ -102,7 +96,10 @@ export const Comments: React.FC<Props> = ({ post }) => {
                     } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                   </Box>
                   {me.data?.id === comment.author.id && (
-                    <DeleteCommentButton commentId={comment.id} />
+                    <DeleteCommentButton
+                      commentId={comment.id}
+                      postId={postId}
+                    />
                   )}
                 </Flex>
                 <Box ml={7}>

@@ -1,24 +1,20 @@
 import React from "react";
 import { Markdown } from "../Markdown";
-import { Flex, Box, Text, Button, useColorMode } from "@chakra-ui/react";
+import { Flex, Box, Text, Button } from "@chakra-ui/react";
 import useCopyClipboard from "../../hooks/useClipboard";
-import { Post as PostType } from "../../types/Post";
 import { Syntax } from "../Syntax";
 import { LikeButton } from "./LikeButton";
 import { Comments } from "./Comments";
-import {
-  ShareIcon,
-  DocumentDuplicateIcon,
-  PhotographIcon,
-} from "@heroicons/react/outline";
+import { ShareIcon, DocumentDuplicateIcon } from "@heroicons/react/outline";
 import { useColors } from "../../hooks/useColors";
 import { ActionMenu } from "./ActionMenu";
 import { paramCase } from "change-case";
 import { Header } from "./Header";
 import { ScreenshotButton } from "./ScreenshotButton";
+import { usePostQuery } from "../../hooks/query/usePostQuery";
 
 interface Props {
-  post: PostType;
+  postId: number;
   isMyPost: boolean;
   showActionMenu?: boolean;
   showMetaInfo?: boolean;
@@ -26,14 +22,15 @@ interface Props {
 }
 
 export const Post: React.FC<Props> = React.memo(function Post({
-  post,
+  postId,
   isMyPost,
   showActionMenu = true,
   showMetaInfo = true,
 }) {
+  const { data: post } = usePostQuery(postId);
   const { borderColor } = useColors();
 
-  const [isCopied, copy] = useCopyClipboard(post.content || "", {
+  const [isCopied, copy] = useCopyClipboard(post?.content || "", {
     successDuration: 3000,
   });
 
@@ -42,10 +39,12 @@ export const Post: React.FC<Props> = React.memo(function Post({
   const handleTweetClick = React.useCallback(() => {
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURI(
-        `Check this: ${window.location.origin}/api/post/${post.id}/screenshot`
+        `Check this: ${window.location.origin}/api/post/${post?.id}/screenshot`
       )}`
     );
   }, []);
+
+  if (!post) return null;
 
   return (
     <Box borderColor={borderColor} borderWidth="thin">
@@ -93,7 +92,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               </Flex>
             </Box>
             <Box>
-              <Comments post={post} />
+              <Comments postId={post.id} />
             </Box>
           </>
         )}

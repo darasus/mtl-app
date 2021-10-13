@@ -9,9 +9,11 @@ export const usePostQuery = (id: number) => {
 
   return useQuery(createUsePostQueryCacheKey(id), () => fetchPost(id), {
     enabled: !!id,
-    cacheTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
     onSuccess(data) {
-      if (data && data.comments.length > 0) {
+      const comments = queryClient.getQueryData(commentsKey.postComments(id));
+
+      if (!comments && data && data.comments.length > 0) {
         queryClient.setQueryData(commentsKey.postComments(data.id), {
           pages: [
             {
