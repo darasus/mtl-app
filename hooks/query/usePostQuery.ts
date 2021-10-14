@@ -15,14 +15,9 @@ export const usePostQuery = (id: number) => {
 
       if (!comments && data && data.comments.length > 0) {
         queryClient.setQueryData(commentsKey.postComments(data.id), {
-          pages: [
-            {
-              items: data.comments,
-              count: data.comments.length,
-              total: data.commentsCount,
-              cursor: data.comments[0].id,
-            },
-          ],
+          items: data.comments,
+          count: data.comments.length,
+          total: data.commentsCount,
         });
       }
     },

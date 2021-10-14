@@ -36,6 +36,8 @@ import { useColors } from "../../hooks/useColors";
 import { prefetchMe } from "../../services/utils/prefetchMe";
 import { Head } from "../../components/Head";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
+import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
+import { commentsKey } from "../../hooks/query/useCommentsQuery";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
@@ -172,15 +174,32 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (createIsFirstServerCall(ctx)) {
     const userId = Number(ctx.query.id);
 
+    const [user, posts] = await Promise.all([
+      fetchUser(userId),
+      fetchUserPosts(userId),
+    ]);
+
     await Promise.all([
       prefetchMe(ctx, queryClient),
       queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
-        fetchUser(userId)
-      ),
-      queryClient.prefetchQuery(createUseUserPostsQueryCacheKey(userId), () =>
-        fetchUserPosts(userId)
+        Promise.resolve(user)
       ),
     ]);
+
+    await Promise.all(
+      posts.map((post) => {
+        return Promise.all([
+          queryClient.prefetchQuery(createUsePostQueryCacheKey(post.id), () =>
+            Promise.resolve(post)
+          ),
+          queryClient.prefetchQuery(commentsKey.postComments(post.id), () => ({
+            items: post.comments,
+            total: post.commentsCount,
+            count: post.comments.length,
+          })),
+        ]);
+      })
+    );
   }
 
   return {
