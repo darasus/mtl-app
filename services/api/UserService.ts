@@ -1,6 +1,8 @@
 import invariant from "invariant";
 import { Session } from "next-auth";
+import { createUseUserQueryCacheKey } from "../../hooks/query/useUserQuery";
 import prisma from "../../lib/prisma";
+import cache from "../../server/cache";
 import { Post } from "../../types/Post";
 import { authorFragment } from "../fragments/authorFragment";
 import { commentFragment } from "../fragments/commentFragment";
@@ -22,12 +24,17 @@ const selectQueryFragment = {
 
 export class UserService {
   async getUserById(userId: number) {
-    return prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      ...selectQueryFragment,
-    });
+    return cache.fetch(
+      JSON.stringify(createUseUserQueryCacheKey(userId)),
+      () =>
+        prisma.user.findUnique({
+          where: {
+            id: userId,
+          },
+          ...selectQueryFragment,
+        }),
+      60 * 60 * 24
+    );
   }
 
   async getUserPosts(userId: number): Promise<Post[]> {
