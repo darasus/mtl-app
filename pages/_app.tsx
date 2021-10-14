@@ -32,31 +32,31 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }
 
   return (
-    <AuthProvider session={pageProps.session}>
-      <QueryClientProvider client={queryClientRef.current}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
-            <Toaster
-              toastOptions={{
-                style: {
-                  borderRadius: "100px",
-                  borderColor:
-                    colorModeManager.get() === "dark"
-                      ? "rgba(255,255,255,0.2)"
-                      : "rgba(0,0,0,0.2)",
-                  borderWidth: "1px",
-                  ...(colorModeManager.get() === "dark"
-                    ? { background: "black", color: "#fff" }
-                    : { background: "white", color: "#black" }),
-                },
-              }}
-            />
-            <Component {...pageProps} />
-          </ChakraProvider>
-        </Hydrate>
-        <ReactQueryDevtools />
-      </QueryClientProvider>
-    </AuthProvider>
+    // <AuthProvider session={pageProps.session}>
+    <QueryClientProvider client={queryClientRef.current}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+          <Toaster
+            toastOptions={{
+              style: {
+                borderRadius: "100px",
+                borderColor:
+                  colorModeManager.get() === "dark"
+                    ? "rgba(255,255,255,0.2)"
+                    : "rgba(0,0,0,0.2)",
+                borderWidth: "1px",
+                ...(colorModeManager.get() === "dark"
+                  ? { background: "black", color: "#fff" }
+                  : { background: "white", color: "#black" }),
+              },
+            }}
+          />
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </Hydrate>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+    // </AuthProvider>
   );
 };
 
