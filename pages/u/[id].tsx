@@ -12,7 +12,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import { getSession } from "next-auth/client";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { fetchUser } from "../../request/fetchUser";

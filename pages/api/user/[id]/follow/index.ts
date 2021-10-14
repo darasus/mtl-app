@@ -1,6 +1,5 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/client";
 import { FollowService } from "../../../../../services/api/FollowService";
 import { UserSessionService } from "../../../../../services/api/UserSessionService";
 
@@ -17,6 +16,11 @@ export default async function handle(
   if (req.method === "GET") {
     try {
       const user = await new UserSessionService({ req }).get();
+
+      if (!user?.id) {
+        return res.status(401);
+      }
+
       const followService = new FollowService();
       const response = await followService.doIFollow(
         Number(req.query.id),
@@ -31,6 +35,11 @@ export default async function handle(
   if (req.method === "POST") {
     try {
       const user = await new UserSessionService({ req }).get();
+
+      if (!user?.id) {
+        return res.status(401);
+      }
+
       const followService = new FollowService();
       await followService.followUser(Number(req.query.id), user.id);
       return res.json({ status: "success" });

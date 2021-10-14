@@ -64,12 +64,12 @@ export class PostService {
   }
 
   async createPost(
+    userId: number,
     {
       title,
       content,
       description,
-    }: { title: string; content: string; description: string },
-    userId: number
+    }: { title: string; content: string; description: string }
   ) {
     const post = await prisma.post.create({
       data: {

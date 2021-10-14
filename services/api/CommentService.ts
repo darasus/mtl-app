@@ -1,17 +1,16 @@
-import { Session } from "next-auth";
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import prisma from "../../lib/prisma";
 import cache from "../../server/cache";
 import { commentFragment } from "../fragments/commentFragment";
 
 export class CommentService {
-  session: Session | null | undefined;
-
-  constructor({ session }: { session?: Session | null }) {
-    this.session = session;
-  }
-
-  async isMyComment(commentId: number) {
+  async isMyComment({
+    commentId,
+    userId,
+  }: {
+    commentId: number;
+    userId: number;
+  }) {
     const comment = await prisma.comment.findFirst({
       where: {
         id: commentId,
@@ -21,7 +20,7 @@ export class CommentService {
       },
     });
 
-    return comment?.author?.email === this.session?.user?.email;
+    return comment?.author?.id === userId;
   }
 
   async deleteComment(commentId: number, postId: number) {
@@ -70,12 +69,20 @@ export class CommentService {
     };
   }
 
-  async addComment({ content, postId }: { content: string; postId: number }) {
+  async addComment({
+    content,
+    postId,
+    userId,
+  }: {
+    content: string;
+    postId: number;
+    userId: number;
+  }) {
     await prisma.comment.create({
       data: {
         content,
         post: { connect: { id: postId } },
-        author: { connect: { email: this.session?.user?.email! } },
+        author: { connect: { id: userId } },
       },
     });
 

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/client";
 import invariant from "invariant";
 import { CommentService } from "../../../../services/api/CommentService";
+import { UserSessionService } from "../../../../services/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -12,21 +12,18 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  const session = await getSession({ req });
-
-  if (!session) {
-    return res.status(401);
-  }
-
-  if (!session?.user?.email) {
-    return res.status(401);
-  }
-
   try {
-    const postService = new CommentService({ session });
+    const user = await new UserSessionService({ req }).get();
+
+    if (!user?.id) {
+      return res.status(401);
+    }
+
+    const postService = new CommentService();
     await postService.addComment({
       content: String(req.body.content),
       postId: Number(req.query.id),
+      userId: user.id,
     });
     res.json({ status: "success" });
   } catch (error) {

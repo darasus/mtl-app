@@ -1,7 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/client";
 import { PostService } from "../../../../services/api/PostService";
+import { UserSessionService } from "../../../../services/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,6 +13,12 @@ export default async function handle(
   );
 
   try {
+    const user = await new UserSessionService({ req }).get();
+
+    if (!user?.id) {
+      return res.status(401);
+    }
+
     const postService = new PostService();
     await postService.publishPost(Number(req.query.id));
     res.json({ status: "success" });

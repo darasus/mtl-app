@@ -1,8 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/client";
 import { FeedService } from "../../services/api/FeedService";
-import { PostService } from "../../services/api/PostService";
 import { UserSessionService } from "../../services/api/UserSessionService";
 
 export default async function handle(
