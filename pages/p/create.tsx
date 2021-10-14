@@ -20,6 +20,7 @@ import { GetServerSideProps } from "next";
 import { prefetchMe } from "../../services/utils/prefetchMe";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
+import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 
 interface Form {
   title: string;
@@ -119,7 +120,9 @@ export default CreatePostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await prefetchMe(ctx, queryClient);
+  if (createIsFirstServerCall(ctx)) {
+    await prefetchMe(ctx, queryClient);
+  }
 
   return {
     props: {

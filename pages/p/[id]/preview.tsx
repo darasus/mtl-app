@@ -10,6 +10,7 @@ import { PreviewLayout } from "../../../layouts/PreviewLayout";
 import { prefetchMe } from "../../../services/utils/prefetchMe";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Logo } from "../../../components/Logo";
+import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -46,7 +47,10 @@ export default PostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await prefetchMe(ctx, queryClient);
+
+  if (createIsFirstServerCall(ctx)) {
+    await prefetchMe(ctx, queryClient);
+  }
 
   return {
     props: {

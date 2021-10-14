@@ -14,6 +14,7 @@ import { dehydrate } from "react-query/hydration";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { fetchPost } from "../../../request/fetchPost";
 import { Head } from "../../../components/Head";
+import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -47,10 +48,10 @@ export default PostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const postId = Number(ctx.query.id);
-  const isFirstServerCall = ctx.req?.url?.indexOf("/_next/data/") === -1;
 
-  if (isFirstServerCall) {
+  if (createIsFirstServerCall(ctx)) {
+    const postId = Number(ctx.query.id);
+
     await Promise.all([
       prefetchMe(ctx, queryClient),
       queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>

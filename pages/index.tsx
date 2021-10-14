@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { Head } from "../components/Head";
 import { commentsKey } from "../hooks/query/useCommentsQuery";
 import { createUsePostQueryCacheKey } from "../hooks/query/usePostQuery";
+import { createIsFirstServerCall } from "../utils/createIsFirstServerCall";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
@@ -98,9 +99,8 @@ export default Index;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const isFirstServerCall = ctx.req?.url?.indexOf("/_next/data/") === -1;
 
-  if (isFirstServerCall) {
+  if (createIsFirstServerCall(ctx)) {
     const me = await prefetchMe(ctx, queryClient);
     const feedService = new FeedService();
     const page = await feedService.fetchFeed({

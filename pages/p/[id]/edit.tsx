@@ -22,6 +22,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Layout } from "../../../layouts/Layout";
 import { useColors } from "../../../hooks/useColors";
 import { prefetchMe } from "../../../services/utils/prefetchMe";
+import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 
 interface Form {
   title: string;
@@ -134,7 +135,10 @@ export default EditPostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await prefetchMe(ctx, queryClient);
+
+  if (createIsFirstServerCall(ctx)) {
+    await prefetchMe(ctx, queryClient);
+  }
 
   return {
     props: {

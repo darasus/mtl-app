@@ -36,6 +36,7 @@ import { Layout } from "../../layouts/Layout";
 import { useColors } from "../../hooks/useColors";
 import { prefetchMe } from "../../services/utils/prefetchMe";
 import { Head } from "../../components/Head";
+import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
@@ -168,17 +169,20 @@ export default UserPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const userId = Number(ctx.query.id);
 
-  await Promise.all([
-    prefetchMe(ctx, queryClient),
-    queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
-      fetchUser(userId)
-    ),
-    queryClient.prefetchQuery(createUseUserPostsQueryCacheKey(userId), () =>
-      fetchUserPosts(userId)
-    ),
-  ]);
+  if (createIsFirstServerCall(ctx)) {
+    const userId = Number(ctx.query.id);
+
+    await Promise.all([
+      prefetchMe(ctx, queryClient),
+      queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
+        fetchUser(userId)
+      ),
+      queryClient.prefetchQuery(createUseUserPostsQueryCacheKey(userId), () =>
+        fetchUserPosts(userId)
+      ),
+    ]);
+  }
 
   return {
     props: {
