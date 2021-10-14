@@ -29,8 +29,6 @@ export const LikeButton: React.FC<Props> = ({ post, isPostLoading }) => {
       leftIcon={<ThumbUpIcon width="15" height="15" />}
       onClick={post.isLikedByMe ? handleUnlikeClick : handleLikeClick}
       disabled={likeIsLoading || unlikeIsLoading || isPostLoading}
-      isLoading={likeIsLoading || unlikeIsLoading || isPostLoading}
-      loadingText={text}
       size="xs"
       variant="ghost"
     >
