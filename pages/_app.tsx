@@ -40,12 +40,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                 borderRadius: "100px",
                 borderColor:
                   colorModeManager.get() === "dark"
-                    ? "rgba(255,255,255,0.2)"
-                    : "rgba(0,0,0,0.2)",
+                    ? "rgba(0,0,0,0.2)"
+                    : "rgba(255,255,255,0.2)",
                 borderWidth: "1px",
                 ...(colorModeManager.get() === "dark"
-                  ? { background: "black", color: "#fff" }
-                  : { background: "white", color: "#black" }),
+                  ? { background: "white", color: "#black" }
+                  : { background: "black", color: "#fff" }),
               },
             }}
           />
