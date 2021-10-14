@@ -160,6 +160,20 @@ export class PostService {
     );
   }
 
+  async findPostByCommentId(commentId: number) {
+    const post = await prisma.post.findFirst({
+      where: {
+        comments: {
+          some: {
+            id: commentId,
+          },
+        },
+      },
+    });
+
+    return post;
+  }
+
   async deletePost(postId: number) {
     await prisma.like.deleteMany({
       where: {

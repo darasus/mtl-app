@@ -2,6 +2,7 @@ import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
 import { CommentService } from "../../../services/api/CommentService";
+import { PostService } from "../../../services/api/PostService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -20,6 +21,7 @@ export default async function handle(
 
   try {
     const commentService = new CommentService({ session });
+    const postService = new PostService();
 
     const isMyComment = await commentService.isMyComment(Number(req.query.id));
 
@@ -31,7 +33,11 @@ export default async function handle(
       });
     }
 
-    await commentService.deleteComment(Number(req.query.id));
+    const post = await postService.findPostByCommentId(Number(req.query.id));
+
+    if (!post) return null;
+
+    await commentService.deleteComment(Number(req.query.id), post.id);
     res.json({ status: "success" });
   } catch (error) {
     return error;
