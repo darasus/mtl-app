@@ -13,12 +13,6 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  const session = await getSession({ req });
-
-  if (!session) {
-    res.status(401);
-  }
-
   try {
     const postService = new PostService();
     await postService.deletePost(Number(req.query.id));

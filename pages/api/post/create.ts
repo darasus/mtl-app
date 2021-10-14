@@ -13,18 +13,9 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  const session = await getSession({ req });
-
-  if (!session) {
-    return res.status(401);
-  }
-
   try {
-    let userId = undefined;
-    if (session) {
-      const userService = await new UserSessionService(session).get();
-      userId = userService.id;
-    }
+    const userService = await new UserSessionService({ req }).get();
+    const userId = userService.id;
     invariant(userId, "userId is undefined");
     const postService = new PostService();
     const post = await postService.createPost(

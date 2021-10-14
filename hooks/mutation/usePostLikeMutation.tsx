@@ -25,7 +25,6 @@ export const usePostLikeMutation = () => {
         queryClient.setQueryData(
           createUsePostQueryCacheKey(postId),
           (old: any) => {
-            console.log(old);
             return {
               ...old,
               likesCount: old.likesCount + 1,

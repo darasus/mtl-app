@@ -13,14 +13,9 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  const session = await getSession({ req });
-
   try {
-    let userId = undefined;
-    if (session) {
-      const userService = await new UserSessionService(session).get();
-      userId = userService.id;
-    }
+    const userService = await new UserSessionService({ req }).get();
+    const userId = userService.id;
     const postService = new PostService();
     const post = await postService.fetchPost(Number(req.query.id), userId);
     res.json(post);

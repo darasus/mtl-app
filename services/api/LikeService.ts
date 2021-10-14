@@ -1,36 +1,35 @@
-import { Session } from "next-auth";
+import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import prisma from "../../lib/prisma";
-import { commentFragment } from "../fragments/commentFragment";
+import cache from "../../server/cache";
 
 export class LikeService {
-  session: Session | null | undefined;
-
-  constructor({ session }: { session?: Session | null }) {
-    this.session = session;
-  }
-
-  async likePost(postId: number) {
+  async likePost(postId: number, userId: number) {
     await prisma.like.create({
       data: {
         post: { connect: { id: postId } },
-        author: { connect: { email: this.session?.user?.email! } },
+        author: { connect: { id: userId } },
       },
     });
+
+    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 
-  async unlikePost(postId: number) {
+  async unlikePost(postId: number, userId: number) {
     const like = await prisma.like.findFirst({
       where: {
         postId,
         author: {
-          email: this.session?.user?.email!,
+          id: userId,
         },
       },
     });
+
     await prisma.like.delete({
       where: {
         id: like?.id,
       },
     });
+
+    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 }

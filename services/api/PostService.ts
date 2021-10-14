@@ -1,15 +1,12 @@
-import { NextApiRequest } from "next";
-import { getSession } from "next-auth/client";
 import prisma from "../../lib/prisma";
 import { Post } from "../../types/Post";
-import * as R from "ramda";
-import invariant from "invariant";
 import Prisma from ".prisma/client";
-import { Session } from "next-auth";
 import { authorFragment } from "../fragments/authorFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
 import { preparePost } from "../utils/preparePost";
+import cache from "../../server/cache";
+import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];
@@ -40,6 +37,8 @@ export class PostService {
         description,
       },
     });
+
+    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 
   async unpublishPost(postId: number) {
@@ -49,6 +48,8 @@ export class PostService {
         published: false,
       },
     });
+
+    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 
   async publishPost(postId: number) {
@@ -58,6 +59,8 @@ export class PostService {
         published: true,
       },
     });
+
+    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 
   async createPost(
@@ -123,22 +126,27 @@ export class PostService {
   }
 
   async fetchPost(postId: number, userId?: number): Promise<Post | null> {
-    const post = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-      include: {
-        author: {
-          select: authorFragment,
-        },
-        likes: {
-          select: likeFragment,
-        },
-        comments: {
-          select: commentFragment,
-        },
-      },
-    });
+    const post = await cache.fetch(
+      JSON.stringify(createUsePostQueryCacheKey(postId)),
+      () =>
+        prisma.post.findUnique({
+          where: {
+            id: postId,
+          },
+          include: {
+            author: {
+              select: authorFragment,
+            },
+            likes: {
+              select: likeFragment,
+            },
+            comments: {
+              select: commentFragment,
+            },
+          },
+        }),
+      60 * 60 * 24
+    );
 
     if (!post) return null;
 
@@ -158,13 +166,17 @@ export class PostService {
         postId,
       },
     });
+
     await prisma.comment.deleteMany({
       where: {
         postId,
       },
     });
+
     await prisma.post.delete({
       where: { id: postId },
     });
+
+    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 }

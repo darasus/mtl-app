@@ -15,12 +15,8 @@ export default async function handle(
   );
   invariant(typeof req.query.id === "string", "User ID is not provided");
 
-  const session = await getSession({ req });
-
-  invariant(session, "Session is not found");
-
   try {
-    const user = await new UserSessionService(session).get();
+    const user = await new UserSessionService({ req }).get();
     const followService = new FollowService();
     await followService.unfollowUser(Number(req.query.id), user.id);
     res.json({ status: "success" });

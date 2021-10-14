@@ -9,17 +9,12 @@ export const prefetchMe = async (
   ctx: GetServerSidePropsContext,
   queryClient: QueryClient
 ) => {
-  const session = await getSession(ctx);
+  const me = new UserSessionService({ req: ctx.req as any }).get();
 
-  let me: User | null = null;
-
-  if (session) {
-    me = await new UserSessionService(session).get();
-    if (me) {
-      await queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
-        Promise.resolve(me)
-      );
-    }
+  if (me) {
+    await queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
+      Promise.resolve(me)
+    );
   }
 
   return me;

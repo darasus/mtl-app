@@ -1,23 +1,35 @@
 import invariant from "invariant";
-import { Session } from "next-auth";
+import { NextApiRequest } from "next";
+import { getSession } from "next-auth/client";
+
+import { createUseMeQueryCacheKey } from "../../hooks/query/useMeQuery";
 import prisma from "../../lib/prisma";
+import cache from "../../server/cache";
 import { User } from "../../types/User";
 import { userFragment } from "../fragments/userFragment";
 
 export class UserSessionService {
-  session: Session | null;
+  req: NextApiRequest | null;
 
-  constructor(session: Session) {
-    this.session = session;
+  constructor({ req }: { req: NextApiRequest }) {
+    this.req = req;
   }
 
   async get(): Promise<User> {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: this.session?.user?.email!,
+    const user = await cache.fetch(
+      JSON.stringify(createUseMeQueryCacheKey()),
+      async () => {
+        const session = await getSession({ req: this.req! });
+
+        return prisma.user.findUnique({
+          where: {
+            email: session?.user?.email!,
+          },
+          select: userFragment,
+        });
       },
-      select: userFragment,
-    });
+      60 * 60 * 24
+    );
 
     invariant(user?.id, "User is not found");
 

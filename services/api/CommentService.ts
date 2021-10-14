@@ -1,5 +1,7 @@
 import { Session } from "next-auth";
+import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import prisma from "../../lib/prisma";
+import cache from "../../server/cache";
 import { commentFragment } from "../fragments/commentFragment";
 
 export class CommentService {
@@ -22,12 +24,14 @@ export class CommentService {
     return comment?.author?.email === this.session?.user?.email;
   }
 
-  async deleteComment(commentId: number) {
-    return prisma.comment.delete({
+  async deleteComment(commentId: number, postId: number) {
+    await prisma.comment.delete({
       where: {
         id: commentId,
       },
     });
+
+    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 
   async getCommentsByPostId({
@@ -74,5 +78,7 @@ export class CommentService {
         author: { connect: { email: this.session?.user?.email! } },
       },
     });
+
+    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 }

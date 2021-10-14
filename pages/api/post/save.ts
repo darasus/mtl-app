@@ -22,7 +22,7 @@ export default async function handle(
   try {
     let userId = undefined;
     if (session) {
-      const userService = await new UserSessionService(session).get();
+      const userService = await new UserSessionService({ req }).get();
       userId = userService.id;
     }
     invariant(userId, "userId is undefined");

@@ -14,15 +14,9 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  let session = await getSession({ req });
-
   if (req.method === "GET") {
-    if (!session) {
-      return res.json({ doIFollow: false });
-    }
-
     try {
-      const user = await new UserSessionService(session).get();
+      const user = await new UserSessionService({ req }).get();
       const followService = new FollowService();
       const response = await followService.doIFollow(
         Number(req.query.id),
@@ -35,16 +29,8 @@ export default async function handle(
   }
 
   if (req.method === "POST") {
-    if (!session) {
-      return res.status(401).json({
-        status: 401,
-        hasError: true,
-        message: "Session is not found",
-      });
-    }
-
     try {
-      const user = await new UserSessionService(session).get();
+      const user = await new UserSessionService({ req }).get();
       const followService = new FollowService();
       await followService.followUser(Number(req.query.id), user.id);
       return res.json({ status: "success" });
