@@ -42,7 +42,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
         `Check this: ${window.location.origin}/api/post/${post?.id}/screenshot`
       )}`
     );
-  }, []);
+  }, [post?.id]);
 
   if (!post) return null;
 

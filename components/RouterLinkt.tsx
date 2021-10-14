@@ -9,7 +9,7 @@ interface Props extends React.ComponentProps<typeof Link> {
 
 export const RouterLink: React.FC<Props> = ({ children, href, ...props }) => {
   return (
-    <Link href={href} {...props}>
+    <Link href={href} {...props} passHref>
       <ChakraLink textDecoration="underline">{children}</ChakraLink>
     </Link>
   );

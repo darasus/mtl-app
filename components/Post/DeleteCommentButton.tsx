@@ -3,7 +3,6 @@ import { TrashIcon } from "@heroicons/react/outline";
 import React from "react";
 import { useColors } from "../../hooks/useColors";
 import { useDeleteCommentMutation } from "../../hooks/mutation/useDeleteCommentMutation";
-import { useCommentsQuery } from "../../hooks/query/useCommentsQuery";
 
 interface Props {
   commentId: number;
@@ -17,7 +16,7 @@ export const DeleteCommentButton: React.FC<Props> = ({ commentId, postId }) => {
 
   const handleDeleteComment = React.useCallback(async () => {
     await deleteComment({ commentId, postId });
-  }, []);
+  }, [postId, commentId, deleteComment]);
 
   return (
     <Flex>

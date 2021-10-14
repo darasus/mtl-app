@@ -4,7 +4,7 @@ import React from "react";
 import { useMeQuery } from "../hooks/query/useMeQuery";
 
 export const UserPreview = React.forwardRef<HTMLDivElement>(
-  ({ ...props }, ref) => {
+  function UserPreview({ ...props }, ref) {
     const me = useMeQuery();
 
     if (!me.data) return null;

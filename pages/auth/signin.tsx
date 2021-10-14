@@ -34,6 +34,7 @@ const BrandLogo = ({ name }: { name: string }) => {
       }
       height={23}
       width={23}
+      alt={name}
     />
   );
 };
@@ -47,7 +48,7 @@ const SignIn: React.FC<Props> = ({ providers }) => {
     if (me) {
       router.push(callbackUrl ? callbackUrl : "/");
     }
-  }, [me]);
+  }, [me, callbackUrl, router]);
 
   if (me) return null;
 

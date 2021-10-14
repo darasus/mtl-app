@@ -41,7 +41,7 @@ export const Header: React.FC = () => {
         {me.data ? (
           <>
             <Box mr={4}>
-              <Link href="/p/create">
+              <Link href="/p/create" passHref>
                 <Button
                   size="sm"
                   variant="outline"

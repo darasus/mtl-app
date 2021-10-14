@@ -37,13 +37,17 @@ export const Syntax: React.FC<Props> = ({ value }) => {
             marginBottom: 0,
           }}
         >
-          {tokens.map((line, i) => (
-            <div {...getLineProps({ line, key: i })}>
-              {line.map((token, key) => (
-                <span {...getTokenProps({ token, key })} />
-              ))}
-            </div>
-          ))}
+          {tokens.map((line, i) => {
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <div {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => {
+                  // eslint-disable-next-line react/jsx-key
+                  return <span {...getTokenProps({ token, key })} />;
+                })}
+              </div>
+            );
+          })}
         </pre>
       )}
     </Highlight>

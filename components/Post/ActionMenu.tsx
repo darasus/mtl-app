@@ -36,7 +36,7 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
 
   const handleEditClick = React.useCallback(() => {
     router.push(`/p/${post.id}/edit`);
-  }, []);
+  }, [router, post.id]);
 
   const handleDeletePost = React.useCallback(() => deletePost(), [deletePost]);
 
@@ -96,15 +96,3 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
     </Menu>
   );
 };
-
-const ActionButton = React.forwardRef<HTMLButtonElement>((props, ref) => {
-  return (
-    <IconButton
-      ref={ref}
-      aria-label="menu icon"
-      icon={<DotsVerticalIcon width="15" height="15" />}
-      variant="ghost"
-      {...props}
-    />
-  );
-});

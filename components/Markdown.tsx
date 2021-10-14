@@ -53,7 +53,7 @@ const defaults: Record<string, ElementType> = {
     const { inline, children, className } = props;
 
     if (inline) {
-      return <Code children={children} />;
+      return <Code>{children}</Code>;
     }
 
     return (
@@ -63,8 +63,9 @@ const defaults: Record<string, ElementType> = {
         d="block"
         w="full"
         p={2}
-        children={children}
-      />
+      >
+        {children}
+      </Code>
     );
   },
   del: (props) => {
@@ -240,5 +241,5 @@ interface Props {
 }
 
 export const Markdown: React.FC<Props> = ({ value }) => {
-  return <ReactMarkdown children={value} components={defaults} />;
+  return <ReactMarkdown components={defaults}>{value}</ReactMarkdown>;
 };

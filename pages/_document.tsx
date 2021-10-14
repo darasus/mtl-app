@@ -40,6 +40,7 @@ class MyDocument extends Document {
           />
           {process.env.VERCEL_ENV === "production" && (
             <>
+              {/* eslint-disable-next-line @next/next/no-sync-scripts */}
               <script
                 src="https://www.datadoghq-browser-agent.com/datadog-rum-v3.js"
                 type="text/javascript"

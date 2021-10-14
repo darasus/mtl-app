@@ -59,7 +59,7 @@ const EditPostPage: React.FC = () => {
       description: description || "",
       content: content || "",
     });
-  }, [post.data]);
+  }, [post.data, reset]);
 
   const submit = handleSubmit(async ({ title, description, content }) => {
     await editPost({ title, description, content, isPublished: true });
