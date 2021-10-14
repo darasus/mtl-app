@@ -50,24 +50,30 @@ export default PostPage;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
 
-  if (createIsFirstServerCall(ctx)) {
-    const postId = Number(ctx.query.id);
-    const post = await fetchPost(postId);
-
-    await Promise.all([
-      prefetchMe(ctx, queryClient),
-      queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
-        Promise.resolve(post)
-      ),
-      queryClient.prefetchQuery(commentsKey.postComments(post.id), () =>
-        Promise.resolve({
-          items: post.comments,
-          total: post.commentsCount,
-          count: post.comments.length,
-        })
-      ),
-    ]);
+  if (!createIsFirstServerCall(ctx)) {
+    return {
+      props: {
+        cookies: ctx.req.headers.cookie ?? "",
+      },
+    };
   }
+
+  const postId = Number(ctx.query.id);
+  const post = await fetchPost(postId);
+
+  await Promise.all([
+    prefetchMe(ctx, queryClient),
+    queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
+      Promise.resolve(post)
+    ),
+    queryClient.prefetchQuery(commentsKey.postComments(post.id), () =>
+      Promise.resolve({
+        items: post.comments,
+        total: post.commentsCount,
+        count: post.comments.length,
+      })
+    ),
+  ]);
 
   return {
     props: {

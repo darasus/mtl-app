@@ -168,35 +168,38 @@ export default UserPage;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
 
-  if (createIsFirstServerCall(ctx)) {
-    const userId = Number(ctx.query.id);
-
-    const [user, posts] = await Promise.all([
-      fetchUser(userId),
-      fetchUserPosts(userId),
-    ]);
-
-    await posts.forEach(async (post) => {
-      await queryClient.prefetchQuery(createUsePostQueryCacheKey(post.id), () =>
-        Promise.resolve(post)
-      );
-      await queryClient.prefetchQuery(
-        commentsKey.postComments(post.id),
-        () => ({
-          items: post.comments,
-          total: post.commentsCount,
-          count: post.comments.length,
-        })
-      );
-    });
-
-    await Promise.all([
-      prefetchMe(ctx, queryClient),
-      queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
-        Promise.resolve(user)
-      ),
-    ]);
+  if (!createIsFirstServerCall(ctx)) {
+    return {
+      props: {
+        cookies: ctx.req.headers.cookie ?? "",
+      },
+    };
   }
+
+  const userId = Number(ctx.query.id);
+
+  const [user, posts] = await Promise.all([
+    fetchUser(userId),
+    fetchUserPosts(userId),
+  ]);
+
+  await posts.forEach(async (post) => {
+    await queryClient.prefetchQuery(createUsePostQueryCacheKey(post.id), () =>
+      Promise.resolve(post)
+    );
+    await queryClient.prefetchQuery(commentsKey.postComments(post.id), () => ({
+      items: post.comments,
+      total: post.commentsCount,
+      count: post.comments.length,
+    }));
+  });
+
+  await Promise.all([
+    prefetchMe(ctx, queryClient),
+    queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
+      Promise.resolve(user)
+    ),
+  ]);
 
   return {
     props: {
