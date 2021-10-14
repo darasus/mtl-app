@@ -1,8 +1,5 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/client";
-import { performance } from "perf_hooks";
-import { UserService } from "../../services/api/UserService";
 import { UserSessionService } from "../../services/api/UserSessionService";
 
 export default async function handle(

@@ -21,10 +21,12 @@ import {
   LogoutIcon,
 } from "@heroicons/react/outline";
 import { Logo } from "./Logo";
+import { useLogoutMutation } from "../hooks/mutation/useLogoutMutation";
 
 export const Header: React.FC = () => {
   const router = useRouter();
   const me = useMeQuery();
+  const logout = useLogoutMutation(me.data?.id!);
 
   return (
     <Box py="6" cursor="pointer">
@@ -70,7 +72,7 @@ export const Header: React.FC = () => {
                   <MenuItem
                     color="red.500"
                     icon={<LogoutIcon width="20" height="20" />}
-                    onClick={() => signOut()}
+                    onClick={() => logout.mutate()}
                   >
                     Logout
                   </MenuItem>

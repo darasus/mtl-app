@@ -1,4 +1,3 @@
-import { Provider as AuthProvider } from "next-auth/client";
 import { AppProps } from "next/app";
 import React from "react";
 import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
@@ -32,7 +31,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }
 
   return (
-    // <AuthProvider session={pageProps.session}>
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
         <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
@@ -56,7 +54,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </Hydrate>
       <ReactQueryDevtools />
     </QueryClientProvider>
-    // </AuthProvider>
   );
 };
 

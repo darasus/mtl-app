@@ -15,11 +15,10 @@ export default async function handle(
   );
 
   try {
-    const userService = await new UserSessionService({ req }).get();
-    const userId = userService.id;
+    const user = await new UserSessionService({ req }).get();
     const feedService = new FeedService();
     const feed = await feedService.fetchFeed({
-      userId,
+      userId: user?.id,
       take: Number(req.query.take) || undefined,
       cursor: Number(req.query.cursor) || undefined,
     });

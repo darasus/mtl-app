@@ -18,7 +18,7 @@ export default async function handle(
   try {
     const user = await new UserSessionService({ req }).get();
 
-    console.log({ user });
+    if (!user) return null;
 
     const postService = new PostService();
     const likeService = new LikeService();
@@ -28,8 +28,6 @@ export default async function handle(
       return res.json({ status: "failure" });
     }
 
-    console.log({ post });
-
     if (post?.isLikedByMe) {
       res.status(400).json({ message: "Post is already liked by you" });
     }
@@ -38,7 +36,6 @@ export default async function handle(
     await cache.del(JSON.stringify(createUsePostQueryCacheKey(post.id)));
     res.json({ status: "success" });
   } catch (error) {
-    console.log(error);
     return res.end(error);
   }
 }
