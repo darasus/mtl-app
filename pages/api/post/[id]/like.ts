@@ -29,7 +29,7 @@ export default async function handle(
     }
 
     if (post?.isLikedByMe) {
-      res.status(400).json({ message: "Post is already liked by you" });
+      return res.status(400).json({ message: "Post is already liked by you" });
     }
 
     await likeService.likePost(Number(req.query.id), user.id);

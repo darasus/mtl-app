@@ -15,6 +15,7 @@ import { Flex, Spinner } from "@chakra-ui/react";
 import { fetchPost } from "../../../request/fetchPost";
 import { Head } from "../../../components/Head";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
+import { commentsKey } from "../../../hooks/query/useCommentsQuery";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -51,11 +52,19 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   if (createIsFirstServerCall(ctx)) {
     const postId = Number(ctx.query.id);
+    const post = await fetchPost(postId);
 
     await Promise.all([
       prefetchMe(ctx, queryClient),
       queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
-        fetchPost(postId)
+        Promise.resolve(post)
+      ),
+      queryClient.prefetchQuery(commentsKey.postComments(post.id), () =>
+        Promise.resolve({
+          items: post.comments,
+          total: post.commentsCount,
+          count: post.comments.length,
+        })
       ),
     ]);
   }

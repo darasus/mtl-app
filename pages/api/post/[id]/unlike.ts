@@ -27,7 +27,7 @@ export default async function handle(
     }
 
     if (!post?.isLikedByMe) {
-      res.status(400).json({ message: "Post is not liked by you yet" });
+      return res.status(400).json({ message: "Post is not liked by you yet" });
     }
 
     await likeService.unlikePost(Number(req.query.id), user.id);
