@@ -7,6 +7,7 @@ import { useCommentsQuery } from "../../hooks/query/useCommentsQuery";
 import { useMeQuery } from "../../hooks/query/useMeQuery";
 import { DeleteCommentButton } from "./DeleteCommentButton";
 import { useAddCommentMutation } from "../../hooks/mutation/useAddCommentMutation";
+import { usePrevious } from "../../hooks/usePrevious";
 
 interface Props {
   postId: number;
@@ -14,6 +15,7 @@ interface Props {
 
 export const Comments: React.FC<Props> = ({ postId }) => {
   const [take, setTake] = React.useState(5);
+  const prevTake = usePrevious(take);
   const comments = useCommentsQuery({
     postId,
     take,
@@ -43,8 +45,10 @@ export const Comments: React.FC<Props> = ({ postId }) => {
   }, [take, setTake]);
 
   React.useEffect(() => {
-    comments.refetch();
-  }, [take]);
+    if (prevTake && prevTake !== take) {
+      comments.refetch();
+    }
+  }, [prevTake, take, comments]);
 
   return (
     <>
