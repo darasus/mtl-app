@@ -10,8 +10,6 @@ export class LikeService {
         author: { connect: { id: userId } },
       },
     });
-
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 
   async unlikePost(postId: number, userId: number) {
@@ -29,7 +27,5 @@ export class LikeService {
         id: like?.id,
       },
     });
-
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 }
