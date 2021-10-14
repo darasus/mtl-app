@@ -48,12 +48,16 @@ export default PostPage;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
   const postId = Number(ctx.query.id);
-  await Promise.all([
-    prefetchMe(ctx, queryClient),
-    queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
-      fetchPost(postId)
-    ),
-  ]);
+  const isFirstServerCall = ctx.req?.url?.indexOf("/_next/data/") === -1;
+
+  if (isFirstServerCall) {
+    await Promise.all([
+      prefetchMe(ctx, queryClient),
+      queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
+        fetchPost(postId)
+      ),
+    ]);
+  }
 
   return {
     props: {

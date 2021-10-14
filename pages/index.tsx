@@ -98,26 +98,30 @@ export default Index;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const me = await prefetchMe(ctx, queryClient);
-  const feedService = new FeedService();
-  const page = await feedService.fetchFeed({
-    userId: me?.id || undefined,
-  });
+  const isFirstServerCall = ctx.req?.url?.indexOf("/_next/data/") === -1;
 
-  await queryClient.prefetchQuery(createUseFeedQueryCacheKey(), () =>
-    Promise.resolve({
-      pages: [page],
-    })
-  );
-
-  page.items.forEach((post) => {
-    queryClient.setQueryData(createUsePostQueryCacheKey(post.id), post);
-    queryClient.setQueryData(commentsKey.postComments(post.id), {
-      items: post.comments,
-      count: post.comments.length,
-      total: post.commentsCount,
+  if (isFirstServerCall) {
+    const me = await prefetchMe(ctx, queryClient);
+    const feedService = new FeedService();
+    const page = await feedService.fetchFeed({
+      userId: me?.id || undefined,
     });
-  });
+
+    await queryClient.prefetchQuery(createUseFeedQueryCacheKey(), () =>
+      Promise.resolve({
+        pages: [page],
+      })
+    );
+
+    page.items.forEach((post) => {
+      queryClient.setQueryData(createUsePostQueryCacheKey(post.id), post);
+      queryClient.setQueryData(commentsKey.postComments(post.id), {
+        items: post.comments,
+        count: post.comments.length,
+        total: post.commentsCount,
+      });
+    });
+  }
 
   return {
     props: {
