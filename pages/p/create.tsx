@@ -13,7 +13,6 @@ import { Controller, useForm } from "react-hook-form";
 import { CodeEditor } from "../../components/CodeEditor";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { usePostCreate } from "../../hooks/usePostCreate";
 import { Layout } from "../../layouts/Layout";
 import { useColors } from "../../hooks/useColors";
 import { GetServerSideProps } from "next";
@@ -21,6 +20,7 @@ import { prefetchMe } from "../../services/utils/prefetchMe";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
+import { usePostCreateMutation } from "../../hooks/mutation/usePostCreateMutation";
 
 interface Form {
   title: string;
@@ -37,7 +37,7 @@ const schema = yup.object().shape({
 const CreatePostPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
   const router = useRouter();
-  const { createPost, isLoading } = usePostCreate();
+  const createPostMutation = usePostCreateMutation();
   const {
     register,
     handleSubmit,
@@ -48,7 +48,7 @@ const CreatePostPage: React.FC = () => {
   });
 
   const submit = handleSubmit(async (data) => {
-    const post = await createPost(data);
+    const post = await createPostMutation.mutateAsync(data);
     await router.push(`/p/${post.id}`);
   });
 
@@ -103,8 +103,10 @@ const CreatePostPage: React.FC = () => {
             <Button
               type="submit"
               marginRight="size-200"
-              disabled={isLoading}
+              disabled={createPostMutation.isLoading}
               variant="solid"
+              isLoading={createPostMutation.isLoading}
+              loadingText="Publish"
               mr={2}
             >
               Publish

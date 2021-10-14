@@ -1,4 +1,6 @@
+import { Text } from "@chakra-ui/react";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import { Post } from "../../types/Post";
 
@@ -13,10 +15,17 @@ export const usePostCreateMutation = () => {
 
   return useMutation<Post, {}, Variables>(
     (variables) =>
-      axios(`/api/post/create`, {
-        method: "POST",
-        data: variables,
-      }).then((res) => res.data),
+      toast.promise(
+        axios(`/api/post/create`, {
+          method: "POST",
+          data: variables,
+        }).then((res) => res.data),
+        {
+          loading: <Text fontSize="sm">{"Creating library..."}</Text>,
+          success: <Text fontSize="sm">{"Library created!"}</Text>,
+          error: <Text fontSize="sm">{"Library is not created."}</Text>,
+        }
+      ),
     {
       async onSettled(_, __, id) {
         await queryClient.invalidateQueries("feed");
