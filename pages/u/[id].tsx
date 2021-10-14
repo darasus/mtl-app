@@ -20,7 +20,10 @@ import {
   useUserQuery,
 } from "../../hooks/query/useUserQuery";
 import { useRouter } from "next/router";
-import { useUserPostsQuery } from "../../hooks/query/useUserPostsQuery";
+import {
+  createUseUserPostsQueryCacheKey,
+  useUserPostsQuery,
+} from "../../hooks/query/useUserPostsQuery";
 import { fetchUserPosts } from "../../request/fetchUserPosts";
 import { useMeQuery } from "../../hooks/query/useMeQuery";
 import { useFollowMutation } from "../../hooks/mutation/useFollowMutation";
@@ -182,6 +185,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     fetchUser(userId),
     fetchUserPosts(userId),
   ]);
+
+  await queryClient.prefetchQuery(
+    createUseUserPostsQueryCacheKey(user.id),
+    () => Promise.resolve(posts)
+  );
 
   await posts.forEach(async (post) => {
     await queryClient.prefetchQuery(createUsePostQueryCacheKey(post.id), () =>

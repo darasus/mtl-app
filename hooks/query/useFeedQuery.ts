@@ -44,7 +44,6 @@ export const useFeedQuery = () => {
                 items: post.comments,
                 count: post.comments.length,
                 total: post.commentsCount,
-                cursor: post.comments[0].id,
               });
             }
           });
