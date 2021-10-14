@@ -14,17 +14,16 @@ export default async function handle(
   );
 
   try {
-    const userService = await new UserSessionService({ req }).get();
-    const userId = userService.id;
+    const user = await new UserSessionService({ req }).get();
     const postService = new PostService();
     const likeService = new LikeService();
-    const post = await postService.fetchPost(Number(req.query.id), userId);
+    const post = await postService.fetchPost(Number(req.query.id), user.id);
 
     if (post?.isLikedByMe) {
       res.status(400).json({ message: "Post is already liked by you" });
     }
 
-    await likeService.likePost(Number(req.query.id), userId);
+    await likeService.likePost(Number(req.query.id), user.id);
     res.json({ status: "success" });
   } catch (error) {
     return error;
