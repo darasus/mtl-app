@@ -20,10 +20,7 @@ import {
   useUserQuery,
 } from "../../hooks/query/useUserQuery";
 import { useRouter } from "next/router";
-import {
-  createUseUserPostsQueryCacheKey,
-  useUserPostsQuery,
-} from "../../hooks/query/useUserPostsQuery";
+import { useUserPostsQuery } from "../../hooks/query/useUserPostsQuery";
 import { fetchUserPosts } from "../../request/fetchUserPosts";
 import { useMeQuery } from "../../hooks/query/useMeQuery";
 import { useFollowMutation } from "../../hooks/mutation/useFollowMutation";
@@ -179,27 +176,26 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       fetchUserPosts(userId),
     ]);
 
+    await posts.forEach(async (post) => {
+      await queryClient.prefetchQuery(createUsePostQueryCacheKey(post.id), () =>
+        Promise.resolve(post)
+      );
+      await queryClient.prefetchQuery(
+        commentsKey.postComments(post.id),
+        () => ({
+          items: post.comments,
+          total: post.commentsCount,
+          count: post.comments.length,
+        })
+      );
+    });
+
     await Promise.all([
       prefetchMe(ctx, queryClient),
       queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
         Promise.resolve(user)
       ),
     ]);
-
-    await Promise.all(
-      posts.map((post) => {
-        return Promise.all([
-          queryClient.prefetchQuery(createUsePostQueryCacheKey(post.id), () =>
-            Promise.resolve(post)
-          ),
-          queryClient.prefetchQuery(commentsKey.postComments(post.id), () => ({
-            items: post.comments,
-            total: post.commentsCount,
-            count: post.comments.length,
-          })),
-        ]);
-      })
-    );
   }
 
   return {
