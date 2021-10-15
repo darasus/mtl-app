@@ -2,7 +2,7 @@ import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getCsrfToken } from "next-auth/client";
 import { createUseMeQueryCacheKey } from "../../../../hooks/query/useMeQuery";
-import cache from "../../../../server/cache";
+import cache from "../../../../lib/cache";
 
 export default async function handle(
   req: NextApiRequest,

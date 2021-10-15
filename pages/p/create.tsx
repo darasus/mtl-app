@@ -4,7 +4,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Layout } from "../../layouts/Layout";
 import { GetServerSideProps } from "next";
-import { prefetchMe } from "../../services/utils/prefetchMe";
+import { prefetchMe } from "../../lib/utils/prefetchMe";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";

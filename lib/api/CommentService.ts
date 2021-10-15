@@ -1,7 +1,7 @@
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import prisma from "../prisma";
-import cache from "../../server/cache";
-import { commentFragment } from "../../services/fragments/commentFragment";
+import cache from "../cache";
+import { commentFragment } from "../fragments/commentFragment";
 
 export class CommentService {
   async isMyComment({

@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { dehydrate } from "react-query/hydration";
 import { useMeQuery } from "../../../hooks/query/useMeQuery";
 import { PreviewLayout } from "../../../layouts/PreviewLayout";
-import { prefetchMe } from "../../../services/utils/prefetchMe";
+import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Logo } from "../../../components/Logo";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";

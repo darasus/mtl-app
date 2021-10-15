@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import { QueryClient } from "react-query";
 import { createUseMeQueryCacheKey } from "../../hooks/query/useMeQuery";
-import { UserSessionService } from "../../lib/api/UserSessionService";
+import { UserSessionService } from "../api/UserSessionService";
 
 export const prefetchMe = async (
   ctx: GetServerSidePropsContext,

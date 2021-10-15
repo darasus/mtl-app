@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { useMeQuery } from "../../../hooks/query/useMeQuery";
 import { Layout } from "../../../layouts/Layout";
 import { QueryClient } from "react-query";
-import { prefetchMe } from "../../../services/utils/prefetchMe";
+import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { dehydrate } from "react-query/hydration";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { Head } from "../../../components/Head";

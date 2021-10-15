@@ -1,6 +1,6 @@
 import { createUseTagsQueryQueryCacheKey } from "../../hooks/query/useTagsQuery";
 import prisma from "../prisma";
-import cache from "../../server/cache";
+import cache from "../cache";
 
 export class TagService {
   async getAllTags() {

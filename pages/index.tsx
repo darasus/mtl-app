@@ -11,7 +11,7 @@ import {
 import { useMeQuery } from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
 import { FeedService } from "../lib/api/FeedService";
-import { prefetchMe } from "../services/utils/prefetchMe";
+import { prefetchMe } from "../lib/utils/prefetchMe";
 import { useRouter } from "next/router";
 import { Head } from "../components/Head";
 import { commentsKey } from "../hooks/query/useCommentsQuery";
@@ -56,7 +56,7 @@ const Index: React.FC = () => {
             </Center>
           )}
           <Heading mb={10} variant="section-heading">
-            Latest libraries
+            Library feed
           </Heading>
           {feed.isLoading && (
             <Flex justifyContent="center" mt={5} mb={5}>

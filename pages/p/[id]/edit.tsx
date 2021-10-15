@@ -8,7 +8,7 @@ import { usePostEdit } from "../../../hooks/usePostEdit";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Layout } from "../../../layouts/Layout";
-import { prefetchMe } from "../../../services/utils/prefetchMe";
+import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { PostForm, postSchema } from "../../../features/PostForm";
 

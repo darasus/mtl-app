@@ -3,7 +3,7 @@ import invariant from "invariant";
 import { PostService } from "../../../../lib/api/PostService";
 import { LikeService } from "../../../../lib/api/LikeService";
 import { UserSessionService } from "../../../../lib/api/UserSessionService";
-import cache from "../../../../server/cache";
+import cache from "../../../../lib/cache";
 import { createUsePostQueryCacheKey } from "../../../../hooks/query/usePostQuery";
 
 export default async function handle(

@@ -31,7 +31,7 @@ import { useDoIFollowUserQuery } from "../../hooks/query/useDoIFollowUserQuery";
 import { UserGroupIcon } from "@heroicons/react/outline";
 import { Layout } from "../../layouts/Layout";
 import { useColors } from "../../hooks/useColors";
-import { prefetchMe } from "../../services/utils/prefetchMe";
+import { prefetchMe } from "../../lib/utils/prefetchMe";
 import { Head } from "../../components/Head";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";

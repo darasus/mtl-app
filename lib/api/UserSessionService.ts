@@ -1,12 +1,10 @@
 import { NextApiRequest } from "next";
 import { getCsrfToken, getSession } from "next-auth/client";
-
 import { createUseMeQueryCacheKey } from "../../hooks/query/useMeQuery";
 import prisma from "../prisma";
-import cache from "../../server/cache";
+import cache from "../cache";
 import { User } from "../../types/User";
-import { parseAppSessionFromCookies } from "../../utils/parseCookies";
-import { userFragment } from "../../services/fragments/userFragment";
+import { userFragment } from "../fragments/userFragment";
 
 export class UserSessionService {
   req: NextApiRequest | null;
