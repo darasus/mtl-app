@@ -22,10 +22,10 @@ export default async function handle(
       }
 
       const followService = new FollowService();
-      const response = await followService.doIFollow(
-        Number(req.query.id),
-        user.id
-      );
+      const response = await followService.doIFollow({
+        followingUserId: Number(req.query.id),
+        followerUserId: user.id,
+      });
       return res.json({ doIFollow: response.doIFollow });
     } catch (error) {
       return res.end(error);

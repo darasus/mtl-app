@@ -14,7 +14,7 @@ const get = async <T>(key: string): Promise<T | null> => {
   const value = await redis.get(key);
   const cacheT1 = performance.now();
   console.log(
-    `Fetch hit for ${key} to cache took ${cacheT1 - cacheT0} milliseconds.`
+    `Get hit for ${key} to cache took ${cacheT1 - cacheT0} milliseconds.`
   );
   if (value === null) return null;
   return JSON.parse(value);
@@ -44,6 +44,6 @@ const perge = async () => {
   await redis.flushall();
 };
 
-const all = { fetch, set, get, del, perge };
+const cache = { fetch, set, get, del, perge };
 
-export default all;
+export default cache;

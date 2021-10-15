@@ -1,3 +1,5 @@
+import { createUseDoIFollowUserQueryQueryCache } from "../../hooks/query/useDoIFollowUserQuery";
+import cache from "../cache";
 import prisma from "../prisma";
 
 export class FollowService {
@@ -26,6 +28,13 @@ export class FollowService {
         },
       },
     });
+
+    await cache.del(
+      JSON.stringify([
+        ...createUseDoIFollowUserQueryQueryCache(followingUserId),
+        ...createUseDoIFollowUserQueryQueryCache(followerUserId),
+      ])
+    );
   }
 
   async unfollowUser(followingUserId: number, followerUserId: number) {
@@ -37,15 +46,38 @@ export class FollowService {
         },
       },
     });
+
+    await cache.del(
+      JSON.stringify([
+        ...createUseDoIFollowUserQueryQueryCache(followingUserId),
+        ...createUseDoIFollowUserQueryQueryCache(followerUserId),
+      ])
+    );
   }
 
-  async doIFollow(followingUserId: number, followerUserId: number) {
-    const response = await prisma.follow.findFirst({
-      where: {
-        followingId: followingUserId,
-        followerId: followerUserId,
-      },
-    });
+  async doIFollow({
+    followingUserId,
+    followerUserId,
+  }: {
+    followingUserId: number;
+    followerUserId: number;
+  }) {
+    const response = await cache.fetch(
+      JSON.stringify([
+        ...createUseDoIFollowUserQueryQueryCache(followingUserId),
+        ...createUseDoIFollowUserQueryQueryCache(followerUserId),
+      ]),
+      () =>
+        prisma.follow.findUnique({
+          where: {
+            followerId_followingId: {
+              followerId: followerUserId,
+              followingId: followingUserId,
+            },
+          },
+        }),
+      60 * 60 * 24
+    );
 
     return { doIFollow: !!response };
   }

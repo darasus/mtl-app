@@ -1,7 +1,10 @@
 import { useQuery } from "react-query";
 import { Fetcher } from "../../lib/Fetcher";
 
-export const createUseUserQueryCacheKey = (userId: number) => ["user", userId];
+export const createUseUserQueryCacheKey = (userId: number) => [
+  "user",
+  { userId },
+];
 
 export const useUserQuery = (userId: number) => {
   const fetcher = new Fetcher();

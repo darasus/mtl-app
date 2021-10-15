@@ -9,7 +9,11 @@ export const createUseFollowersCountQueryCacheKey = (userId: number) => [
 export const useFollowersCountQuery = (userId: number) => {
   const fetcher = new Fetcher();
 
-  return useQuery(createUseFollowersCountQueryCacheKey(userId), () =>
-    fetcher.getFollowersCount(userId)
+  return useQuery(
+    createUseFollowersCountQueryCacheKey(userId),
+    () => fetcher.getFollowersCount(userId),
+    {
+      staleTime: 60 * 60 * 24,
+    }
   );
 };

@@ -9,7 +9,11 @@ export const createUseDoIFollowUserQueryQueryCache = (userId: number) => [
 export const useDoIFollowUserQuery = (userId: number) => {
   const fetcher = new Fetcher();
 
-  return useQuery(createUseDoIFollowUserQueryQueryCache(userId), () =>
-    fetcher.doIFollowUser(userId)
+  return useQuery(
+    createUseDoIFollowUserQueryQueryCache(userId),
+    () => fetcher.doIFollowUser(userId),
+    {
+      staleTime: 60 * 60 * 24,
+    }
   );
 };
