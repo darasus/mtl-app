@@ -21,6 +21,6 @@ export default async function handle(
     });
     res.json(comments);
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

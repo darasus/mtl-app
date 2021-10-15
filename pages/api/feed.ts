@@ -22,6 +22,6 @@ export default async function handle(
     });
     res.send(feed);
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

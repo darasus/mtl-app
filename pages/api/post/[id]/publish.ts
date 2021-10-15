@@ -23,6 +23,6 @@ export default async function handle(
     await postService.publishPost(Number(req.query.id));
     res.json({ status: "success" });
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

@@ -18,6 +18,6 @@ export default async function handle(
     const post = await postService.fetchPost(Number(req.query.id), user?.id);
     res.json(post);
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

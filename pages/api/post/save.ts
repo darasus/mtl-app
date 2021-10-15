@@ -30,6 +30,6 @@ export default async function handle(
     );
     res.json({ status: "success" });
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

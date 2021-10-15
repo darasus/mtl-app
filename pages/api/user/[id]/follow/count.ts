@@ -19,6 +19,6 @@ export default async function handle(
     );
     res.json(count);
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

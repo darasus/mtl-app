@@ -24,6 +24,6 @@ export default async function handle(
     await followService.unfollowUser(Number(req.query.id), user.id);
     res.json({ status: "success" });
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

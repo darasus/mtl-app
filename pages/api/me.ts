@@ -15,6 +15,6 @@ export default async function handle(
     const userService = await new UserSessionService({ req }).get();
     res.send(userService);
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

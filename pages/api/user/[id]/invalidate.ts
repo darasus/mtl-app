@@ -24,6 +24,6 @@ export default async function handle(
     }
     res.json({ success: true });
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }

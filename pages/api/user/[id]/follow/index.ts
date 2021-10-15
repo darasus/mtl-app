@@ -28,7 +28,7 @@ export default async function handle(
       );
       return res.json({ doIFollow: response.doIFollow });
     } catch (error) {
-      return error;
+      return res.end(error);
     }
   }
 
@@ -44,7 +44,7 @@ export default async function handle(
       await followService.followUser(Number(req.query.id), user.id);
       return res.json({ status: "success" });
     } catch (error) {
-      return error;
+      return res.end(error);
     }
   }
 }

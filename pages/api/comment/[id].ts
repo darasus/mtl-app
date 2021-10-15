@@ -43,6 +43,6 @@ export default async function handle(
     await commentService.deleteComment(Number(req.query.id), post.id);
     res.json({ status: "success" });
   } catch (error) {
-    return error;
+    return res.end(error);
   }
 }
