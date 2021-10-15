@@ -10,7 +10,7 @@ import {
 } from "../hooks/query/useFeedQuery";
 import { useMeQuery } from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
-import { FeedService } from "../services/api/FeedService";
+import { FeedService } from "../lib/api/FeedService";
 import { prefetchMe } from "../services/utils/prefetchMe";
 import { useRouter } from "next/router";
 import { Head } from "../components/Head";

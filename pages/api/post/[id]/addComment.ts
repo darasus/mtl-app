@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
-import { CommentService } from "../../../../services/api/CommentService";
-import { UserSessionService } from "../../../../services/api/UserSessionService";
+import { CommentService } from "../../../../lib/api/CommentService";
+import { UserSessionService } from "../../../../lib/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,

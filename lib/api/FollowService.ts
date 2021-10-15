@@ -1,5 +1,4 @@
-import { Session } from "next-auth";
-import prisma from "../../lib/prisma";
+import prisma from "../prisma";
 
 export class FollowService {
   async getNumberOfFollowers(userId: number) {

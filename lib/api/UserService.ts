@@ -1,12 +1,12 @@
 import { createUseUserQueryCacheKey } from "../../hooks/query/useUserQuery";
-import prisma from "../../lib/prisma";
+import prisma from "../prisma";
 import cache from "../../server/cache";
 import { Post } from "../../types/Post";
-import { authorFragment } from "../fragments/authorFragment";
-import { commentFragment } from "../fragments/commentFragment";
-import { likeFragment } from "../fragments/likeFragment";
-import { tagsFragment } from "../fragments/tagsFragment";
-import { preparePost } from "../utils/preparePost";
+import { authorFragment } from "../../services/fragments/authorFragment";
+import { commentFragment } from "../../services/fragments/commentFragment";
+import { likeFragment } from "../../services/fragments/likeFragment";
+import { tagsFragment } from "../../services/fragments/tagsFragment";
+import { preparePost } from "../../services/utils/preparePost";
 
 const selectQueryFragment = {
   select: {

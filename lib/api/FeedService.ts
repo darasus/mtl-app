@@ -1,12 +1,11 @@
-import prisma from "../../lib/prisma";
+import prisma from "../prisma";
 import { Post } from "../../types/Post";
 import * as R from "ramda";
 import Prisma from ".prisma/client";
-import { authorFragment } from "../fragments/authorFragment";
-import { likeFragment } from "../fragments/likeFragment";
-import { commentFragment } from "../fragments/commentFragment";
-import mitt from "next/dist/shared/lib/mitt";
-import { tagsFragment } from "../fragments/tagsFragment";
+import { authorFragment } from "../../services/fragments/authorFragment";
+import { likeFragment } from "../../services/fragments/likeFragment";
+import { commentFragment } from "../../services/fragments/commentFragment";
+import { tagsFragment } from "../../services/fragments/tagsFragment";
 
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];

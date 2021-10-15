@@ -1,6 +1,4 @@
-import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
-import prisma from "../../lib/prisma";
-import cache from "../../server/cache";
+import prisma from "../prisma";
 
 export class LikeService {
   async likePost(postId: number, userId: number) {

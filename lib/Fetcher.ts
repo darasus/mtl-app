@@ -1,15 +1,14 @@
 import axios, { AxiosInstance } from "axios";
-import Prisma, { CodeLanguage } from ".prisma/client";
-import { CommentService } from "../services/api/CommentService";
+import { CodeLanguage } from ".prisma/client";
+import { CommentService } from "./api/CommentService";
 import { Post } from "../types/Post";
 import { User } from "../types/User";
 import qs from "query-string";
-import { FeedService, FetchFeedResponse } from "../services/api/FeedService";
-import { FollowService } from "../services/api/FollowService";
-import { PostService } from "../services/api/PostService";
-import { TagService } from "../services/api/TagService";
-import { LikeService } from "../services/api/LikeService";
-import { UserService } from "../services/api/UserService";
+import { FeedService } from "./api/FeedService";
+import { FollowService } from "./api/FollowService";
+import { PostService } from "./api/PostService";
+import { TagService } from "./api/TagService";
+import { LikeService } from "./api/LikeService";
 
 export class Fetcher {
   request: AxiosInstance;

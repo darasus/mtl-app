@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
-import { CommentService } from "../../../../services/api/CommentService";
+import { CommentService } from "../../../../lib/api/CommentService";
 
 export default async function handle(
   req: NextApiRequest,

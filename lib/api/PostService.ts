@@ -1,13 +1,13 @@
-import prisma from "../../lib/prisma";
+import prisma from "../prisma";
 import { Post } from "../../types/Post";
 import Prisma, { CodeLanguage } from ".prisma/client";
-import { authorFragment } from "../fragments/authorFragment";
-import { likeFragment } from "../fragments/likeFragment";
-import { commentFragment } from "../fragments/commentFragment";
-import { preparePost } from "../utils/preparePost";
+import { authorFragment } from "../../services/fragments/authorFragment";
+import { likeFragment } from "../../services/fragments/likeFragment";
+import { commentFragment } from "../../services/fragments/commentFragment";
+import { preparePost } from "../../services/utils/preparePost";
 import cache from "../../server/cache";
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
-import { tagsFragment } from "../fragments/tagsFragment";
+import { tagsFragment } from "../../services/fragments/tagsFragment";
 
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];

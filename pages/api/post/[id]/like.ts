@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
-import { PostService } from "../../../../services/api/PostService";
-import { LikeService } from "../../../../services/api/LikeService";
-import { UserSessionService } from "../../../../services/api/UserSessionService";
+import { PostService } from "../../../../lib/api/PostService";
+import { LikeService } from "../../../../lib/api/LikeService";
+import { UserSessionService } from "../../../../lib/api/UserSessionService";
 import cache from "../../../../server/cache";
 import { createUsePostQueryCacheKey } from "../../../../hooks/query/usePostQuery";
 

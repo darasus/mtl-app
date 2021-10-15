@@ -2,7 +2,7 @@ import { Text } from "@chakra-ui/react";
 import { toast } from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import { Fetcher } from "../../lib/Fetcher";
-import { CommentService } from "../../services/api/CommentService";
+import { CommentService } from "../../lib/api/CommentService";
 import { commentsKey } from "../query/useCommentsQuery";
 import { useMeQuery } from "../query/useMeQuery";
 

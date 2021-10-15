@@ -1,5 +1,5 @@
 import { createUseTagsQueryQueryCacheKey } from "../../hooks/query/useTagsQuery";
-import prisma from "../../lib/prisma";
+import prisma from "../prisma";
 import cache from "../../server/cache";
 
 export class TagService {

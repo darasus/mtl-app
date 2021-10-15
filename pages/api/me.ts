@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { UserSessionService } from "../../services/api/UserSessionService";
+import { UserSessionService } from "../../lib/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,

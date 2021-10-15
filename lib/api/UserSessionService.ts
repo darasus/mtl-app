@@ -1,13 +1,12 @@
-import invariant from "invariant";
 import { NextApiRequest } from "next";
 import { getCsrfToken, getSession } from "next-auth/client";
 
 import { createUseMeQueryCacheKey } from "../../hooks/query/useMeQuery";
-import prisma from "../../lib/prisma";
+import prisma from "../prisma";
 import cache from "../../server/cache";
 import { User } from "../../types/User";
 import { parseAppSessionFromCookies } from "../../utils/parseCookies";
-import { userFragment } from "../fragments/userFragment";
+import { userFragment } from "../../services/fragments/userFragment";
 
 export class UserSessionService {
   req: NextApiRequest | null;

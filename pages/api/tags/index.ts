@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { TagService } from "../../../services/api/TagService";
+import { TagService } from "../../../lib/api/TagService";
 
 export default async function handle(
   req: NextApiRequest,

@@ -1,7 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { FeedService } from "../../services/api/FeedService";
-import { UserSessionService } from "../../services/api/UserSessionService";
+import { FeedService } from "../../lib/api/FeedService";
+import { UserSessionService } from "../../lib/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,
