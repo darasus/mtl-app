@@ -124,7 +124,7 @@ export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
         </Box>
         <Box mb={3}>
           <Text color={secondaryTextColor} mb={2}>
-            {`Tiny ${codeLanguage.toLowerCase()} library`}
+            {`Tiny ${codeLanguage?.toLowerCase()} library`}
           </Text>
           {errors.content?.message && (
             <Text color="red.500" mb={2}>

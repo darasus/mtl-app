@@ -3,6 +3,8 @@ import Highlight, { defaultProps } from "prism-react-renderer";
 import { syntaxStylesDark, syntaxStylesLight } from "../constants/codeTheme";
 import { useColorMode } from "@chakra-ui/react";
 import { useColors } from "../hooks/useColors";
+import darkTheme from "prism-react-renderer/themes/vsDark";
+import lightTheme from "prism-react-renderer/themes/vsLight";
 
 interface Props {
   value: string;
@@ -23,7 +25,7 @@ export const Syntax: React.FC<Props> = ({ value }) => {
   return (
     <Highlight
       {...defaultProps}
-      theme={theme}
+      theme={colorMode === "dark" ? darkTheme : lightTheme}
       code={value}
       language="javascript"
     >
