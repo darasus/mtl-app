@@ -1,16 +1,17 @@
 import { useMutation, useQueryClient } from "react-query";
-import { deleteComment } from "../../request/deleteComment";
 import { commentsKey } from "../query/useCommentsQuery";
 import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 import { toast } from "react-hot-toast";
 import { Text } from "@chakra-ui/layout";
+import { Fetcher } from "../../lib/Fetcher";
 
 export const useDeleteCommentMutation = () => {
   const queryClient = useQueryClient();
+  const fetcher = new Fetcher();
 
   return useMutation(
     ({ commentId }: { commentId: number; postId: number }) =>
-      toast.promise(deleteComment(commentId), {
+      toast.promise(fetcher.deleteComment(commentId), {
         loading: <Text fontSize="sm">{"Deleting comment..."}</Text>,
         success: <Text fontSize="sm">{"Comment deleted!"}</Text>,
         error: <Text fontSize="sm">{"Comment is not deleted."}</Text>,

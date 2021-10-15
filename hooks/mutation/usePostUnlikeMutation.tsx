@@ -1,15 +1,16 @@
 import { Text } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { unlikePost } from "../../request/unlikePost";
+import { Fetcher } from "../../lib/Fetcher";
 import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 
 export const usePostUnlikeMutation = () => {
   const queryClient = useQueryClient();
+  const fetcher = new Fetcher();
 
   return useMutation<unknown, unknown, { postId: number }>(
     ({ postId }) =>
-      toast.promise(unlikePost(postId), {
+      toast.promise(fetcher.unlikePost(postId), {
         loading: <Text fontSize="sm">{"Unliking..."}</Text>,
         success: <Text fontSize="sm">{"Unliked!"}</Text>,
         error: <Text fontSize="sm">{"Did not unlike."}</Text>,

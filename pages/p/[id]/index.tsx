@@ -12,10 +12,10 @@ import { QueryClient } from "react-query";
 import { prefetchMe } from "../../../services/utils/prefetchMe";
 import { dehydrate } from "react-query/hydration";
 import { Flex, Spinner } from "@chakra-ui/react";
-import { fetchPost } from "../../../request/fetchPost";
 import { Head } from "../../../components/Head";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { commentsKey } from "../../../hooks/query/useCommentsQuery";
+import { Fetcher } from "../../../lib/Fetcher";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -49,6 +49,7 @@ export default PostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
+  const fetcher = new Fetcher();
 
   if (!createIsFirstServerCall(ctx)) {
     return {
@@ -59,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   const postId = Number(ctx.query.id);
-  const post = await fetchPost(postId);
+  const post = await fetcher.getPost(postId);
 
   await Promise.all([
     prefetchMe(ctx, queryClient),

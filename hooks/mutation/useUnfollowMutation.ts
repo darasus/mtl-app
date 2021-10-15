@@ -1,13 +1,14 @@
 import { useMutation, useQueryClient } from "react-query";
-import { unfollowUser } from "../../request/unfollowUser";
+import { Fetcher } from "../../lib/Fetcher";
 import { createUseDoIFollowUserQueryQueryCache } from "../query/useDoIFollowUserQuery";
 import { createUseFollowersCountQueryCacheKey } from "../query/useFollowersCountQuery";
 
 export const useUnfollowMutation = () => {
   const qc = useQueryClient();
+  const fetcher = new Fetcher();
 
   return useMutation<unknown, unknown, { userId: number }>(
-    ({ userId }) => unfollowUser(userId).then((res) => res.data),
+    ({ userId }) => fetcher.unfollowUser(userId),
     {
       onSuccess(_, { userId }) {
         qc.invalidateQueries(createUseFollowersCountQueryCacheKey(userId));

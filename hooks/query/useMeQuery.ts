@@ -1,10 +1,12 @@
 import { useQuery } from "react-query";
-import { fetchMe } from "../../request/fetchMe";
+import { Fetcher } from "../../lib/Fetcher";
 
 export const createUseMeQueryCacheKey = () => ["me"];
 
 export const useMeQuery = () => {
-  return useQuery(createUseMeQueryCacheKey(), fetchMe, {
+  const fetcher = new Fetcher();
+
+  return useQuery(createUseMeQueryCacheKey(), fetcher.getMe, {
     staleTime: 1000 * 60 * 5,
     keepPreviousData: true,
   });

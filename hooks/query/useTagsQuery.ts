@@ -1,10 +1,16 @@
 import { useQuery } from "react-query";
-import { getAllTags } from "../../request/getAllTags";
+import { Fetcher } from "../../lib/Fetcher";
 
 export const createUseTagsQueryQueryCacheKey = () => ["tags"];
 
 export const useTagsQuery = () => {
-  return useQuery(createUseTagsQueryQueryCacheKey(), () => getAllTags(), {
-    staleTime: 1000 * 60 * 60,
-  });
+  const fetcher = new Fetcher();
+
+  return useQuery(
+    createUseTagsQueryQueryCacheKey(),
+    () => fetcher.getAllTags(),
+    {
+      staleTime: 1000 * 60 * 60,
+    }
+  );
 };

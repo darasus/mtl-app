@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchScreenshot } from "../../request/fetchScreenshot";
+import { Fetcher } from "../../lib/Fetcher";
 
 export const createUseScreenshotQueryCacheKey = (postId: number) => [
   "screehshot",
@@ -7,9 +7,11 @@ export const createUseScreenshotQueryCacheKey = (postId: number) => [
 ];
 
 export const useScreenshotQuery = (postId: number) => {
+  const fetcher = new Fetcher();
+
   return useQuery(
     createUseScreenshotQueryCacheKey(postId),
-    () => fetchScreenshot(postId),
+    () => fetcher.getScreenshot(postId),
     {
       refetchOnWindowFocus: false,
       enabled: false,

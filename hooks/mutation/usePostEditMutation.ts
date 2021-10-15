@@ -1,23 +1,21 @@
-import axios from "axios";
+import { CodeLanguage } from ".prisma/client";
 import { useMutation, useQueryClient } from "react-query";
-import { Post } from "../../types/Post";
+import { Fetcher } from "../../lib/Fetcher";
 
 interface Variables {
   title: string;
   description: string;
   content: string;
-  isPublished?: boolean;
+  codeLanguage: CodeLanguage;
+  tagId: number;
 }
 
 export const usePostEditMutation = (id: number) => {
   const queryClient = useQueryClient();
+  const fetcher = new Fetcher();
 
-  return useMutation<Post, {}, Variables>(
-    (variables) =>
-      axios(`/api/post/${id}/update`, {
-        method: "PUT",
-        data: variables,
-      }).then((res) => res.data),
+  return useMutation(
+    (variables: Variables) => fetcher.updatePost(id, variables),
     {
       async onSettled() {
         await queryClient.invalidateQueries(["post", id]);

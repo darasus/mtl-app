@@ -1,15 +1,16 @@
 import { useMutation, useQueryClient } from "react-query";
-import { likePost } from "../../request/likePost";
 import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 import { toast } from "react-hot-toast";
 import { Text } from "@chakra-ui/react";
+import { Fetcher } from "../../lib/Fetcher";
 
 export const usePostLikeMutation = () => {
   const queryClient = useQueryClient();
+  const fetcher = new Fetcher();
 
   return useMutation(
     ({ postId }: { postId: number }) =>
-      toast.promise(likePost(postId), {
+      toast.promise(fetcher.likePost(postId), {
         loading: <Text fontSize="sm">{"Liking..."}</Text>,
         success: <Text fontSize="sm">{"Liked!"}</Text>,
         error: <Text fontSize="sm">{"Did not like."}</Text>,

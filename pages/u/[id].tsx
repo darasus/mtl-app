@@ -14,7 +14,6 @@ import {
 import Image from "next/image";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
-import { fetchUser } from "../../request/fetchUser";
 import {
   createUseUserQueryCacheKey,
   useUserQuery,
@@ -24,7 +23,6 @@ import {
   createUseUserPostsQueryCacheKey,
   useUserPostsQuery,
 } from "../../hooks/query/useUserPostsQuery";
-import { fetchUserPosts } from "../../request/fetchUserPosts";
 import { useMeQuery } from "../../hooks/query/useMeQuery";
 import { useFollowMutation } from "../../hooks/mutation/useFollowMutation";
 import { useFollowersCountQuery } from "../../hooks/query/useFollowersCountQuery";
@@ -38,6 +36,7 @@ import { Head } from "../../components/Head";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import { commentsKey } from "../../hooks/query/useCommentsQuery";
+import { Fetcher } from "../../lib/Fetcher";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
@@ -170,6 +169,7 @@ export default UserPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
+  const fetcher = new Fetcher();
 
   if (!createIsFirstServerCall(ctx)) {
     return {
@@ -182,8 +182,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const userId = Number(ctx.query.id);
 
   const [user, posts] = await Promise.all([
-    fetchUser(userId),
-    fetchUserPosts(userId),
+    fetcher.getUser(userId),
+    fetcher.getUserPosts(userId),
   ]);
 
   await queryClient.prefetchQuery(

@@ -1,7 +1,7 @@
 import { Text } from "@chakra-ui/react";
 import { toast } from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { addComment } from "../../request/addComment";
+import { Fetcher } from "../../lib/Fetcher";
 import { CommentService } from "../../services/api/CommentService";
 import { commentsKey } from "../query/useCommentsQuery";
 import { useMeQuery } from "../query/useMeQuery";
@@ -17,10 +17,11 @@ type Variables = { postId: number; content: string; take: number };
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
   const me = useMeQuery();
+  const fetcher = new Fetcher();
 
   return useMutation(
     ({ postId, content }: Variables) =>
-      toast.promise(addComment(postId, content), {
+      toast.promise(fetcher.addComment(postId, content), {
         loading: <Text fontSize="sm">{"Posting comment..."}</Text>,
         success: <Text fontSize="sm">{"Comment posted!"}</Text>,
         error: <Text fontSize="sm">{"Comment is not posted."}</Text>,

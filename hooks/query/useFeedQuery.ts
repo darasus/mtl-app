@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQueryClient } from "react-query";
-import { fetchFeed } from "../../request/fetchFeed";
+import { Fetcher } from "../../lib/Fetcher";
 import { commentsKey } from "./useCommentsQuery";
 import { createUsePostQueryCacheKey } from "./usePostQuery";
 
@@ -7,10 +7,11 @@ export const createUseFeedQueryCacheKey = () => ["feed"];
 
 export const useFeedQuery = () => {
   const queryClient = useQueryClient();
+  const fetcher = new Fetcher();
 
   return useInfiniteQuery(
     createUseFeedQueryCacheKey(),
-    ({ pageParam = undefined }) => fetchFeed({ cursor: pageParam }),
+    ({ pageParam = undefined }) => fetcher.getFeed({ cursor: pageParam }),
     {
       getNextPageParam: (lastPage, pages) => {
         const localTotal = pages
