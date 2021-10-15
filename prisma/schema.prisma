@@ -8,15 +8,16 @@ datasource db {
 }
 
 model Post {
-  id          Int       @id @default(autoincrement())
-  title       String
-  content     String?   @db.LongText
-  description String?   @db.LongText
-  published   Boolean   @default(false)
-  author      User?     @relation(fields: [authorId], references: [id])
-  authorId    Int?
-  likes       Like[]
-  comments    Comment[]
+  id           Int           @id @default(autoincrement())
+  title        String
+  content      String?       @db.LongText
+  description  String?       @db.LongText
+  published    Boolean       @default(false)
+  author       User?         @relation(fields: [authorId], references: [id])
+  authorId     Int?
+  likes        Like[]
+  comments     Comment[]
+  codeLanguage CodeLanguage?
 }
 
 model User {
@@ -108,4 +109,9 @@ model Follow {
   followingId Int
 
   @@id([followerId, followingId])
+}
+
+enum CodeLanguage {
+  JAVASCRIPT
+  TYPESCRIPT
 }

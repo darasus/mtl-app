@@ -8,6 +8,7 @@ import {
   Button,
   Flex,
   Text,
+  Select,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { CodeEditor } from "../../components/CodeEditor";
@@ -21,17 +22,20 @@ import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 import { usePostCreateMutation } from "../../hooks/mutation/usePostCreateMutation";
+import { CodeLanguage } from ".prisma/client";
 
 interface Form {
   title: string;
   description: string;
   content: string;
+  codeLanguage: CodeLanguage;
 }
 
 const schema = yup.object().shape({
   title: yup.string().min(3).max(100).required(),
   description: yup.string().min(3).max(1000).required(),
   content: yup.string().min(3).max(1000).required(),
+  codeLanguage: yup.string().required(),
 });
 
 const CreatePostPage: React.FC = () => {
@@ -42,10 +46,20 @@ const CreatePostPage: React.FC = () => {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<Form>({
+    defaultValues: {
+      title: "",
+      description: "",
+      content: "",
+      codeLanguage: CodeLanguage.JAVASCRIPT,
+    },
+
     resolver: yupResolver(schema),
   });
+
+  watch("codeLanguage");
 
   const submit = handleSubmit(async (data) => {
     const post = await createPostMutation.mutateAsync(data);
@@ -85,6 +99,23 @@ const CreatePostPage: React.FC = () => {
             />
           </Box>
           <Box mb={3}>
+            <Flex>
+              <Text color={secondaryTextColor}>Language</Text>
+              {errors.codeLanguage?.message && (
+                <Text color="red.500" mb={2}>
+                  {errors.codeLanguage?.message}
+                </Text>
+              )}
+            </Flex>
+            <Select
+              {...register("codeLanguage")}
+              isInvalid={!!errors.codeLanguage?.message}
+            >
+              <option value={CodeLanguage.JAVASCRIPT}>JavaScript</option>
+              <option value={CodeLanguage.TYPESCRIPT}>TypeScript</option>
+            </Select>
+          </Box>
+          <Box mb={3}>
             <Text color={secondaryTextColor}>Little JavaScript library</Text>
             {errors.content?.message && (
               <Text color="red.500" mb={2}>
@@ -95,7 +126,11 @@ const CreatePostPage: React.FC = () => {
               name="content"
               control={control}
               render={({ field: { onChange, value } }) => (
-                <CodeEditor value={value} onChange={onChange} />
+                <CodeEditor
+                  value={value}
+                  onChange={onChange}
+                  codeLanguage={watch("codeLanguage")}
+                />
               )}
             />
           </Box>

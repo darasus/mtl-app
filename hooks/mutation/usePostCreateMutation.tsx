@@ -1,3 +1,4 @@
+import { CodeLanguage } from ".prisma/client";
 import { Text } from "@chakra-ui/react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -8,6 +9,7 @@ interface Variables {
   title: string;
   description: string;
   content: string;
+  codeLanguage: CodeLanguage;
 }
 
 export const usePostCreateMutation = () => {

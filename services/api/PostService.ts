@@ -1,6 +1,6 @@
 import prisma from "../../lib/prisma";
 import { Post } from "../../types/Post";
-import Prisma from ".prisma/client";
+import Prisma, { CodeLanguage } from ".prisma/client";
 import { authorFragment } from "../fragments/authorFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
@@ -20,10 +20,12 @@ export class PostService {
       title,
       content,
       description,
+      codeLanguage,
     }: {
       title: string;
       content: string;
       description: string;
+      codeLanguage: CodeLanguage;
     },
     postId: number
   ) {
@@ -35,6 +37,7 @@ export class PostService {
         title,
         content,
         description,
+        codeLanguage,
       },
     });
 
@@ -69,7 +72,13 @@ export class PostService {
       title,
       content,
       description,
-    }: { title: string; content: string; description: string }
+      codeLanguage,
+    }: {
+      title: string;
+      content: string;
+      description: string;
+      codeLanguage: CodeLanguage;
+    }
   ) {
     const post = await prisma.post.create({
       data: {
@@ -77,6 +86,7 @@ export class PostService {
         content,
         description,
         published: true,
+        codeLanguage,
         author: { connect: { id: userId } },
       },
       include: {

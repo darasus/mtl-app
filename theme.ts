@@ -32,7 +32,7 @@ export const theme = extendTheme({
     },
   },
   styles: {
-    global: (props) => ({
+    global: (props: any) => ({
       "html, body": {
         color: props.colorMode === "dark" ? "white" : "black",
         background: props.colorMode === "dark" ? "black" : "white",
@@ -53,7 +53,7 @@ export const theme = extendTheme({
       },
     },
     Menu: {
-      baseStyle: (props) => ({
+      baseStyle: (props: any) => ({
         list: {
           bg: props.colorMode === "dark" ? "black" : "white",
           borderColor: props.colorMode === "dark" ? "gray.900" : "gray.200",

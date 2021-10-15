@@ -5,6 +5,7 @@ import React from "react";
 import { PostUserPreview } from "../PostUserPreview";
 import { RouterLink } from "../RouterLinkt";
 import { useColors } from "../../hooks/useColors";
+import { CodeLanguageIcon } from "./CodeLanguageIcon";
 
 interface Props {
   post: PostType;
@@ -17,6 +18,11 @@ export const Header: React.FC<Props> = ({ post, showMetaInfo = true }) => {
   return (
     <Box p={4}>
       <Flex alignItems="center">
+        {post.codeLanguage && (
+          <Box mr={2}>
+            <CodeLanguageIcon codeLanguage={post.codeLanguage} />
+          </Box>
+        )}
         <Box mr={2}>
           <RouterLink href={`/p/${post.id}`}>
             <Text fontSize="sm" data-testid="post-title">

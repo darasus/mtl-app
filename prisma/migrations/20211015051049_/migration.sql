@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Post` ADD COLUMN `codeLanguage` ENUM('JAVASCRIPT', 'TYPESCRIPT');

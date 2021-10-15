@@ -12,6 +12,11 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
+  invariant(req.body.title, "Title is required.");
+  invariant(req.body.content, "Content is required.");
+  invariant(req.body.description, "Description is required.");
+  invariant(req.body.codeLanguage, "Code language is required.");
+
   try {
     const user = await new UserSessionService({ req }).get();
 
@@ -25,6 +30,7 @@ export default async function handle(
         title: req.body.title,
         content: req.body.content,
         description: req.body.description,
+        codeLanguage: req.body.codeLanguage,
       },
       Number(req.query.id)
     );

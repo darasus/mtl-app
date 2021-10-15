@@ -1,15 +1,24 @@
 import React from "react";
 import dynamic from "next/dynamic";
+import { CodeLanguage } from ".prisma/client";
 
 const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 
-type Props = React.ComponentProps<typeof Editor>;
+type Props = React.ComponentProps<typeof Editor> & {
+  codeLanguage: CodeLanguage;
+};
+
+const langMap = {
+  [CodeLanguage.JAVASCRIPT]: "javascript",
+  [CodeLanguage.TYPESCRIPT]: "typescript",
+};
 
 export const CodeEditor: React.FC<Props> = (props) => {
+  console.log(props.codeLanguage);
   return (
     <Editor
       height={500}
-      defaultLanguage="javascript"
+      defaultLanguage={langMap[props.codeLanguage]}
       options={{
         minimap: {
           enabled: false,
