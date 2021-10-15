@@ -11,6 +11,7 @@ import { Layout } from "../../../layouts/Layout";
 import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { PostForm, postSchema } from "../../../features/PostForm";
+import invariant from "invariant";
 
 const EditPostPage: React.FC = () => {
   const router = useRouter();
@@ -31,14 +32,17 @@ const EditPostPage: React.FC = () => {
       description: description!,
       content: content!,
       codeLanguage: codeLanguage!,
-      tagId: tags[0].tag.id!,
+      tagId: tags?.[0]?.tag?.id || null,
     });
   }, [post.data, reset]);
 
-  const submit = handleSubmit(async (data) => {
-    await editPost(data);
-    await router.push(`/p/${post.data?.id}`);
-  });
+  const submit = handleSubmit(
+    async ({ tagId, codeLanguage, content, description, title }) => {
+      invariant(typeof tagId === "number", "tagId is required");
+      await editPost({ tagId, codeLanguage, content, description, title });
+      await router.push(`/p/${post.data?.id}`);
+    }
+  );
 
   return (
     <Layout>

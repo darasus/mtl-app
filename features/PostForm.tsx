@@ -27,15 +27,21 @@ export interface PostForm {
   description: string;
   content: string;
   codeLanguage: CodeLanguage;
-  tagId: number;
+  tagId: number | null;
 }
 
 export const postSchema = yup.object().shape({
   title: yup.string().min(3).max(100).required(),
   description: yup.string().min(3).max(1000).required(),
   content: yup.string().min(3).max(1000).required(),
-  codeLanguage: yup.string().required(),
-  tagId: yup.number().required(),
+  codeLanguage: yup
+    .string()
+    .typeError("Please select tag")
+    .required("Please select tag"),
+  tagId: yup
+    .number()
+    .typeError("Please select tag")
+    .required("Please select tag"),
 });
 
 export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
@@ -59,6 +65,7 @@ export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
           <Text mr={1} color={secondaryTextColor} mb={2}>
             Title
           </Text>
+          <Box />
           {errors.title?.message && (
             <Text color="red.500" mb={2}>
               {errors.title?.message}
@@ -113,6 +120,9 @@ export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
             )}
           </Flex>
           <Select {...register("tagId")} isInvalid={!!errors.tagId?.message}>
+            <option key={0} value={0}>
+              -
+            </option>
             {tags.data?.map((tag) => {
               return (
                 <option key={tag.id} value={tag.id}>
