@@ -14,7 +14,6 @@ const langMap = {
 };
 
 export const CodeEditor: React.FC<Props> = (props) => {
-  console.log(props.codeLanguage);
   return (
     <Editor
       height={500}

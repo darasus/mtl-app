@@ -40,4 +40,10 @@ const del = async (key: string) => {
   );
 };
 
-export default { fetch, set, get, del };
+const perge = async () => {
+  await redis.flushall();
+};
+
+const all = { fetch, set, get, del, perge };
+
+export default all;

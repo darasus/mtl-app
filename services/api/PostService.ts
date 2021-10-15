@@ -7,6 +7,7 @@ import { commentFragment } from "../fragments/commentFragment";
 import { preparePost } from "../utils/preparePost";
 import cache from "../../server/cache";
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
+import { tagsFragment } from "../fragments/tagsFragment";
 
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];
@@ -21,15 +22,48 @@ export class PostService {
       content,
       description,
       codeLanguage,
+      tagId,
     }: {
       title: string;
       content: string;
       description: string;
       codeLanguage: CodeLanguage;
+      tagId: number;
     },
     postId: number
   ) {
-    await prisma.post.update({
+    const oldPost = await prisma.post.findFirst({
+      where: {
+        id: postId,
+      },
+      include: {
+        tags: {
+          select: {
+            tagId: true,
+          },
+        },
+      },
+    });
+
+    if (oldPost?.tags[0]?.tagId) {
+      await prisma.tagsOnPosts.delete({
+        where: {
+          postId_tagId: {
+            postId,
+            tagId: oldPost?.tags[0].tagId!,
+          },
+        },
+      });
+    }
+
+    await prisma.tagsOnPosts.create({
+      data: {
+        postId,
+        tagId,
+      },
+    });
+
+    const post = await prisma.post.update({
       where: {
         id: postId,
       },
@@ -39,9 +73,23 @@ export class PostService {
         description,
         codeLanguage,
       },
+      include: {
+        author: {
+          select: authorFragment,
+        },
+        likes: {
+          select: likeFragment,
+        },
+        comments: {
+          select: commentFragment,
+        },
+        tags: tagsFragment,
+      },
     });
 
     await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
+
+    return post;
   }
 
   async unpublishPost(postId: number) {
@@ -73,11 +121,13 @@ export class PostService {
       content,
       description,
       codeLanguage,
+      tagId,
     }: {
       title: string;
       content: string;
       description: string;
       codeLanguage: CodeLanguage;
+      tagId: number;
     }
   ) {
     const post = await prisma.post.create({
@@ -99,6 +149,14 @@ export class PostService {
         comments: {
           select: commentFragment,
         },
+        tags: tagsFragment,
+      },
+    });
+
+    await prisma.tagsOnPosts.create({
+      data: {
+        postId: post.id,
+        tagId,
       },
     });
 
@@ -131,6 +189,7 @@ export class PostService {
         comments: {
           select: commentFragment,
         },
+        tags: tagsFragment,
       },
     });
   }
@@ -153,6 +212,7 @@ export class PostService {
             comments: {
               select: commentFragment,
             },
+            tags: tagsFragment,
           },
         }),
       60 * 60 * 24

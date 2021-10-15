@@ -12,10 +12,11 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  invariant(req.body.title, "Title is required.");
-  invariant(req.body.content, "Content is required.");
-  invariant(req.body.description, "Description is required.");
-  invariant(req.body.codeLanguage, "Code language is required.");
+  invariant(req.body.title, "title is required.");
+  invariant(req.body.content, "content is required.");
+  invariant(req.body.description, "description is required.");
+  invariant(req.body.codeLanguage, "codeLanguage is required.");
+  invariant(typeof req.body.tagId === "number", "tagId is required.");
 
   try {
     const user = await new UserSessionService({ req }).get();
@@ -30,6 +31,7 @@ export default async function handle(
       content: req.body.content,
       description: req.body.description,
       codeLanguage: req.body.codeLanguage,
+      tagId: req.body.tagId,
     });
     res.json(post);
   } catch (error) {

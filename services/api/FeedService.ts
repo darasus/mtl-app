@@ -5,11 +5,14 @@ import Prisma from ".prisma/client";
 import { authorFragment } from "../fragments/authorFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
+import mitt from "next/dist/shared/lib/mitt";
+import { tagsFragment } from "../fragments/tagsFragment";
 
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Prisma.User | null })[];
   comments: Prisma.Comment[];
   commentsCount: number;
+  tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
 };
 
 export type FetchFeedResponse = {
@@ -80,8 +83,18 @@ export class FeedService {
           ],
           select: commentFragment,
         },
+        tags: tagsFragment,
       },
     });
+
+    if (posts.length === 0) {
+      return {
+        items: [],
+        count: 0,
+        total: 0,
+        cursor: 0,
+      };
+    }
 
     const lastPostInResults = posts[posts.length - 1];
     const newCursor = lastPostInResults.id;

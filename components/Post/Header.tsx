@@ -1,6 +1,6 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Post as PostType } from "../../types/Post";
-import { ThumbUpIcon, ChatIcon } from "@heroicons/react/outline";
+import { ThumbUpIcon, ChatIcon, TagIcon } from "@heroicons/react/outline";
 import React from "react";
 import { PostUserPreview } from "../PostUserPreview";
 import { RouterLink } from "../RouterLinkt";
@@ -37,26 +37,38 @@ export const Header: React.FC<Props> = ({ post, showMetaInfo = true }) => {
           {post.author && <PostUserPreview user={post.author} />}
         </Box>
         {showMetaInfo && (
-          <Box mr={2}>
-            <Flex color={secondaryTextColor}>
-              <Flex mr={2} alignItems="center">
-                <Box mr={1}>
-                  <ThumbUpIcon width="15" height="15" />
-                </Box>
-                <Box>
-                  <Text fontSize="sm">{`${post.likesCount} likes`}</Text>
-                </Box>
+          <Flex flexGrow={1}>
+            <Box mr={2}>
+              <Flex color={secondaryTextColor}>
+                <Flex mr={2} alignItems="center">
+                  <Box mr={1}>
+                    <ThumbUpIcon width="15" height="15" />
+                  </Box>
+                  <Box>
+                    <Text fontSize="sm">{`${post.likesCount} likes`}</Text>
+                  </Box>
+                </Flex>
+                <Flex alignItems="center" mr={2}>
+                  <Box mr={1}>
+                    <ChatIcon width="15" height="15" />
+                  </Box>
+                  <Box>
+                    <Text fontSize="sm">{`${post.commentsCount} comments`}</Text>
+                  </Box>
+                </Flex>
+                <Flex alignItems="center">
+                  <Box mr={1}>
+                    <TagIcon width="15" height="15" />
+                  </Box>
+                  <Box>
+                    <Text fontSize="sm">{`${post.tags
+                      .map((tag) => tag.tag.name)
+                      .join(",")}`}</Text>
+                  </Box>
+                </Flex>
               </Flex>
-              <Flex alignItems="center">
-                <Box mr={1}>
-                  <ChatIcon width="15" height="15" />
-                </Box>
-                <Box>
-                  <Text fontSize="sm">{`${post.commentsCount} comments`}</Text>
-                </Box>
-              </Flex>
-            </Flex>
-          </Box>
+            </Box>
+          </Flex>
         )}
       </Flex>
     </Box>

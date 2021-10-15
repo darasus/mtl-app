@@ -18,6 +18,7 @@ model Post {
   likes        Like[]
   comments     Comment[]
   codeLanguage CodeLanguage?
+  tags         TagsOnPosts[]
 }
 
 model User {
@@ -109,6 +110,23 @@ model Follow {
   followingId Int
 
   @@id([followerId, followingId])
+}
+
+model Tag {
+  id        Int           @id @default(autoincrement())
+  name      String
+  createdAt DateTime      @default(now()) @map(name: "created_at")
+  updatedAt DateTime      @default(now()) @map(name: "updated_at")
+  posts     TagsOnPosts[]
+}
+
+model TagsOnPosts {
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
+  tag    Tag  @relation(fields: [tagId], references: [id])
+  tagId  Int
+
+  @@id([postId, tagId])
 }
 
 enum CodeLanguage {

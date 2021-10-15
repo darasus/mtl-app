@@ -5,6 +5,7 @@ import { Post } from "../../types/Post";
 import { authorFragment } from "../fragments/authorFragment";
 import { commentFragment } from "../fragments/commentFragment";
 import { likeFragment } from "../fragments/likeFragment";
+import { tagsFragment } from "../fragments/tagsFragment";
 import { preparePost } from "../utils/preparePost";
 
 const selectQueryFragment = {
@@ -55,6 +56,7 @@ export class UserService {
         comments: {
           select: commentFragment,
         },
+        tags: tagsFragment,
       },
     });
 
