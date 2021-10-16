@@ -4,19 +4,22 @@ import { paramCase } from "change-case";
 import React from "react";
 import download from "js-file-download";
 import { useScreenshotQuery } from "../../hooks/query/useScreenshotQuery";
+import { Post } from "../../types/Post";
 
 interface Props {
-  title: string;
-  postId: number;
+  post: Post;
 }
 
-export const ScreenshotButton: React.FC<Props> = ({ title, postId }) => {
-  const url = `${globalThis.location?.origin}/p/${postId}/preview`;
+export const ScreenshotButton: React.FC<Props> = ({ post }) => {
+  const url = `${globalThis.location?.origin}/p/${
+    post.id
+  }/preview?updateDate=${new Date(post.updatedAt).getTime()}`;
   const { refetch, isFetching } = useScreenshotQuery(url);
+
   const handleClick = React.useCallback(async () => {
     const screenshot = await refetch();
-    download(screenshot.data!, `${paramCase(title)}.png`, "image/png");
-  }, [refetch, title]);
+    download(screenshot.data!, `${paramCase(post.title)}.png`, "image/png");
+  }, [refetch, post]);
 
   return (
     <Button

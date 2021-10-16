@@ -86,7 +86,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 >
                   <Text>{isCopied ? "Copied!" : "Copy"}</Text>
                 </Button>
-                <ScreenshotButton title={post.title} postId={post.id} />
+                <ScreenshotButton post={post} />
                 <Box flexGrow={1} />
                 <ActionMenu isMyPost={isMyPost} post={post} />
               </Flex>
