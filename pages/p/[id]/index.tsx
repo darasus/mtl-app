@@ -21,7 +21,11 @@ const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
   const me = useMeQuery();
-  const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${process.env.NEXTAUTH_URL}/p/${router.query.id}/preview`;
+  const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${
+    process.env.NEXTAUTH_URL
+  }/p/${router.query.id}/preview?updateDate=${new Date(
+    post.data?.updatedAt!
+  ).getTime()}`;
 
   return (
     <>
