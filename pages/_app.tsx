@@ -10,8 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { theme } from "../theme";
 import { Toaster, toast } from "react-hot-toast";
+import * as Fathom from "fathom-client";
+import { useRouter } from "next/router";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  const router = useRouter();
   const colorModeManager =
     typeof pageProps.cookies === "string"
       ? cookieStorageManager(pageProps.cookies)
@@ -29,6 +32,22 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       }),
     });
   }
+
+  React.useEffect(() => {
+    Fathom.load("STOSBNAU", {
+      includedDomains: ["www.mytinylibrary.com"],
+    });
+
+    function onRouteChangeComplete() {
+      Fathom.trackPageview();
+    }
+    router.events.on("routeChangeComplete", onRouteChangeComplete);
+
+    return () => {
+      router.events.off("routeChangeComplete", onRouteChangeComplete);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <QueryClientProvider client={queryClientRef.current}>
