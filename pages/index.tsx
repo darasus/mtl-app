@@ -38,7 +38,7 @@ const Index: React.FC = () => {
         <main>
           {!me.data && (
             <Center height="50vh">
-              <Intro />
+              <Intro withSignIn />
             </Center>
           )}
           <Heading mb={10} variant="section-heading">

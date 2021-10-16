@@ -10,10 +10,10 @@ type Props = React.ComponentProps<typeof Editor> & {
   codeLanguage: CodeLanguage;
 };
 
-const langMap = {
+export const langMap = {
   [CodeLanguage.JAVASCRIPT]: "javascript",
   [CodeLanguage.TYPESCRIPT]: "typescript",
-};
+} as const;
 
 export const CodeEditor: React.FC<Props> = ({ codeLanguage, ...props }) => {
   const { borderColor } = useColors();

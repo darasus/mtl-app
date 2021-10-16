@@ -23,7 +23,7 @@ const PostPage: React.FC = () => {
   const me = useMeQuery();
   const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${
     process.env.NEXTAUTH_URL
-  }/p/${router.query.id}/preview?updateDate=${new Date(
+  }/p/${router.query.id}/thumbnail?updateDate=${new Date(
     post.data?.updatedAt!
   ).getTime()}`;
 

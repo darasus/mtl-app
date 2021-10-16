@@ -12,6 +12,7 @@ import { paramCase } from "change-case";
 import { Header } from "./Header";
 import { ScreenshotButton } from "./ScreenshotButton";
 import { usePostQuery } from "../../hooks/query/usePostQuery";
+import { CodeLanguage } from ".prisma/client";
 
 interface Props {
   postId: number;
@@ -58,7 +59,10 @@ export const Post: React.FC<Props> = React.memo(function Post({
               <Markdown value={post.description || ""} />
             </Flex>
           </Box>
-          <Syntax value={post.content || ""} />
+          <Syntax
+            codeLanguage={post.codeLanguage || CodeLanguage.JAVASCRIPT}
+            value={post.content || ""}
+          />
         </Box>
         {showActionMenu && (
           <>
