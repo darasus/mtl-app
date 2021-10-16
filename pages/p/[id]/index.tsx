@@ -21,15 +21,16 @@ const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
   const me = useMeQuery();
+  const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${process.env.NEXTAUTH_URL}/p/${router.query.id}/preview`;
 
   return (
     <>
       <Head
         title={post.data?.title!}
-        description={post.data?.content!}
+        description={post.data?.description!}
         urlPath={`p/${post.data?.id}`}
-        facebookImage=""
-        twitterImage=""
+        facebookImage={imageUrl}
+        twitterImage={imageUrl}
       />
       <Layout>
         <main>
