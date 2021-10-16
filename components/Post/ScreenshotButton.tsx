@@ -31,6 +31,7 @@ export const ScreenshotButton: React.FC<Props> = ({ post }) => {
       onClick={handleClick}
       isLoading={isFetching}
       loadingText={"Screenshot"}
+      cursor="pointer"
     >
       <Text>Screenshot</Text>
     </Button>
