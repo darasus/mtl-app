@@ -26,8 +26,8 @@ const textColorMap = {
 
 export const CodeLanguageIcon: React.FC<Props> = ({
   codeLanguage,
-  width = 8,
-  height = 8,
+  width = 6,
+  height = 6,
   fontSize = "sm",
 }) => {
   return (

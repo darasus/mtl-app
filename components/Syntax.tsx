@@ -18,13 +18,13 @@ export const Syntax: React.FC<Props> = ({ value, codeLanguage, slice }) => {
   const { darkerBgColor } = useColors();
   const { colorMode } = useColorMode();
 
-  const theme = {
-    styles: colorMode === "dark" ? syntaxStylesDark : syntaxStylesLight,
-    plain: {
-      color: "#9CDCFE",
-      backgroundColor: darkerBgColor,
-    },
-  };
+  // const theme = {
+  //   styles: colorMode === "dark" ? syntaxStylesDark : syntaxStylesLight,
+  //   plain: {
+  //     color: "#9CDCFE",
+  //     backgroundColor: darkerBgColor,
+  //   },
+  // };
 
   return (
     <Highlight
@@ -44,6 +44,7 @@ export const Syntax: React.FC<Props> = ({ value, codeLanguage, slice }) => {
               padding: "10px 20px",
               marginTop: 0,
               marginBottom: 0,
+              overflow: "scroll",
             }}
           >
             {newTokens.map((line, i) => {

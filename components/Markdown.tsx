@@ -43,11 +43,7 @@ const defaults: Record<string, ElementType> = {
   },
   blockquote: (props) => {
     const { children } = props;
-    return (
-      <Code as="blockquote" p={2}>
-        {children}
-      </Code>
-    );
+    return <Text as="cite">{children}</Text>;
   },
   code: (props) => {
     const { inline, children, className } = props;

@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { signOut } from "next-auth/client";
 import { UserPreview } from "./UserPreview";
 import { useMeQuery } from "../hooks/query/useMeQuery";
 import {
@@ -13,6 +12,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useBreakpoint,
 } from "@chakra-ui/react";
 import {
   PlusSmIcon,
@@ -27,6 +27,7 @@ export const Header: React.FC = () => {
   const router = useRouter();
   const me = useMeQuery();
   const logout = useLogoutMutation(me.data?.id!);
+  const breakpoint = useBreakpoint();
 
   return (
     <Box py="6" cursor="pointer">
@@ -40,19 +41,21 @@ export const Header: React.FC = () => {
         </Flex>
         {me.data ? (
           <>
-            <Box mr={4}>
-              <Link href="/p/create" passHref>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  color="brand"
-                  borderColor="brand"
-                  leftIcon={<PlusCircleIcon width="15" height="15" />}
-                >
-                  Create
-                </Button>
-              </Link>
-            </Box>
+            {breakpoint !== "base" && (
+              <Box mr={4}>
+                <Link href="/p/create" passHref>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    color="brand"
+                    borderColor="brand"
+                    leftIcon={<PlusCircleIcon width="15" height="15" />}
+                  >
+                    Create
+                  </Button>
+                </Link>
+              </Box>
+            )}
             <Flex alignItems="center">
               <Menu>
                 <MenuButton as={UserPreview} aria-label="Options" />

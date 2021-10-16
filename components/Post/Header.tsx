@@ -1,4 +1,11 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  useBreakpointValue,
+  ResponsiveValue,
+  useBreakpoint,
+} from "@chakra-ui/react";
 import { Post as PostType } from "../../types/Post";
 import { ThumbUpIcon, ChatIcon, TagIcon } from "@heroicons/react/outline";
 import React from "react";
@@ -14,29 +21,43 @@ interface Props {
 
 export const Header: React.FC<Props> = ({ post, showMetaInfo = true }) => {
   const { secondaryTextColor } = useColors();
+  const breakpoint = useBreakpoint();
+  const likeLabel = useBreakpointValue({
+    base: `${post.likesCount}`,
+    md: `${post.likesCount} likes`,
+  });
+  const commentsLabel = useBreakpointValue({
+    base: `${post.commentsCount}`,
+    md: `${post.commentsCount} comments`,
+  });
+  const isMetaInfoVisible = breakpoint !== "base" && showMetaInfo;
 
   return (
     <Box p={4}>
       <Flex alignItems="center">
-        {post.codeLanguage && (
+        <Flex alignItems="center">
+          {post.codeLanguage && (
+            <Box mr={2}>
+              <CodeLanguageIcon codeLanguage={post.codeLanguage} />
+            </Box>
+          )}
           <Box mr={2}>
-            <CodeLanguageIcon codeLanguage={post.codeLanguage} />
+            <RouterLink href={`/p/${post.id}`}>
+              <Text fontSize="sm" data-testid="post-title">
+                {post.title}
+              </Text>
+            </RouterLink>
           </Box>
-        )}
-        <Box mr={2}>
-          <RouterLink href={`/p/${post.id}`}>
-            <Text fontSize="sm" data-testid="post-title">
-              {post.title}
-            </Text>
-          </RouterLink>
-        </Box>
-        <Box mr={2}>
-          <Text fontSize="sm">by</Text>
-        </Box>
-        <Box mr={2}>
-          {post.author && <PostUserPreview user={post.author} />}
-        </Box>
-        {showMetaInfo && (
+        </Flex>
+        <Flex alignItems="center">
+          <Box mr={2}>
+            <Text fontSize="sm">by</Text>
+          </Box>
+          <Box mr={2}>
+            {post.author && <PostUserPreview user={post.author} />}
+          </Box>
+        </Flex>
+        {isMetaInfoVisible && (
           <Flex flexGrow={1}>
             <Box mr={2}>
               <Flex color={secondaryTextColor}>
@@ -45,7 +66,7 @@ export const Header: React.FC<Props> = ({ post, showMetaInfo = true }) => {
                     <ThumbUpIcon width="15" height="15" />
                   </Box>
                   <Box>
-                    <Text fontSize="sm">{`${post.likesCount} likes`}</Text>
+                    <Text fontSize="sm">{likeLabel}</Text>
                   </Box>
                 </Flex>
                 <Flex alignItems="center" mr={2}>
@@ -53,7 +74,7 @@ export const Header: React.FC<Props> = ({ post, showMetaInfo = true }) => {
                     <ChatIcon width="15" height="15" />
                   </Box>
                   <Box>
-                    <Text fontSize="sm">{`${post.commentsCount} comments`}</Text>
+                    <Text fontSize="sm">{commentsLabel}</Text>
                   </Box>
                 </Flex>
                 <Flex alignItems="center">
