@@ -28,7 +28,7 @@ export const CodeLanguageIcon: React.FC<Props> = ({
   codeLanguage,
   width = 8,
   height = 8,
-  fontSize = "xs",
+  fontSize = "sm",
 }) => {
   return (
     <Flex
