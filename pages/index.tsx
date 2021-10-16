@@ -12,47 +12,33 @@ import { useMeQuery } from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
 import { FeedService } from "../lib/api/FeedService";
 import { prefetchMe } from "../lib/utils/prefetchMe";
-import { useRouter } from "next/router";
 import { Head } from "../components/Head";
 import { commentsKey } from "../hooks/query/useCommentsQuery";
 import { createUsePostQueryCacheKey } from "../hooks/query/usePostQuery";
 import { createIsFirstServerCall } from "../utils/createIsFirstServerCall";
+import { Intro } from "../components/Intro";
+import { slogan } from "../constants/slogan";
+
+const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${process.env.NEXTAUTH_URL}/home-preview-image`;
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
   const me = useMeQuery();
-  const router = useRouter();
 
   return (
     <>
-      <Head />
+      <Head
+        title="Home"
+        description={slogan}
+        urlPath=""
+        facebookImage={imageUrl}
+        twitterImage={imageUrl}
+      />
       <Layout>
         <main>
           {!me.data && (
             <Center height="50vh">
-              <Flex alignItems="center" direction="column">
-                <Flex>
-                  <Heading size="3xl" mr={3}>
-                    This is
-                  </Heading>
-                  <Heading size="3xl" color="brand">
-                    My Tiny Library
-                  </Heading>
-                </Flex>
-                <Box mb={3} />
-                <Heading size="xl">
-                  The best way to share your code with your peers
-                </Heading>
-                <Box mb={5} />
-                <Button
-                  variant="outline"
-                  borderColor="brand"
-                  color="brand"
-                  onClick={() => router.push("/auth/signin")}
-                >
-                  Sign in
-                </Button>
-              </Flex>
+              <Intro />
             </Center>
           )}
           <Heading mb={10} variant="section-heading">

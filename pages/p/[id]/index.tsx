@@ -24,7 +24,13 @@ const PostPage: React.FC = () => {
 
   return (
     <>
-      <Head title={post.data?.title!} />
+      <Head
+        title={post.data?.title!}
+        description={post.data?.content!}
+        urlPath={`p/${post.data?.id}`}
+        facebookImage=""
+        twitterImage=""
+      />
       <Layout>
         <main>
           {post.isLoading && (

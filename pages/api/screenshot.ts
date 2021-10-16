@@ -12,6 +12,9 @@ export default async function handle(
     req.method === "GET",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  invariant(typeof req.query.url === "string", "url param is not provided");
+
+  console.log(req.query.url);
 
   const isLocalhost = req.headers.host === "localhost:3000";
   const browser = await (isLocalhost ? puppeteer : puppeteerCore).launch({
@@ -28,7 +31,7 @@ export default async function handle(
   });
 
   await page.goto(
-    `${process.env.NEXTAUTH_URL}/p/${req.query.id}/preview`,
+    req.query.url,
     isLocalhost
       ? {
           waitUntil: "networkidle2",

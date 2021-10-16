@@ -134,10 +134,22 @@ export class Fetcher {
   getPost = (id: number): Promise<Post> =>
     this.request(`/api/post/${id}`).then((res) => res.data);
 
-  getScreenshot = (postId: number): Promise<Blob> =>
-    this.request(`/api/post/${postId}/screenshot`, {
-      responseType: "blob",
-    }).then((res) => res.data);
+  getScreenshot = ({
+    url,
+    width,
+    height,
+  }: {
+    url: string;
+    width?: number;
+    height?: number;
+  }): Promise<Blob> => {
+    return this.request(
+      `/api/screenshot?${qs.stringify({ url, width, height })}`,
+      {
+        responseType: "blob",
+      }
+    ).then((res) => res.data);
+  };
 
   createPost = (data: {
     title: string;

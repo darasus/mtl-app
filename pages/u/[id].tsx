@@ -37,6 +37,7 @@ import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import { commentsKey } from "../../hooks/query/useCommentsQuery";
 import { Fetcher } from "../../lib/Fetcher";
+import { slogan } from "../../constants/slogan";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
@@ -87,7 +88,13 @@ const UserPage: React.FC = () => {
 
   return (
     <>
-      <Head title={user.data?.name!} />
+      <Head
+        title={user.data?.name!}
+        description={slogan}
+        urlPath={`u/${user.data?.id}`}
+        facebookImage=""
+        twitterImage=""
+      />
       <Layout>
         <Grid templateColumns="repeat(12, 1fr)" gap={4}>
           <GridItem colSpan={3}>
