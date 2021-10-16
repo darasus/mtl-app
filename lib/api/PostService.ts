@@ -72,6 +72,7 @@ export class PostService {
         content,
         description,
         codeLanguage,
+        updatedAt: new Date(),
       },
       include: {
         author: {
