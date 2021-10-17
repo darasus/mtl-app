@@ -1,4 +1,5 @@
 import { AppProps } from "next/app";
+import Head from "next/head";
 import React from "react";
 import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
@@ -68,6 +69,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
               },
             }}
           />
+          <Head>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1, maximum-scale=1"
+            />
+          </Head>
           <Component {...pageProps} />
         </ChakraProvider>
       </Hydrate>

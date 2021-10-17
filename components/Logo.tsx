@@ -6,10 +6,12 @@ export const Logo = () => {
 
   return (
     <Image
+      id="logo"
       src={colorMode === "dark" ? "/logo-light.svg" : "/logo-dark.svg"}
       height="30"
       width={130}
       alt="Logo"
+      priority
     />
   );
 };
