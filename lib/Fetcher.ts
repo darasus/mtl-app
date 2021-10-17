@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { CodeLanguage } from ".prisma/client";
 import { CommentService } from "./api/CommentService";
 import { Post } from "../types/Post";
@@ -9,17 +9,31 @@ import { FollowService } from "./api/FollowService";
 import { PostService } from "./api/PostService";
 import { TagService } from "./api/TagService";
 import { LikeService } from "./api/LikeService";
+import { NextApiRequest } from "next";
+import { IncomingMessage } from "http";
+import { NextApiRequestCookies } from "next/dist/server/api-utils";
 
 export class Fetcher {
   request: AxiosInstance;
 
-  constructor() {
-    this.request = this.createRequest();
+  constructor(
+    req?: IncomingMessage & {
+      cookies: NextApiRequestCookies;
+    }
+  ) {
+    this.request = this.createRequest({
+      config: {
+        headers: {
+          cookie: req?.headers?.cookie,
+        },
+      },
+    });
   }
 
-  createRequest = () => {
+  createRequest = (props?: { config?: AxiosRequestConfig }) => {
     const client = axios.create({
       baseURL: process.env.NEXTAUTH_URL,
+      ...props?.config,
     });
 
     client.interceptors.response.use(

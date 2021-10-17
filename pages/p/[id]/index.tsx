@@ -60,7 +60,7 @@ export default PostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = new Fetcher(ctx.req);
 
   if (!createIsFirstServerCall(ctx)) {
     return {

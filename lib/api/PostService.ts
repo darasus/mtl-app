@@ -9,12 +9,6 @@ import cache from "../cache";
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import { tagsFragment } from "../fragments/tagsFragment";
 
-type InputPost = Prisma.Post & {
-  likes: (Prisma.Like & { author: Prisma.User | null })[];
-  comments: Prisma.Comment[];
-  commentsCount: number;
-};
-
 export class PostService {
   async updatePost(
     {
