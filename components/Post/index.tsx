@@ -13,6 +13,8 @@ import { Header } from "./Header";
 import { ScreenshotButton } from "./ScreenshotButton";
 import { usePostQuery } from "../../hooks/query/usePostQuery";
 import { CodeLanguage } from ".prisma/client";
+import { TweetButton } from "./TweetButton";
+import { CopyButton } from "./CopyButton";
 
 interface Props {
   postId: number;
@@ -30,20 +32,6 @@ export const Post: React.FC<Props> = React.memo(function Post({
 }) {
   const { data: post } = usePostQuery(postId);
   const { borderColor } = useColors();
-
-  const [isCopied, copy] = useCopyClipboard(post?.content || "", {
-    successDuration: 3000,
-  });
-
-  const handleClipboardCopy = React.useCallback(() => copy(), [copy]);
-
-  const handleTweetClick = React.useCallback(() => {
-    window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURI(
-        `Check this: ${window.location.origin}/api/post/${post?.id}/screenshot`
-      )}`
-    );
-  }, [post?.id]);
 
   if (!post) return null;
 
@@ -70,28 +58,12 @@ export const Post: React.FC<Props> = React.memo(function Post({
           <>
             <Box borderColor={borderColor} borderTopWidth="thin">
               <Flex alignItems="center" p={4}>
-                <Box mr="2">
-                  <LikeButton post={post} />
-                </Box>
-                <Button
-                  leftIcon={<ShareIcon width="15" height="15" />}
-                  onClick={handleTweetClick}
-                  variant="ghost"
-                  size="xs"
-                  mr={2}
-                >
-                  <Text>Tweet</Text>
-                </Button>
-                <Button
-                  leftIcon={<DocumentDuplicateIcon width="15" height="15" />}
-                  onClick={handleClipboardCopy}
-                  disabled={isCopied}
-                  variant="ghost"
-                  size="xs"
-                  mr={2}
-                >
-                  <Text>{isCopied ? "Copied!" : "Copy"}</Text>
-                </Button>
+                <LikeButton post={post} />
+                <Box mr={2} />
+                <TweetButton postId={post.id} />
+                <Box mr={2} />
+                <CopyButton content={post.content!} />
+                <Box mr={2} />
                 <ScreenshotButton post={post} />
                 <Box flexGrow={1} />
                 <ActionMenu isMyPost={isMyPost} post={post} />

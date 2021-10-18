@@ -1,4 +1,4 @@
-import { Button, Text } from "@chakra-ui/react";
+import { Button, Text, useBreakpointValue, IconButton } from "@chakra-ui/react";
 import { PhotographIcon } from "@heroicons/react/outline";
 import { paramCase } from "change-case";
 import React from "react";
@@ -21,19 +21,41 @@ export const ScreenshotButton: React.FC<Props> = ({ post }) => {
     download(screenshot.data!, `${paramCase(post.title)}.png`, "image/png");
   }, [refetch, post]);
 
-  return (
+  const commonProps = {
+    "aria-label": "Make screenshot button",
+    as: "a",
+    onClick: handleClick,
+    cursor: "pointer",
+    isLoading: isFetching,
+  } as const;
+
+  const mobileButton = (
+    <IconButton
+      {...commonProps}
+      icon={<PhotographIcon width="20" height="20" />}
+      variant="solid"
+      size="sm"
+    />
+  );
+
+  const desktopButton = (
     <Button
+      {...commonProps}
       leftIcon={<PhotographIcon width="15" height="15" />}
       variant="ghost"
       size="xs"
-      mr={2}
-      as="a"
-      onClick={handleClick}
-      isLoading={isFetching}
       loadingText={"Screenshot"}
-      cursor="pointer"
     >
       <Text>Screenshot</Text>
     </Button>
   );
+
+  const buttonComponent = useBreakpointValue({
+    base: mobileButton,
+    sm: desktopButton,
+  });
+
+  if (!buttonComponent) return mobileButton;
+
+  return buttonComponent;
 };

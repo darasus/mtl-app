@@ -4,6 +4,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -50,17 +51,30 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
     [publishPost]
   );
 
+  const commonProps = {
+    as: IconButton,
+    "aria-label": "Options",
+    icon: <DotsVerticalIcon width="15" height="15" />,
+  } as const;
+
+  const mobileButton = (
+    <MenuButton {...commonProps} variant="solid" size="sm" />
+  );
+
+  const desktopButton = (
+    <MenuButton {...commonProps} variant="ghost" size="xs" />
+  );
+
+  const buttonComponent = useBreakpointValue({
+    base: mobileButton,
+    sm: desktopButton,
+  });
+
   if (!isMyPost) return null;
 
   return (
     <Menu>
-      <MenuButton
-        as={IconButton}
-        aria-label="Options"
-        icon={<DotsVerticalIcon width="15" height="15" />}
-        variant="ghost"
-        size="xs"
-      />
+      {buttonComponent}
       <MenuList>
         <MenuItem
           onClick={handleEditClick}

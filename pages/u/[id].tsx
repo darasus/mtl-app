@@ -97,8 +97,8 @@ const UserPage: React.FC = () => {
       />
       <Layout>
         <Grid templateColumns="repeat(12, 1fr)" gap={4}>
-          <GridItem colSpan={3}>
-            <Box marginBottom="size-100">
+          <GridItem colSpan={[12, 12, 3, 3]}>
+            <Flex marginBottom="size-100" justifyContent="center" mb={3}>
               {user.isLoading && (
                 <Flex justifyContent="center">
                   <Spinner />
@@ -144,9 +144,9 @@ const UserPage: React.FC = () => {
                   </Flex>
                 </Flex>
               )}
-            </Box>
+            </Flex>
           </GridItem>
-          <GridItem colSpan={9}>
+          <GridItem colSpan={[12, 12, 9, 9]}>
             <Box>
               <Heading mb={10} variant="section-heading">
                 My libraries
