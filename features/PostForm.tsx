@@ -31,28 +31,56 @@ export interface PostForm {
 }
 
 export const postSchema = yup.object().shape({
-  title: yup.string().min(3).max(300).required(),
-  description: yup.string().min(3).required(),
-  content: yup.string().min(3).required(),
+  title: yup.string().required("Please fill in your title here"),
+  description: yup.string(),
+  content: yup.string().min(3).required("Please write your library here"),
   codeLanguage: yup
     .string()
+    .test(
+      "has-code-language",
+      "Please select language",
+      (value) => !!value && value !== "none"
+    )
     .typeError("Please select tag")
     .required("Please select tag"),
   tagId: yup
     .number()
+    .test("has-tag", "Please select tag", (value) => !!value && value > 0)
     .typeError("Please select tag")
     .required("Please select tag"),
 });
+
+const FormItem: React.FC<{ title: string; errorMessage?: string }> = ({
+  title,
+  errorMessage,
+  children,
+}) => {
+  const { secondaryTextColor } = useColors();
+  return (
+    <Flex flexDirection="column" mb={6}>
+      <Flex>
+        <Text color={secondaryTextColor} mb={2}>
+          {title}
+        </Text>
+        <Box mr={2} />
+        {errorMessage && (
+          <Text color="red.300" mb={2}>
+            {errorMessage}
+          </Text>
+        )}
+      </Flex>
+      {children}
+    </Flex>
+  );
+};
 
 export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
   const {
     control,
     register,
-    watch,
     formState: { errors },
   } = useFormContext<PostForm>();
   const tags = useTagsQuery();
-  const { secondaryTextColor } = useColors();
   const codeLanguage = useWatch({ control, name: "codeLanguage" });
 
   return (
@@ -61,64 +89,31 @@ export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
         <Heading mb={10} variant="section-heading">
           Create new javascript library
         </Heading>
-        <Box mb={3}>
-          <Text mr={1} color={secondaryTextColor} mb={2}>
-            Title
-          </Text>
-          <Box />
-          {errors.title?.message && (
-            <Text color="red.500" mb={2}>
-              {errors.title?.message}
-            </Text>
-          )}
+        <FormItem title="Title" errorMessage={errors.title?.message}>
           <Input {...register("title")} isInvalid={!!errors.title?.message} />
-        </Box>
-        <Box mb={3}>
-          <Flex>
-            <Text color={secondaryTextColor} mb={2}>
-              Description
-            </Text>
-            {errors.description?.message && (
-              <Text color="red.500" mb={2}>
-                {errors.description?.message}
-              </Text>
-            )}
-          </Flex>
+        </FormItem>
+        <FormItem
+          title="Description"
+          errorMessage={errors.description?.message}
+        >
           <Textarea
             {...register("description")}
             isInvalid={!!errors.description?.message}
           />
-        </Box>
-        <Box mb={3}>
-          <Flex>
-            <Text color={secondaryTextColor} mb={2}>
-              Language
-            </Text>
-            {errors.codeLanguage?.message && (
-              <Text color="red.500" mb={2}>
-                {errors.codeLanguage?.message}
-              </Text>
-            )}
-          </Flex>
+        </FormItem>
+        <FormItem title="Language" errorMessage={errors.codeLanguage?.message}>
           <Select
             {...register("codeLanguage")}
             isInvalid={!!errors.codeLanguage?.message}
           >
+            <option key={"none"} value="none">
+              -
+            </option>
             <option value={CodeLanguage.JAVASCRIPT}>JavaScript</option>
             <option value={CodeLanguage.TYPESCRIPT}>TypeScript</option>
           </Select>
-        </Box>
-        <Box mb={3}>
-          <Flex>
-            <Text color={secondaryTextColor} mb={2}>
-              Tag
-            </Text>
-            {errors.tagId?.message && (
-              <Text color="red.500" mb={2}>
-                {errors.tagId?.message}
-              </Text>
-            )}
-          </Flex>
+        </FormItem>
+        <FormItem title="Tag" errorMessage={errors.tagId?.message}>
           <Select {...register("tagId")} isInvalid={!!errors.tagId?.message}>
             <option key={0} value={0}>
               -
@@ -131,16 +126,12 @@ export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
               );
             })}
           </Select>
-        </Box>
-        <Box mb={3}>
-          <Text color={secondaryTextColor} mb={2}>
-            {`Tiny ${codeLanguage?.toLowerCase()} library`}
-          </Text>
-          {errors.content?.message && (
-            <Text color="red.500" mb={2}>
-              {errors.content?.message}
-            </Text>
-          )}
+        </FormItem>
+
+        <FormItem
+          title={`Tiny ${codeLanguage?.toLowerCase()} library`}
+          errorMessage={errors.content?.message}
+        >
           <Controller
             name="content"
             control={control}
@@ -149,10 +140,12 @@ export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
                 value={value}
                 onChange={onChange}
                 codeLanguage={codeLanguage}
+                isInvalid={!!errors.content?.message}
               />
             )}
           />
-        </Box>
+        </FormItem>
+
         <Flex>
           <Button
             type="submit"

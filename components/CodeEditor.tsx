@@ -8,6 +8,7 @@ const Editor = dynamic(import("@monaco-editor/react"), { ssr: false });
 
 type Props = React.ComponentProps<typeof Editor> & {
   codeLanguage: CodeLanguage;
+  isInvalid?: boolean;
 };
 
 export const langMap = {
@@ -15,11 +16,21 @@ export const langMap = {
   [CodeLanguage.TYPESCRIPT]: "typescript",
 } as const;
 
-export const CodeEditor: React.FC<Props> = ({ codeLanguage, ...props }) => {
+export const CodeEditor: React.FC<Props> = ({
+  codeLanguage,
+  isInvalid,
+  ...props
+}) => {
   const { borderColor } = useColors();
+  const style = isInvalid
+    ? {
+        borderColor: "#FC8181",
+        boxShadow: "0 0 0 1px #FC8181",
+      }
+    : { borderColor };
 
   return (
-    <Box p={3} borderColor={borderColor} borderWidth="thin" borderRadius="md">
+    <Box p={3} borderWidth="thin" borderRadius="md" {...style}>
       <Editor
         height={500}
         language={langMap[codeLanguage]}
