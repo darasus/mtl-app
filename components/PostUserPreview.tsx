@@ -29,7 +29,9 @@ export const PostUserPreview: React.FC<Props> = ({ user }) => {
         </RouterLink>
       </Box>
       <RouterLink href={`/u/${user?.id}`}>
-        <Text fontSize="sm">{user?.name}</Text>
+        <Text whiteSpace="nowrap" fontSize="sm">
+          {user?.name}
+        </Text>
       </RouterLink>
     </Flex>
   );

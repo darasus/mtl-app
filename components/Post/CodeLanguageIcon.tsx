@@ -35,11 +35,12 @@ export const CodeLanguageIcon: React.FC<Props> = ({
       alignItems="center"
       justifyContent="center"
       width={width}
+      minWidth={width}
       height={height}
       backgroundColor={colorMap[codeLanguage]}
       color={textColorMap[codeLanguage]}
       borderRadius={1000}
-      pl={"2px"}
+      pl={"3px"}
     >
       <Text fontSize={fontSize} fontWeight="bold" textAlign="center">
         {labelMap[codeLanguage]}

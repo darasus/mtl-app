@@ -49,7 +49,7 @@ const defaults: Record<string, ElementType> = {
     const { inline, children, className } = props;
 
     if (inline) {
-      return <Code>{children}</Code>;
+      return <Code variant="subtle">{children}</Code>;
     }
 
     return (
@@ -59,6 +59,7 @@ const defaults: Record<string, ElementType> = {
         d="block"
         w="full"
         p={2}
+        variant="solid"
       >
         {children}
       </Code>

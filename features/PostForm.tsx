@@ -31,9 +31,9 @@ export interface PostForm {
 }
 
 export const postSchema = yup.object().shape({
-  title: yup.string().min(3).max(100).required(),
-  description: yup.string().min(3).max(1000).required(),
-  content: yup.string().min(3).max(1000).required(),
+  title: yup.string().min(3).max(300).required(),
+  description: yup.string().min(3).required(),
+  content: yup.string().min(3).required(),
   codeLanguage: yup
     .string()
     .typeError("Please select tag")
