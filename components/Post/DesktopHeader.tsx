@@ -26,14 +26,8 @@ export const DesktopHeader: React.FC<Props> = ({
         <Flex mr={2}>
           <CodeLanguageIcon codeLanguage={post.codeLanguage!} />
         </Flex>
-        <Flex
-          alignItems="center"
-          pr={2}
-          flexGrow={1}
-          maxWidth="100%"
-          minWidth="0"
-        >
-          <Box flexGrow={1} maxWidth="100%">
+        <Flex alignItems="center" pr={2} maxWidth="100%" minWidth="0">
+          <Box maxWidth="100%">
             <RouterLink href={`/p/${post.id}`}>
               <Text
                 fontSize="sm"
