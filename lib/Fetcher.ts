@@ -23,9 +23,11 @@ export class Fetcher {
   ) {
     this.request = this.createRequest({
       config: {
-        headers: {
-          cookie: req?.headers?.cookie,
-        },
+        headers: req?.headers?.cookie
+          ? {
+              cookie: req?.headers?.cookie,
+            }
+          : {},
       },
     });
   }

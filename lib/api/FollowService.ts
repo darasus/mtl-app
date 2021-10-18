@@ -67,15 +67,17 @@ export class FollowService {
         ...createUseDoIFollowUserQueryQueryCache(followingUserId),
         ...createUseDoIFollowUserQueryQueryCache(followerUserId),
       ]),
-      () =>
-        prisma.follow.findUnique({
+      async () => {
+        const response = await prisma.follow.findUnique({
           where: {
             followerId_followingId: {
               followerId: followerUserId,
               followingId: followingUserId,
             },
           },
-        }),
+        });
+        return response || false;
+      },
       60 * 60 * 24
     );
 
