@@ -14,7 +14,6 @@ export default async function handle(
 
   invariant(req.body.title, "title is required.");
   invariant(req.body.content, "content is required.");
-  invariant(req.body.description, "description is required.");
   invariant(req.body.codeLanguage, "codeLanguage is required.");
   invariant(typeof req.body.tagId === "number", "tagId is required.");
 

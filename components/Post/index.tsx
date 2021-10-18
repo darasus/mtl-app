@@ -54,11 +54,13 @@ export const Post: React.FC<Props> = React.memo(function Post({
           <Box borderColor={borderColor} borderBottomWidth="thin">
             <Header post={post} showMetaInfo={showMetaInfo} />
           </Box>
-          <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
-            <Flex flexDirection="column">
-              <Markdown value={post.description || ""} />
-            </Flex>
-          </Box>
+          {post.description && (
+            <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
+              <Flex flexDirection="column">
+                <Markdown value={post.description || ""} />
+              </Flex>
+            </Box>
+          )}
           <Syntax
             codeLanguage={post.codeLanguage || CodeLanguage.JAVASCRIPT}
             value={post.content || ""}
