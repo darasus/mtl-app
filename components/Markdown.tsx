@@ -59,7 +59,8 @@ const defaults: Record<string, ElementType> = {
         d="block"
         w="full"
         p={2}
-        variant="solid"
+        mb={2}
+        variant="subtle"
       >
         {children}
       </Code>
@@ -223,7 +224,7 @@ const defaults: Record<string, ElementType> = {
   },
   pre: (props) => {
     const { children } = props;
-    return <Code {...getCoreProps(props)}>{children}</Code>;
+    return <pre>{children}</pre>;
   },
   table: Table,
   thead: Thead,
@@ -238,5 +239,9 @@ interface Props {
 }
 
 export const Markdown: React.FC<Props> = ({ value }) => {
-  return <ReactMarkdown components={defaults}>{value}</ReactMarkdown>;
+  return (
+    <ReactMarkdown className="markdown" components={defaults}>
+      {value}
+    </ReactMarkdown>
+  );
 };

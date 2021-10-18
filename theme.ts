@@ -37,6 +37,9 @@ export const theme = extendTheme({
         color: props.colorMode === "dark" ? "white" : "black",
         background: props.colorMode === "dark" ? "black" : "white",
       },
+      ".markdown > *:first-child, .markdown > *:last-child": {
+        marginBottom: 0,
+      },
     }),
     focusBorderColor: "brand.500",
   },
