@@ -3,15 +3,18 @@ import { Text } from "@chakra-ui/layout";
 import { useBreakpointValue } from "@chakra-ui/media-query";
 import { ShareIcon } from "@heroicons/react/outline";
 import React from "react";
+import { Post } from "../../types/Post";
 
-export const TweetButton = ({ postId }: { postId: number }) => {
+export const TweetButton = ({ post }: { post: Post }) => {
   const handleTweetClick = React.useCallback(() => {
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURI(
-        `Check this: ${window.location.origin}/api/post/${postId}/screenshot`
+        `${post.title.substring(0, 279)} ${window.location.origin}/api/post/${
+          post.id
+        }`
       )}`
     );
-  }, [postId]);
+  }, [post]);
 
   const commonProps = {
     "aria-label": "Tweet button",

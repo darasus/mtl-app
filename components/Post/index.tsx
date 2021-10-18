@@ -60,7 +60,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
               <Flex alignItems="center" p={4}>
                 <LikeButton post={post} />
                 <Box mr={2} />
-                <TweetButton postId={post.id} />
+                <TweetButton post={post} />
                 <Box mr={2} />
                 <CopyButton content={post.content!} />
                 <Box mr={2} />
