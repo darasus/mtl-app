@@ -9,9 +9,7 @@ export const TweetButton = ({ post }: { post: Post }) => {
   const handleTweetClick = React.useCallback(() => {
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURI(
-        `${post.title.substring(0, 279)} ${window.location.origin}/api/post/${
-          post.id
-        }`
+        `${post.title.substring(0, 279)} ${window.location.origin}/p/${post.id}`
       )}`
     );
   }, [post]);
