@@ -18,7 +18,7 @@ export const ScreenshotButton: React.FC<Props> = ({ post }) => {
 
   const handleClick = React.useCallback(async () => {
     const screenshot = await refetch();
-    download(screenshot.data!, `${paramCase(post.title)}.png`, "image/png");
+    download(screenshot.data!, `${paramCase(post.title)}.webp`, "image/webp");
   }, [refetch, post]);
 
   const commonProps = {

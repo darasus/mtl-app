@@ -1,6 +1,11 @@
+import axios from "axios";
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ScreenshotService } from "../../lib/api/ScreenshotService";
+import qs from "query-string";
+import cache from "../../lib/cache";
+import { createUseScreenshotQueryCacheKey } from "../../hooks/query/useScreenshotQuery";
+import { Stream } from "stream";
+import { redis } from "../../lib/redis";
 
 export default async function handle(
   req: NextApiRequest,
@@ -12,14 +17,28 @@ export default async function handle(
   );
   invariant(typeof req.query.url === "string", "url param is not provided");
 
-  const isLocalhost = req.headers.host === "localhost:3000";
-  const screenshotService = new ScreenshotService();
-  const screenshot = await screenshotService.screenshot({
-    isLocalhost,
+  const query = qs.stringify({
     url: req.query.url,
     width: Number(req.query.width) || undefined,
     height: Number(req.query.height) || undefined,
   });
 
-  return res.status(200).end(screenshot);
+  const cacheKey = JSON.stringify(
+    createUseScreenshotQueryCacheKey(req.query.url)
+  );
+
+  const cachedResponse = await cache.getBuffer(cacheKey);
+
+  if (cachedResponse) {
+    return res.status(200).end(cachedResponse);
+  }
+
+  const response = await axios.request<ArrayBuffer>({
+    url: `${process.env.SCREENSHOT_API_BASE_URL}/api/screenshot?${query}`,
+    responseType: "arraybuffer",
+  });
+
+  await cache.setBuffer(cacheKey, response.data, 60 * 60 * 24);
+
+  return res.status(200).end(Buffer.from(new Uint8Array(response.data)));
 }
