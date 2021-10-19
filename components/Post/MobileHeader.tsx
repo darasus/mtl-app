@@ -28,11 +28,11 @@ export const MobileHeader: React.FC<Props> = ({ post }) => {
       <Text fontSize="sm" noOfLines={3}>
         <RouterLink href={`/p/${post.id}`}>{post.title}</RouterLink>
       </Text>
-      <Flex flexGrow={1}>
-        <Box mr={2}>
-          <Flex color={secondaryTextColor}>
-            <Flex mr={2} alignItems="center">
-              <Text fontSize="sm" color={secondaryTextColor}>
+      <Flex>
+        <Box mr={2} width="100%">
+          <Flex color={secondaryTextColor} width="100%">
+            <Flex mr={2} alignItems="center" minWidth={0}>
+              <Text fontSize="sm" color={secondaryTextColor} isTruncated>
                 <RouterLink href={`/u/${post.authorId}`}>
                   {post.author?.name}
                 </RouterLink>
@@ -64,7 +64,7 @@ export const MobileHeader: React.FC<Props> = ({ post }) => {
                 <Text fontSize="sm">{post.commentsCount}</Text>
               </Box>
             </Flex>
-            <Flex alignItems="center">
+            <Flex alignItems="center" flexShrink={1}>
               <Box mr={1}>
                 <TagIcon width="15" height="15" />
               </Box>
