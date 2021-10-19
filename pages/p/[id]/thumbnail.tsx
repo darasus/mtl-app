@@ -34,7 +34,7 @@ const PostPage: React.FC = () => {
             <Box>
               <Box borderColor={borderColor} borderBottomWidth="thin">
                 <Box p={4}>
-                  <Flex alignItems="center">
+                  <Flex alignItems="center" width="100%">
                     {post.codeLanguage && (
                       <Box mr={4}>
                         <CodeLanguageIcon
@@ -45,8 +45,8 @@ const PostPage: React.FC = () => {
                         />
                       </Box>
                     )}
-                    <Box mr={4}>
-                      <Text fontSize="4xl" data-testid="post-title">
+                    <Box mr={4} flexGrow={1} minWidth={0}>
+                      <Text fontSize="4xl" data-testid="post-title" isTruncated>
                         {post.title}
                       </Text>
                     </Box>
@@ -72,7 +72,9 @@ const PostPage: React.FC = () => {
                             />
                           </Box>
                         )}
-                        <Text fontSize="4xl">{post.author?.name}</Text>
+                        <Text fontSize="4xl" whiteSpace="nowrap">
+                          {post.author?.name}
+                        </Text>
                       </Flex>
                     </Box>
                   </Flex>
