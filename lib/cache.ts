@@ -25,7 +25,7 @@ const getBuffer = async (key: string) => {
   const value = await redis.getBuffer(key);
   const cacheT1 = performance.now();
   console.log(
-    `Get hit for ${key} to cache took ${cacheT1 - cacheT0} milliseconds.`
+    `Get buffer hit for ${key} to cache took ${cacheT1 - cacheT0} milliseconds.`
   );
   if (value === null) return null;
   return value;
@@ -48,7 +48,9 @@ const setBuffer = async <T>(
   const dbT0 = performance.now();
   await redis.set(key, Buffer.from(new Uint8Array(value)), "EX", expires);
   const dbT1 = performance.now();
-  console.log(`Set hit for ${key} to DO DB took ${dbT1 - dbT0} milliseconds.`);
+  console.log(
+    `Set buffer hit for ${key} to DO DB took ${dbT1 - dbT0} milliseconds.`
+  );
   return value;
 };
 

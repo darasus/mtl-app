@@ -4,17 +4,11 @@ import { Post } from "../components/Post";
 import { Box, Button, Center, Flex, Heading, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
-import {
-  createUseFeedQueryCacheKey,
-  useFeedQuery,
-} from "../hooks/query/useFeedQuery";
+import { useFeedQuery } from "../hooks/query/useFeedQuery";
 import { useMeQuery } from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
-import { FeedService } from "../lib/api/FeedService";
 import { prefetchMe } from "../lib/utils/prefetchMe";
 import { Head } from "../components/Head";
-import { commentsKey } from "../hooks/query/useCommentsQuery";
-import { createUsePostQueryCacheKey } from "../hooks/query/usePostQuery";
 import { createIsFirstServerCall } from "../utils/createIsFirstServerCall";
 import { Intro } from "../components/Intro";
 import { slogan } from "../constants/slogan";
@@ -94,26 +88,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const me = await prefetchMe(ctx, queryClient);
-  const feedService = new FeedService();
-  const page = await feedService.fetchFeed({
-    userId: me?.id || undefined,
-  });
-
-  await queryClient.prefetchQuery(createUseFeedQueryCacheKey(), () =>
-    Promise.resolve({
-      pages: [page],
-    })
-  );
-
-  page.items.forEach((post) => {
-    queryClient.setQueryData(createUsePostQueryCacheKey(post.id), post);
-    queryClient.setQueryData(commentsKey.postComments(post.id), {
-      items: post.comments,
-      count: post.comments.length,
-      total: post.commentsCount,
-    });
-  });
+  await prefetchMe(ctx, queryClient);
 
   return {
     props: {
