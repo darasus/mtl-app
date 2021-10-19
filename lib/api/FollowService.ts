@@ -1,16 +1,24 @@
 import { createUseDoIFollowUserQueryQueryCache } from "../../hooks/query/useDoIFollowUserQuery";
+import { createUseFollowersCountQueryCacheKey } from "../../hooks/query/useFollowersCountQuery";
 import cache from "../cache";
 import prisma from "../prisma";
 
 export class FollowService {
   async getNumberOfFollowers(userId: number) {
-    return prisma.follow.count({
-      where: {
-        follower: {
-          id: userId,
-        },
+    const response = await cache.fetch(
+      JSON.stringify(createUseFollowersCountQueryCacheKey(userId)),
+      async () => {
+        const response = prisma.follow.count({
+          where: {
+            followingId: userId,
+          },
+        });
+        return response;
       },
-    });
+      60 * 60 * 24
+    );
+
+    return response;
   }
 
   async followUser(followingUserId: number, followerUserId: number) {
@@ -35,6 +43,9 @@ export class FollowService {
         ...createUseDoIFollowUserQueryQueryCache(followerUserId),
       ])
     );
+    await cache.del(
+      JSON.stringify(createUseFollowersCountQueryCacheKey(followingUserId))
+    );
   }
 
   async unfollowUser(followingUserId: number, followerUserId: number) {
@@ -52,6 +63,9 @@ export class FollowService {
         ...createUseDoIFollowUserQueryQueryCache(followingUserId),
         ...createUseDoIFollowUserQueryQueryCache(followerUserId),
       ])
+    );
+    await cache.del(
+      JSON.stringify(createUseFollowersCountQueryCacheKey(followingUserId))
     );
   }
 

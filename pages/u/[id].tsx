@@ -65,12 +65,13 @@ const UserPage: React.FC = () => {
   };
 
   const followButton = !isMyPage ? (
-    doIFollowUser.data ? (
+    doIFollowUser.data?.doIFollow ? (
       <Button
         variant="outline"
         mb={1}
         onClick={handleUnfollow}
         disabled={unfollowMutation.isLoading}
+        isLoading={unfollowMutation.isLoading}
       >
         Unfollow
       </Button>
@@ -80,6 +81,7 @@ const UserPage: React.FC = () => {
         mb={1}
         onClick={handleFollow}
         disabled={followMutation.isLoading}
+        isLoading={followMutation.isLoading}
       >
         Follow
       </Button>
@@ -140,7 +142,7 @@ const UserPage: React.FC = () => {
                       fontWeight="bold"
                       fontSize="sm"
                       color={secondaryTextColor}
-                    >{`${followersCount.data} followers`}</Text>
+                    >{`${followersCount.data || 0} followers`}</Text>
                   </Flex>
                 </Flex>
               )}
