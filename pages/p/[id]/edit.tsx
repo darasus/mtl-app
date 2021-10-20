@@ -4,7 +4,6 @@ import { dehydrate } from "react-query/hydration";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { usePostQuery } from "../../../hooks/query/usePostQuery";
-import { usePostEdit } from "../../../hooks/usePostEdit";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Layout } from "../../../layouts/Layout";
@@ -12,11 +11,12 @@ import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { PostForm, postSchema } from "../../../features/PostForm";
 import invariant from "invariant";
+import { usePostEditMutation } from "../../../hooks/mutation/usePostEditMutation";
 
 const EditPostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
-  const { editPost, isLoading } = usePostEdit(post.data?.id as number);
+  const postEditMutation = usePostEditMutation(post.data?.id as number);
   const form = useForm<PostForm>({
     resolver: yupResolver(postSchema),
   });
@@ -36,10 +36,16 @@ const EditPostPage: React.FC = () => {
     });
   }, [post.data, reset]);
 
-  const submit = handleSubmit(
+  const handleUpdate = handleSubmit(
     async ({ tagId, codeLanguage, content, description, title }) => {
       invariant(typeof tagId === "number", "tagId is required");
-      await editPost({ tagId, codeLanguage, content, description, title });
+      await postEditMutation.mutateAsync({
+        tagId,
+        codeLanguage,
+        content,
+        description,
+        title,
+      });
       await router.push(`/p/${post.data?.id}`);
     }
   );
@@ -47,7 +53,10 @@ const EditPostPage: React.FC = () => {
   return (
     <Layout>
       <FormProvider {...form}>
-        <PostForm submit={submit} isSubmitting={isLoading} />
+        <PostForm
+          handleUpdate={handleUpdate}
+          isUpdating={postEditMutation.isLoading}
+        />
       </FormProvider>
     </Layout>
   );

@@ -11,9 +11,10 @@ interface Variables {
   content: string;
   codeLanguage: CodeLanguage;
   tagId: number;
+  isPublished: boolean;
 }
 
-export const usePostCreateMutation = () => {
+export const useCreatePostMutation = () => {
   const queryClient = useQueryClient();
   const fetcher = new Fetcher();
 

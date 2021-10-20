@@ -22,6 +22,7 @@ interface Props {
   showActionMenu?: boolean;
   showMetaInfo?: boolean;
   isPostLoading?: boolean;
+  isPostStatusVisible?: boolean;
 }
 
 export const Post: React.FC<Props> = React.memo(function Post({
@@ -29,6 +30,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
   isMyPost,
   showActionMenu = true,
   showMetaInfo = true,
+  isPostStatusVisible,
 }) {
   const { data: post } = usePostQuery(postId);
   const { borderColor } = useColors();
@@ -40,7 +42,11 @@ export const Post: React.FC<Props> = React.memo(function Post({
       <Flex flexDirection="column">
         <Box>
           <Box borderColor={borderColor} borderBottomWidth="thin">
-            <Header post={post} showMetaInfo={showMetaInfo} />
+            <Header
+              post={post}
+              showMetaInfo={showMetaInfo}
+              isPostStatusVisible={isPostStatusVisible}
+            />
           </Box>
           {post.description && (
             <Box p={4} borderColor={borderColor} borderBottomWidth="thin">

@@ -48,6 +48,7 @@ const PostPage: React.FC = () => {
               postId={post.data.id}
               isMyPost={post.data.authorId === me.data?.id}
               isPostLoading={post.isFetching}
+              isPostStatusVisible={true}
             />
           )}
         </main>

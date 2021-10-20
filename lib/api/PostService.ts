@@ -117,12 +117,14 @@ export class PostService {
       description,
       codeLanguage,
       tagId,
+      isPublished,
     }: {
       title: string;
       content: string;
       description: string;
       codeLanguage: CodeLanguage;
       tagId: number;
+      isPublished: boolean;
     }
   ) {
     const post = await prisma.post.create({
@@ -130,7 +132,7 @@ export class PostService {
         title,
         content,
         description,
-        published: true,
+        published: isPublished,
         codeLanguage,
         author: { connect: { id: userId } },
       },

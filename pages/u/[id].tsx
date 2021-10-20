@@ -163,6 +163,7 @@ const UserPage: React.FC = () => {
                   <Post
                     postId={post.id}
                     isMyPost={post.authorId === me.data?.id}
+                    isPostStatusVisible
                   />
                 </Box>
               ))}
