@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { UserService } from "../../../../lib/api/UserService";
+import { UserSessionService } from "../../../../lib/api/UserSessionService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,8 +14,11 @@ export default async function handle(
   invariant(typeof req.query.id === "string", "User ID is not provided");
 
   try {
+    const me = await new UserSessionService({ req }).get();
     const userService = new UserService();
-    const posts = await userService.getUserPosts(Number(req.query.id));
+    const userId = Number(req.query.id);
+    console.log(me?.id === userId);
+    const posts = await userService.getUserPosts(userId, me?.id === userId);
     res.json(posts);
   } catch (error) {
     return res.end(error);

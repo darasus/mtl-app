@@ -36,10 +36,11 @@ export class UserService {
     );
   }
 
-  async getUserPosts(userId: number): Promise<Post[]> {
+  async getUserPosts(userId: number, isMe: boolean): Promise<Post[]> {
     const posts = await prisma.post.findMany({
       where: {
         authorId: userId,
+        ...(isMe ? {} : { published: true }),
       },
       orderBy: [
         {
