@@ -1,11 +1,11 @@
 import { Text } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 
 export const usePostUnpublishMutation = (id: number) => {
   const queryClient = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useMutation(
     () =>

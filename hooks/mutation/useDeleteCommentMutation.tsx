@@ -3,11 +3,11 @@ import { commentsKey } from "../query/useCommentsQuery";
 import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 import { toast } from "react-hot-toast";
 import { Text } from "@chakra-ui/layout";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 
 export const useDeleteCommentMutation = () => {
   const queryClient = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useMutation(
     ({ commentId }: { commentId: number; postId: number }) =>

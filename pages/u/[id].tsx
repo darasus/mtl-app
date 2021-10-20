@@ -19,11 +19,11 @@ import {
   useUserQuery,
 } from "../../hooks/query/useUserQuery";
 import { useRouter } from "next/router";
+import { useUserPostsQuery } from "../../hooks/query/useUserPostsQuery";
 import {
-  createUseUserPostsQueryCacheKey,
-  useUserPostsQuery,
-} from "../../hooks/query/useUserPostsQuery";
-import { useMeQuery } from "../../hooks/query/useMeQuery";
+  createUseMeQueryCacheKey,
+  useMeQuery,
+} from "../../hooks/query/useMeQuery";
 import { useFollowMutation } from "../../hooks/mutation/useFollowMutation";
 import { useFollowersCountQuery } from "../../hooks/query/useFollowersCountQuery";
 import { useUnfollowMutation } from "../../hooks/mutation/useUnfollowMutation";
@@ -31,13 +31,10 @@ import { useDoIFollowUserQuery } from "../../hooks/query/useDoIFollowUserQuery";
 import { UserGroupIcon } from "@heroicons/react/outline";
 import { Layout } from "../../layouts/Layout";
 import { useColors } from "../../hooks/useColors";
-import { prefetchMe } from "../../lib/utils/prefetchMe";
 import { Head } from "../../components/Head";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
-import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
-import { commentsKey } from "../../hooks/query/useCommentsQuery";
 import { Fetcher } from "../../lib/Fetcher";
-import { slogan } from "../../constants/slogan";
+import { ServerHttpConnector } from "../../lib/ServerHttpConnector";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
@@ -173,7 +170,6 @@ export default UserPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const fetcher = new Fetcher();
 
   if (!createIsFirstServerCall(ctx)) {
     return {
@@ -183,10 +179,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  const httpConnector = new ServerHttpConnector(ctx);
+  const fetcher = new Fetcher(httpConnector);
   const userId = Number(ctx.query.id);
 
   await Promise.all([
-    prefetchMe(ctx, queryClient),
+    queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
+      fetcher.getMe()
+    ),
     queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
       fetcher.getUser(userId)
     ),

@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
 import { createUseDoIFollowUserQueryQueryCache } from "../query/useDoIFollowUserQuery";
 import { createUseFollowersCountQueryCacheKey } from "../query/useFollowersCountQuery";
+import { useFetcher } from "../useFetcher";
 
 export const useUnfollowMutation = () => {
   const qc = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useMutation<unknown, unknown, { userId: number }>(
     ({ userId }) => fetcher.unfollowUser(userId),

@@ -6,16 +6,19 @@ import {
   usePostQuery,
 } from "../../../hooks/query/usePostQuery";
 import { useRouter } from "next/router";
-import { useMeQuery } from "../../../hooks/query/useMeQuery";
+import {
+  createUseMeQueryCacheKey,
+  useMeQuery,
+} from "../../../hooks/query/useMeQuery";
 import { Layout } from "../../../layouts/Layout";
 import { QueryClient } from "react-query";
-import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { dehydrate } from "react-query/hydration";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { Head } from "../../../components/Head";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { commentsKey } from "../../../hooks/query/useCommentsQuery";
 import { Fetcher } from "../../../lib/Fetcher";
+import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -61,7 +64,6 @@ export default PostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const fetcher = new Fetcher(ctx.req);
 
   if (!createIsFirstServerCall(ctx)) {
     return {
@@ -71,11 +73,16 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  const httpConnector = new ServerHttpConnector(ctx);
+  const fetcher = new Fetcher(httpConnector);
+
   const postId = Number(ctx.query.id);
   const post = await fetcher.getPost(postId);
 
   await Promise.all([
-    prefetchMe(ctx, queryClient),
+    queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
+      fetcher.getMe()
+    ),
     queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
       Promise.resolve(post)
     ),

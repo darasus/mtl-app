@@ -1,6 +1,6 @@
 import { CodeLanguage } from ".prisma/client";
 import { useMutation, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 
 interface Variables {
   title: string;
@@ -12,7 +12,7 @@ interface Variables {
 
 export const usePostEditMutation = (id: number) => {
   const queryClient = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useMutation(
     (variables: Variables) => fetcher.updatePost(id, variables),

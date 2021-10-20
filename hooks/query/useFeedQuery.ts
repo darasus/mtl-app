@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 import { commentsKey } from "./useCommentsQuery";
 import { createUsePostQueryCacheKey } from "./usePostQuery";
 
@@ -7,7 +7,7 @@ export const createUseFeedQueryCacheKey = () => ["feed"];
 
 export const useFeedQuery = () => {
   const queryClient = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useInfiniteQuery(
     createUseFeedQueryCacheKey(),

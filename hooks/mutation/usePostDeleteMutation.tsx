@@ -1,14 +1,13 @@
 import { Text } from "@chakra-ui/react";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
 import { createUseFeedQueryCacheKey } from "../query/useFeedQuery";
 import { createUsePostQueryCacheKey } from "../query/usePostQuery";
+import { useFetcher } from "../useFetcher";
 
 export const usePostDeleteMutation = (id: number) => {
   const queryClient = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useMutation(
     () =>

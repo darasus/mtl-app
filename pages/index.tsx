@@ -5,12 +5,16 @@ import { Box, Button, Center, Flex, Heading, Spinner } from "@chakra-ui/react";
 import React from "react";
 import { dehydrate } from "react-query/hydration";
 import { useFeedQuery } from "../hooks/query/useFeedQuery";
-import { useMeQuery } from "../hooks/query/useMeQuery";
+import {
+  createUseMeQueryCacheKey,
+  useMeQuery,
+} from "../hooks/query/useMeQuery";
 import { Layout } from "../layouts/Layout";
-import { prefetchMe } from "../lib/utils/prefetchMe";
 import { Head } from "../components/Head";
 import { createIsFirstServerCall } from "../utils/createIsFirstServerCall";
 import { Intro } from "../components/Intro";
+import { ServerHttpConnector } from "../lib/ServerHttpConnector";
+import { Fetcher } from "../lib/Fetcher";
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
@@ -79,7 +83,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  await prefetchMe(ctx, queryClient);
+  const httpConnector = new ServerHttpConnector(ctx);
+  const fetcher = new Fetcher(httpConnector);
+
+  await queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
+    fetcher.getMe()
+  );
 
   return {
     props: {

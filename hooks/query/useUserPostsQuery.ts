@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 import { commentsKey } from "./useCommentsQuery";
 import { createUsePostQueryCacheKey } from "./usePostQuery";
 
@@ -10,7 +10,7 @@ export const createUseUserPostsQueryCacheKey = (userId: number) => [
 
 export const useUserPostsQuery = (userId: number) => {
   const queryClient = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useQuery(
     createUseUserPostsQueryCacheKey(userId),

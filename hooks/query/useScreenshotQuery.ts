@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 
 export const createUseScreenshotQueryCacheKey = (url: string) => [
   "screehshot",
@@ -7,7 +7,7 @@ export const createUseScreenshotQueryCacheKey = (url: string) => [
 ];
 
 export const useScreenshotQuery = (url: string) => {
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useQuery(
     createUseScreenshotQueryCacheKey(url),

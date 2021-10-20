@@ -1,12 +1,12 @@
 import { useQuery, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 import { commentsKey } from "./useCommentsQuery";
 
 export const createUsePostQueryCacheKey = (id: number) => ["post", id];
 
 export const usePostQuery = (id: number) => {
   const queryClient = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useQuery(createUsePostQueryCacheKey(id), () => fetcher.getPost(id), {
     enabled: !!id,

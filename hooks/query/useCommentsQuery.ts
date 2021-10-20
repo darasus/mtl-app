@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 
 export const commentsKey = {
   base: ["comments"],
@@ -13,7 +13,7 @@ export const useCommentsQuery = ({
   postId: number;
   take: number;
 }) => {
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useQuery(
     commentsKey.postComments(postId),

@@ -1,16 +1,11 @@
 import React from "react";
-import { GetServerSideProps } from "next";
 import { Post } from "../../../components/Post";
-import { QueryClient } from "react-query";
 import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { useRouter } from "next/router";
-import { dehydrate } from "react-query/hydration";
 import { useMeQuery } from "../../../hooks/query/useMeQuery";
 import { PreviewLayout } from "../../../layouts/PreviewLayout";
-import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Logo } from "../../../components/Logo";
-import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -44,18 +39,3 @@ const PostPage: React.FC = () => {
 };
 
 export default PostPage;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const queryClient = new QueryClient();
-
-  if (createIsFirstServerCall(ctx)) {
-    await prefetchMe(ctx, queryClient);
-  }
-
-  return {
-    props: {
-      cookies: ctx.req.headers.cookie ?? "",
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};

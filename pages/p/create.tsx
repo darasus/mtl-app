@@ -4,7 +4,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FullscreenLayout } from "../../layouts/FullscreenLayout";
 import { GetServerSideProps } from "next";
-import { prefetchMe } from "../../lib/utils/prefetchMe";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
@@ -13,6 +12,9 @@ import { PostForm, postSchema } from "../../features/PostForm";
 import invariant from "invariant";
 import { CodeLanguage } from ".prisma/client";
 import { Head } from "../../components/Head";
+import { ServerHttpConnector } from "../../lib/ServerHttpConnector";
+import { Fetcher } from "../../lib/Fetcher";
+import { createUseMeQueryCacheKey } from "../../hooks/query/useMeQuery";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -75,9 +77,21 @@ export default CreatePostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  if (createIsFirstServerCall(ctx)) {
-    await prefetchMe(ctx, queryClient);
+
+  if (!createIsFirstServerCall(ctx)) {
+    return {
+      props: {
+        cookies: ctx.req.headers.cookie ?? "",
+      },
+    };
   }
+
+  const httpConnector = new ServerHttpConnector(ctx);
+  const fetcher = new Fetcher(httpConnector);
+
+  await queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
+    fetcher.getMe()
+  );
 
   return {
     props: {

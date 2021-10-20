@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 
 export const createUseFollowersCountQueryCacheKey = (userId: number) => [
   "followersCount",
@@ -7,7 +7,7 @@ export const createUseFollowersCountQueryCacheKey = (userId: number) => [
 ];
 
 export const useFollowersCountQuery = (userId: number) => {
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useQuery(
     createUseFollowersCountQueryCacheKey(userId),

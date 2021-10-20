@@ -1,21 +1,12 @@
 import React from "react";
-import { GetServerSideProps } from "next";
-import { QueryClient } from "react-query";
 import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { useRouter } from "next/router";
-import { dehydrate } from "react-query/hydration";
-import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Logo } from "../../../components/Logo";
-import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { ThumbnailLayout } from "../../../layouts/ThumbnailLayout";
 import { Syntax } from "../../../components/Syntax";
-import { Markdown } from "../../../components/Markdown";
-import { Header } from "../../../components/Post/Header";
 import { useColors } from "../../../hooks/useColors";
 import { CodeLanguageIcon } from "../../../components/Post/CodeLanguageIcon";
-import { RouterLink } from "../../../components/RouterLinkt";
-import { PostUserPreview } from "../../../components/PostUserPreview";
 import Image from "next/image";
 import { CodeLanguage } from ".prisma/client";
 
@@ -109,18 +100,3 @@ const PostPage: React.FC = () => {
 };
 
 export default PostPage;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const queryClient = new QueryClient();
-
-  if (createIsFirstServerCall(ctx)) {
-    await prefetchMe(ctx, queryClient);
-  }
-
-  return {
-    props: {
-      cookies: ctx.req.headers.cookie ?? "",
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};

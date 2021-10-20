@@ -1,10 +1,10 @@
 import { Text } from "@chakra-ui/react";
 import { toast } from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
 import { CommentService } from "../../lib/api/CommentService";
 import { commentsKey } from "../query/useCommentsQuery";
 import { useMeQuery } from "../query/useMeQuery";
+import { useFetcher } from "../useFetcher";
 
 type Page = ReturnType<CommentService["getCommentsByPostId"]>;
 
@@ -17,7 +17,7 @@ type Variables = { postId: number; content: string; take: number };
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
   const me = useMeQuery();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useMutation(
     ({ postId, content }: Variables) =>

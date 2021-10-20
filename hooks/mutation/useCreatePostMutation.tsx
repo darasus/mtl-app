@@ -2,8 +2,8 @@ import { CodeLanguage } from ".prisma/client";
 import { Text } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
 import { Post } from "../../types/Post";
+import { useFetcher } from "../useFetcher";
 
 interface Variables {
   title: string;
@@ -16,7 +16,7 @@ interface Variables {
 
 export const useCreatePostMutation = () => {
   const queryClient = useQueryClient();
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useMutation<Post, {}, Variables>(
     (variables) =>

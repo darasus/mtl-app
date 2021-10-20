@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Fetcher } from "../../lib/Fetcher";
+import { useFetcher } from "../useFetcher";
 
 export const createUseDoIFollowUserQueryQueryCache = (userId: number) => [
   "doIFollowUser",
@@ -7,7 +7,7 @@ export const createUseDoIFollowUserQueryQueryCache = (userId: number) => [
 ];
 
 export const useDoIFollowUserQuery = (userId: number) => {
-  const fetcher = new Fetcher();
+  const fetcher = useFetcher();
 
   return useQuery(
     createUseDoIFollowUserQueryQueryCache(userId),

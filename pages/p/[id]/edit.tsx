@@ -6,15 +6,15 @@ import { QueryClient } from "react-query";
 import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { PostForm, postSchema } from "../../../features/PostForm";
 import invariant from "invariant";
 import { usePostEditMutation } from "../../../hooks/mutation/usePostEditMutation";
 import { FullscreenLayout } from "../../../layouts/FullscreenLayout";
-import { introImageUrl } from "../../../constants/introImageUrl";
 import { Head } from "../../../components/Head";
-import { slogan } from "../../../constants/slogan";
+import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
+import { Fetcher } from "../../../lib/Fetcher";
+import { createUseMeQueryCacheKey } from "../../../hooks/query/useMeQuery";
 
 const EditPostPage: React.FC = () => {
   const router = useRouter();
@@ -73,9 +73,20 @@ export default EditPostPage;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
 
-  if (createIsFirstServerCall(ctx)) {
-    await prefetchMe(ctx, queryClient);
+  if (!createIsFirstServerCall(ctx)) {
+    return {
+      props: {
+        cookies: ctx.req.headers.cookie ?? "",
+      },
+    };
   }
+
+  const httpConnector = new ServerHttpConnector(ctx);
+  const fetcher = new Fetcher(httpConnector);
+
+  await queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
+    fetcher.getMe()
+  );
 
   return {
     props: {
