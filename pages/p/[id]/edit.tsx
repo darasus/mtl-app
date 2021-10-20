@@ -6,12 +6,15 @@ import { QueryClient } from "react-query";
 import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Layout } from "../../../layouts/Layout";
 import { prefetchMe } from "../../../lib/utils/prefetchMe";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { PostForm, postSchema } from "../../../features/PostForm";
 import invariant from "invariant";
 import { usePostEditMutation } from "../../../hooks/mutation/usePostEditMutation";
+import { FullscreenLayout } from "../../../layouts/FullscreenLayout";
+import { introImageUrl } from "../../../constants/introImageUrl";
+import { Head } from "../../../components/Head";
+import { slogan } from "../../../constants/slogan";
 
 const EditPostPage: React.FC = () => {
   const router = useRouter();
@@ -51,14 +54,17 @@ const EditPostPage: React.FC = () => {
   );
 
   return (
-    <Layout>
-      <FormProvider {...form}>
-        <PostForm
-          handleUpdate={handleUpdate}
-          isUpdating={postEditMutation.isLoading}
-        />
-      </FormProvider>
-    </Layout>
+    <>
+      <Head title="Edit tiny library" urlPath="/create" />
+      <FullscreenLayout>
+        <FormProvider {...form}>
+          <PostForm
+            handleUpdate={handleUpdate}
+            isUpdating={postEditMutation.isLoading}
+          />
+        </FormProvider>
+      </FullscreenLayout>
+    </>
   );
 };
 

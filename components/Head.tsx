@@ -1,19 +1,21 @@
 import NextHead from "next/head";
+import { introImageUrl } from "../constants/introImageUrl";
+import { slogan } from "../constants/slogan";
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
   urlPath: string;
-  facebookImage: string;
-  twitterImage: string;
+  facebookImage?: string;
+  twitterImage?: string;
 }
 
 export const Head: React.FC<Props> = ({
   title,
-  description,
+  description = slogan,
   urlPath,
-  facebookImage,
-  twitterImage,
+  facebookImage = introImageUrl,
+  twitterImage = introImageUrl,
   children,
 }) => {
   const url = `${process.env.NEXTAUTH_URL}/${urlPath}`;

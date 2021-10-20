@@ -38,7 +38,7 @@ export const theme = extendTheme({
         color: props.colorMode === "dark" ? "white" : "black",
         background: props.colorMode === "dark" ? "black" : "white",
       },
-      ".markdown > *:first-child, .markdown > *:last-child": {
+      ".markdown > *:first-of-type, .markdown > *:last-child": {
         marginBottom: 0,
       },
     }),

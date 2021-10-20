@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Layout } from "../../layouts/Layout";
+import { FullscreenLayout } from "../../layouts/FullscreenLayout";
 import { GetServerSideProps } from "next";
 import { prefetchMe } from "../../lib/utils/prefetchMe";
 import { QueryClient } from "react-query";
@@ -12,6 +12,9 @@ import { useCreatePostMutation } from "../../hooks/mutation/useCreatePostMutatio
 import { PostForm, postSchema } from "../../features/PostForm";
 import invariant from "invariant";
 import { CodeLanguage } from ".prisma/client";
+import { Head } from "../../components/Head";
+import { slogan } from "../../constants/slogan";
+import { introImageUrl } from "../../constants/introImageUrl";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -54,16 +57,19 @@ const CreatePostPage: React.FC = () => {
   );
 
   return (
-    <Layout>
-      <FormProvider {...form}>
-        <PostForm
-          handlePublish={handlePublish}
-          isPublishing={createPostMutation.isLoading}
-          handleSave={handleSave}
-          isSaving={createPostMutation.isLoading}
-        />
-      </FormProvider>
-    </Layout>
+    <>
+      <Head title="Create tiny library" urlPath="/create" />
+      <FullscreenLayout>
+        <FormProvider {...form}>
+          <PostForm
+            handlePublish={handlePublish}
+            isPublishing={createPostMutation.isLoading}
+            handleSave={handleSave}
+            isSaving={createPostMutation.isLoading}
+          />
+        </FormProvider>
+      </FullscreenLayout>
+    </>
   );
 };
 

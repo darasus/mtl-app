@@ -90,13 +90,7 @@ const UserPage: React.FC = () => {
 
   return (
     <>
-      <Head
-        title={user.data?.name!}
-        description={slogan}
-        urlPath={`u/${user.data?.id}`}
-        facebookImage=""
-        twitterImage=""
-      />
+      <Head title={user.data?.name!} urlPath={`u/${user.data?.id}`} />
       <Layout>
         <Grid templateColumns="repeat(12, 1fr)" gap={4}>
           <GridItem colSpan={[12, 12, 3, 3]}>

@@ -11,9 +11,6 @@ import { prefetchMe } from "../lib/utils/prefetchMe";
 import { Head } from "../components/Head";
 import { createIsFirstServerCall } from "../utils/createIsFirstServerCall";
 import { Intro } from "../components/Intro";
-import { slogan } from "../constants/slogan";
-
-const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${process.env.NEXTAUTH_URL}/home-preview-image`;
 
 const Index: React.FC = () => {
   const feed = useFeedQuery();
@@ -21,13 +18,7 @@ const Index: React.FC = () => {
 
   return (
     <>
-      <Head
-        title="Home"
-        description={slogan}
-        urlPath=""
-        facebookImage={imageUrl}
-        twitterImage={imageUrl}
-      />
+      <Head title="Home" urlPath="" />
       <Layout>
         <main>
           {!me.data && (
