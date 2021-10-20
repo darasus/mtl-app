@@ -13,8 +13,6 @@ import { PostForm, postSchema } from "../../features/PostForm";
 import invariant from "invariant";
 import { CodeLanguage } from ".prisma/client";
 import { Head } from "../../components/Head";
-import { slogan } from "../../constants/slogan";
-import { introImageUrl } from "../../constants/introImageUrl";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();

@@ -17,6 +17,7 @@ import { useColors } from "../hooks/useColors";
 import { CodeEditor } from "../components/CodeEditor";
 import { useTagsQuery } from "../hooks/query/useTagsQuery";
 import { GridItem, Grid } from "@chakra-ui/layout";
+import { AutoComplete } from "../components/Autocomplete";
 
 interface Props {
   handlePublish?: React.FormEventHandler;
@@ -184,21 +185,35 @@ export const PostForm: React.FC<Props> = ({
               </Select>
             </FormItem>
             <FormItem title="Tag" errorMessage={errors.tagId?.message}>
-              <Select
-                {...register("tagId")}
-                isInvalid={!!errors.tagId?.message}
-              >
-                <option key={0} value={0}>
-                  -
-                </option>
-                {tags.data?.map((tag) => {
-                  return (
-                    <option key={tag.id} value={tag.id}>
-                      {tag.name}
-                    </option>
+              <Controller
+                name="tagId"
+                control={control}
+                render={({ field: { onChange, value } }) => {
+                  const items =
+                    tags.data?.map((item) => ({
+                      value: item.id,
+                      label: item.name!,
+                    })) || [];
+                  const selectedItems = items.filter(
+                    (item) => item.value === value
                   );
-                })}
-              </Select>
+
+                  return (
+                    <AutoComplete
+                      selectedItems={selectedItems}
+                      items={items}
+                      placeholder="E.g. React..."
+                      disableCreateItem={true}
+                      onStateChange={(item) => {
+                        onChange(
+                          item?.selectedItems?.[item?.selectedItems.length - 1]
+                            ?.value || null
+                        );
+                      }}
+                    />
+                  );
+                }}
+              />
             </FormItem>
 
             {!isSmall && actions}

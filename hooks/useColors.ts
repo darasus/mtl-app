@@ -8,22 +8,27 @@ export const useColors = () => {
 
   const borderColor = React.useMemo(
     () => (isDark ? "gray.900" : "gray.200"),
-    [colorMode]
+    [isDark]
   );
 
   const darkerBgColor = React.useMemo(
     () => (isDark ? gray1000 : gray50),
-    [colorMode]
+    [isDark, gray1000, gray50]
   );
 
   const secondaryTextColor = React.useMemo(
     () => (isDark ? "gray.500" : "gray.600"),
-    [colorMode]
+    [isDark]
   );
 
   const secondaryButtonTextColor = React.useMemo(
     () => (isDark ? "gray.600" : "gray.600"),
-    [colorMode]
+    [isDark]
+  );
+
+  const backgroundColor = React.useMemo(
+    () => (isDark ? "black" : "white"),
+    [isDark]
   );
 
   return {
@@ -31,5 +36,6 @@ export const useColors = () => {
     darkerBgColor,
     secondaryTextColor,
     secondaryButtonTextColor,
+    backgroundColor,
   };
 };
