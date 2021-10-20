@@ -69,7 +69,7 @@ export const MobileHeader: React.FC<Props> = ({ post }) => {
                 <TagIcon width="15" height="15" />
               </Box>
               <Box>
-                <Text fontSize="sm">{`${post.tags
+                <Text fontSize="sm" whiteSpace="nowrap">{`${post.tags
                   .map((tag) => tag.tag.name)
                   .join(",")}`}</Text>
               </Box>
