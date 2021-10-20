@@ -8,18 +8,22 @@ import { prefetchMe } from "../../lib/utils/prefetchMe";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
-import { usePostCreateMutation } from "../../hooks/mutation/usePostCreateMutation";
+import { useCreatePostMutation } from "../../hooks/mutation/useCreatePostMutation";
 import { PostForm, postSchema } from "../../features/PostForm";
 import invariant from "invariant";
+import { CodeLanguage } from ".prisma/client";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
-  const createPostMutation = usePostCreateMutation();
+  const createPostMutation = useCreatePostMutation();
   const form = useForm<PostForm>({
+    defaultValues: {
+      codeLanguage: CodeLanguage.JAVASCRIPT,
+    },
     resolver: yupResolver(postSchema),
   });
 
-  const submit = form.handleSubmit(
+  const handlePublish = form.handleSubmit(
     async ({ tagId, codeLanguage, content, description, title }) => {
       invariant(typeof tagId === "number", "tagId is required");
       const post = await createPostMutation.mutateAsync({
@@ -28,6 +32,22 @@ const CreatePostPage: React.FC = () => {
         content,
         description,
         title,
+        isPublished: true,
+      });
+      await router.push(`/p/${post.id}`);
+    }
+  );
+
+  const handleSave = form.handleSubmit(
+    async ({ tagId, codeLanguage, content, description, title }) => {
+      invariant(typeof tagId === "number", "tagId is required");
+      const post = await createPostMutation.mutateAsync({
+        tagId,
+        codeLanguage,
+        content,
+        description,
+        title,
+        isPublished: false,
       });
       await router.push(`/p/${post.id}`);
     }
@@ -36,7 +56,12 @@ const CreatePostPage: React.FC = () => {
   return (
     <Layout>
       <FormProvider {...form}>
-        <PostForm submit={submit} isSubmitting={createPostMutation.isLoading} />
+        <PostForm
+          handlePublish={handlePublish}
+          isPublishing={createPostMutation.isLoading}
+          handleSave={handleSave}
+          isSaving={createPostMutation.isLoading}
+        />
       </FormProvider>
     </Layout>
   );

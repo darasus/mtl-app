@@ -17,9 +17,9 @@ import {
 import { useRouter } from "next/router";
 import { Post } from "../../types/Post";
 import { usePostDelete } from "../../hooks/usePostDelete";
-import { usePostUnpublish } from "../../hooks/usePostUnpublish";
-import { usePostPublish } from "../../hooks/usePostPublish";
 import { useColors } from "../../hooks/useColors";
+import { usePostUnpublishMutation } from "../../hooks/mutation/usePostUnpublishMutation";
+import { usePostPublishMutation } from "../../hooks/mutation/usePostPublishMutation";
 
 interface Props {
   isMyPost: boolean;
@@ -30,10 +30,8 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
   const { secondaryButtonTextColor } = useColors();
   const router = useRouter();
   const { deletePost, isLoading: isDeleting } = usePostDelete(post.id);
-  const { unpublishPost, isLoading: isUnpublishing } = usePostUnpublish(
-    post.id
-  );
-  const { publishPost, isLoading: isPublishing } = usePostPublish(post.id);
+  const unpublishMutation = usePostUnpublishMutation(post.id);
+  const publishMutation = usePostPublishMutation(post.id);
 
   const handleEditClick = React.useCallback(() => {
     router.push(`/p/${post.id}/edit`);
@@ -42,13 +40,13 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
   const handleDeletePost = React.useCallback(() => deletePost(), [deletePost]);
 
   const handleUnpublishPost = React.useCallback(
-    () => unpublishPost(),
-    [unpublishPost]
+    () => unpublishMutation.mutate(),
+    [unpublishMutation]
   );
 
   const handlepublishPost = React.useCallback(
-    () => publishPost(),
-    [publishPost]
+    () => publishMutation.mutate(),
+    [publishMutation]
   );
 
   const commonProps = {
@@ -85,7 +83,7 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
         {post.published ? (
           <MenuItem
             onClick={handleUnpublishPost}
-            disabled={isUnpublishing}
+            disabled={unpublishMutation.isLoading}
             icon={<CloudDownloadIcon width="15" height="15" />}
           >
             Unpublish
@@ -93,7 +91,7 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
         ) : (
           <MenuItem
             onClick={handlepublishPost}
-            disabled={isPublishing}
+            disabled={publishMutation.isLoading}
             icon={<CloudUploadIcon width="15" height="15" />}
           >
             Publish

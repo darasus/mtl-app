@@ -1,4 +1,5 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+import { cssVar } from "@chakra-ui/styled-system";
 
 const config: ThemeConfig = {
   useSystemColorMode: true,
@@ -74,6 +75,18 @@ export const theme = extendTheme({
     Textarea: {
       defaultProps: {
         focusBorderColor: token.color.brand + "50",
+      },
+    },
+    Tooltip: {
+      baseStyle: (props: any) => {
+        const $bg = cssVar("tooltip-bg");
+        const $arrowBg = cssVar("popper-arrow-bg");
+
+        return {
+          bg: props.colorMode === "dark" ? "white" : "black",
+          [$arrowBg.variable]: props.colorMode === "dark" ? "white" : "black",
+          color: props.colorMode === "dark" ? "black" : "white",
+        };
       },
     },
   },

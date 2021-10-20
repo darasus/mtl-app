@@ -16,6 +16,10 @@ export default async function handle(
   invariant(req.body.content, "content is required.");
   invariant(req.body.codeLanguage, "codeLanguage is required.");
   invariant(typeof req.body.tagId === "number", "tagId is required.");
+  invariant(
+    typeof req.body.isPublished === "boolean",
+    "isPublished is required."
+  );
 
   try {
     const user = await new UserSessionService({ req }).get();
@@ -25,13 +29,7 @@ export default async function handle(
     }
 
     const postService = new PostService();
-    const post = await postService.createPost(user.id, {
-      title: req.body.title,
-      content: req.body.content,
-      description: req.body.description,
-      codeLanguage: req.body.codeLanguage,
-      tagId: req.body.tagId,
-    });
+    const post = await postService.createPost(user.id, req.body);
     res.json(post);
   } catch (error) {
     return res.end(error);

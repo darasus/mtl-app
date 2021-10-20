@@ -18,8 +18,12 @@ import { useTagsQuery } from "../hooks/query/useTagsQuery";
 import { ArrowCircleUpIcon } from "@heroicons/react/outline";
 
 interface Props {
-  submit: React.FormEventHandler;
-  isSubmitting: boolean;
+  handlePublish?: React.FormEventHandler;
+  isPublishing?: boolean;
+  handleSave?: React.FormEventHandler;
+  isSaving?: boolean;
+  handleUpdate?: React.FormEventHandler;
+  isUpdating?: boolean;
 }
 
 export interface PostForm {
@@ -74,7 +78,14 @@ const FormItem: React.FC<{ title: string; errorMessage?: string }> = ({
   );
 };
 
-export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
+export const PostForm: React.FC<Props> = ({
+  handlePublish,
+  isPublishing,
+  handleSave,
+  isSaving,
+  handleUpdate,
+  isUpdating,
+}) => {
   const {
     control,
     register,
@@ -85,7 +96,7 @@ export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
 
   return (
     <Box>
-      <form onSubmit={submit}>
+      <form>
         <Heading mb={10} variant="section-heading">
           Create new javascript library
         </Heading>
@@ -147,20 +158,49 @@ export const PostForm: React.FC<Props> = ({ submit, isSubmitting }) => {
         </FormItem>
 
         <Flex>
-          <Button
-            type="submit"
-            marginRight="size-200"
-            disabled={isSubmitting}
-            variant="outline"
-            isLoading={isSubmitting}
-            loadingText="Publish"
-            mr={2}
-            color="brand"
-            borderColor="brand"
-            leftIcon={<ArrowCircleUpIcon width="20px" height="20px" />}
-          >
-            Publish
-          </Button>
+          {handlePublish && (
+            <Button
+              marginRight="size-200"
+              disabled={isPublishing}
+              variant="outline"
+              isLoading={isPublishing}
+              loadingText="Publish"
+              mr={2}
+              color="brand"
+              borderColor="brand"
+              onClick={handlePublish}
+            >
+              Publish
+            </Button>
+          )}
+          {handleSave && (
+            <Button
+              marginRight="size-200"
+              disabled={isSaving}
+              variant="outline"
+              isLoading={isSaving}
+              loadingText="Publish"
+              mr={2}
+              onClick={handleSave}
+            >
+              Save as draft
+            </Button>
+          )}
+          {handleUpdate && (
+            <Button
+              marginRight="size-200"
+              disabled={isUpdating}
+              variant="outline"
+              isLoading={isUpdating}
+              loadingText="Update"
+              mr={2}
+              color="brand"
+              borderColor="brand"
+              onClick={handleUpdate}
+            >
+              Update
+            </Button>
+          )}
         </Flex>
       </form>
     </Box>
