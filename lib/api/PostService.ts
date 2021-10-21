@@ -215,7 +215,7 @@ export class PostService {
       60 * 60 * 24
     );
 
-    if (!post) return null;
+    if (!post || (!post.published && post.authorId !== userId)) return null;
 
     return preparePost(
       {

@@ -16,10 +16,9 @@ import {
 } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import { Post } from "../../types/Post";
-import { usePostDelete } from "../../hooks/usePostDelete";
-import { useColors } from "../../hooks/useColors";
 import { usePostUnpublishMutation } from "../../hooks/mutation/usePostUnpublishMutation";
 import { usePostPublishMutation } from "../../hooks/mutation/usePostPublishMutation";
+import { usePostDeleteMutation } from "../../hooks/mutation/usePostDeleteMutation";
 
 interface Props {
   isMyPost: boolean;
@@ -27,9 +26,9 @@ interface Props {
 }
 
 export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
-  const { secondaryButtonTextColor } = useColors();
   const router = useRouter();
-  const { deletePost, isLoading: isDeleting } = usePostDelete(post.id);
+  const { mutateAsync: deletePost, isLoading: isDeleting } =
+    usePostDeleteMutation(post.id);
   const unpublishMutation = usePostUnpublishMutation(post.id);
   const publishMutation = usePostPublishMutation(post.id);
 
@@ -37,7 +36,13 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
     router.push(`/p/${post.id}/edit`);
   }, [router, post.id]);
 
-  const handleDeletePost = React.useCallback(() => deletePost(), [deletePost]);
+  const handleDeletePost = React.useCallback(async () => {
+    deletePost().then(() => {
+      if (router.pathname === "/p/[id]") {
+        router.push("/");
+      }
+    });
+  }, [deletePost, router]);
 
   const handleUnpublishPost = React.useCallback(
     () => unpublishMutation.mutate(),

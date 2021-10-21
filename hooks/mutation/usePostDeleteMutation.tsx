@@ -18,8 +18,8 @@ export const usePostDeleteMutation = (id: number) => {
       }),
     {
       async onSettled() {
-        await queryClient.invalidateQueries(createUsePostQueryCacheKey(id));
-        await queryClient.invalidateQueries(createUseFeedQueryCacheKey());
+        await queryClient.removeQueries(createUsePostQueryCacheKey(id));
+        await queryClient.removeQueries(createUseFeedQueryCacheKey());
       },
     }
   );

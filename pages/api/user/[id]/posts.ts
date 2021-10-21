@@ -17,7 +17,6 @@ export default async function handle(
     const me = await new UserSessionService({ req }).get();
     const userService = new UserService();
     const userId = Number(req.query.id);
-    console.log(me?.id === userId);
     const posts = await userService.getUserPosts(userId, me?.id === userId);
     res.json(posts);
   } catch (error) {

@@ -16,7 +16,12 @@ export default async function handle(
     const user = await new UserSessionService({ req }).get();
     const postService = new PostService();
     const post = await postService.fetchPost(Number(req.query.id), user?.id);
-    res.json(post);
+
+    if (!post) {
+      return res.status(404).end();
+    }
+
+    return res.json(post);
   } catch (error) {
     return res.end(error);
   }

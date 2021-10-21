@@ -19,6 +19,7 @@ import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall"
 import { commentsKey } from "../../../hooks/query/useCommentsQuery";
 import { Fetcher } from "../../../lib/Fetcher";
 import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
+import { Post as PostType } from "../../../types/Post";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -77,23 +78,32 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const fetcher = new Fetcher(httpConnector);
 
   const postId = Number(ctx.query.id);
-  const post = await fetcher.getPost(postId);
 
-  await Promise.all([
-    queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
-      fetcher.getMe()
-    ),
-    queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
-      Promise.resolve(post)
-    ),
-    queryClient.prefetchQuery(commentsKey.postComments(post.id), () =>
-      Promise.resolve({
-        items: post.comments,
-        total: post.commentsCount,
-        count: post.comments.length,
-      })
-    ),
-  ]);
+  try {
+    const post = await fetcher.getPost(postId);
+
+    await Promise.all([
+      queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
+        fetcher.getMe()
+      ),
+      queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
+        Promise.resolve(post)
+      ),
+      queryClient.prefetchQuery(commentsKey.postComments(post.id), () =>
+        Promise.resolve({
+          items: post.comments,
+          total: post.commentsCount,
+          count: post.comments.length,
+        })
+      ),
+    ]);
+  } catch (e: any) {
+    if (e?.response?.status === 404) {
+      return {
+        notFound: true,
+      };
+    }
+  }
 
   return {
     props: {
