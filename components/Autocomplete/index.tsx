@@ -7,7 +7,7 @@ import {
 import { matchSorter } from "match-sorter";
 import Highlighter from "react-highlight-words";
 import useDeepCompareEffect from "react-use/lib/useDeepCompareEffect";
-import { Text, Stack, Box, List, ListItem } from "@chakra-ui/layout";
+import { Text, Stack, Box, List, ListItem, HStack } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/button";
 import { Input } from "@chakra-ui/input";
 import { Tag, TagCloseButton, TagLabel } from "@chakra-ui/tag";
@@ -185,14 +185,13 @@ export const AutoComplete = <T extends Item>(
   return (
     <Stack position="relative">
       {selectedItems && (
-        <Stack spacing={2}>
+        <HStack spacing={2}>
           {selectedItems.map((selectedItem, index) => (
             <Tag
-              display="flex"
               key={`selected-item-${index}`}
               {...getSelectedItemProps({ selectedItem, index })}
             >
-              <TagLabel flexGrow={1}>{selectedItem.label}</TagLabel>
+              <TagLabel>{selectedItem.label}</TagLabel>
               <TagCloseButton
                 onClick={(e) => {
                   e.stopPropagation();
@@ -202,7 +201,7 @@ export const AutoComplete = <T extends Item>(
               />
             </Tag>
           ))}
-        </Stack>
+        </HStack>
       )}
 
       <Stack isInline {...getComboboxProps()}>
