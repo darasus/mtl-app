@@ -22,7 +22,7 @@ export default async function handle(
     const user = await new UserSessionService({ req }).get();
 
     if (!user?.id) {
-      return res.status(401);
+      return res.status(401).end();
     }
 
     const postService = new PostService();

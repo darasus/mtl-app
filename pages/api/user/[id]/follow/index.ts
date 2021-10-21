@@ -18,7 +18,7 @@ export default async function handle(
       const user = await new UserSessionService({ req }).get();
 
       if (!user?.id) {
-        return res.status(401);
+        return res.status(401).end();
       }
 
       const followService = new FollowService();
@@ -36,8 +36,10 @@ export default async function handle(
     try {
       const user = await new UserSessionService({ req }).get();
 
+      console.log(user);
+
       if (!user?.id) {
-        return res.status(401);
+        return res.status(401).end();
       }
 
       const followService = new FollowService();
