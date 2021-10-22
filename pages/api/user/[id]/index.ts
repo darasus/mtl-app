@@ -1,9 +1,8 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { UserService } from "../../../../lib/api/UserService";
-import { withSentry } from "@sentry/nextjs";
 
-export default withSentry(async function handle(
+export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -20,4 +19,4 @@ export default withSentry(async function handle(
   } catch (error) {
     return res.end(error);
   }
-});
+}
