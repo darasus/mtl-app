@@ -11,6 +11,7 @@ import { TagService } from "./api/TagService";
 import { LikeService } from "./api/LikeService";
 import { ServerHttpConnector } from "./ServerHttpConnector";
 import { ClientHttpConnector } from "./ClientHttpConnector";
+import { FeedType } from "../types/FeedType";
 
 export class Fetcher {
   httpConnector: ServerHttpConnector | ClientHttpConnector;
@@ -123,11 +124,13 @@ export class Fetcher {
 
   getFeed = ({
     cursor,
+    feedType,
   }: {
     cursor?: number;
-  }): ReturnType<FeedService["fetchFeed"]> =>
+    feedType: FeedType;
+  }): ReturnType<FeedService["fetchLatestFeed"]> =>
     this.httpConnector
-      .request(`/api/feed?${qs.stringify({ cursor })}`)
+      .request(`/api/feed?${qs.stringify({ cursor, feedType })}`)
       .then((res) => res.data);
 
   // post

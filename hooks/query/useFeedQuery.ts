@@ -1,17 +1,24 @@
 import { useInfiniteQuery, useQueryClient } from "react-query";
+import { FeedType } from "../../types/FeedType";
+import { hours } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 import { commentsKey } from "./useCommentsQuery";
 import { createUsePostQueryCacheKey } from "./usePostQuery";
 
-export const createUseFeedQueryCacheKey = () => ["feed"];
+export const createUseFeedQueryCacheKey = ({
+  feedType,
+}: {
+  feedType: FeedType;
+}) => ["feed", { feedType }];
 
-export const useFeedQuery = () => {
+export const useFeedQuery = ({ feedType }: { feedType: FeedType }) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
   return useInfiniteQuery(
-    createUseFeedQueryCacheKey(),
-    ({ pageParam = undefined }) => fetcher.getFeed({ cursor: pageParam }),
+    createUseFeedQueryCacheKey({ feedType }),
+    ({ pageParam = undefined }) =>
+      fetcher.getFeed({ feedType, cursor: pageParam }),
     {
       getNextPageParam: (lastPage, pages) => {
         const localTotal = pages
@@ -22,7 +29,7 @@ export const useFeedQuery = () => {
 
         return lastPage.cursor;
       },
-      staleTime: 1000 * 60 * 60,
+      staleTime: hours(1),
       onSuccess(data) {
         data.pages.forEach((page) => {
           page.items.forEach((post) => {

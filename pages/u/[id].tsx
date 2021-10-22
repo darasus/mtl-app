@@ -7,7 +7,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading,
   Spinner,
   Text,
 } from "@chakra-ui/react";
@@ -35,6 +34,7 @@ import { Head } from "../../components/Head";
 import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 import { Fetcher } from "../../lib/Fetcher";
 import { ServerHttpConnector } from "../../lib/ServerHttpConnector";
+import { Heading } from "../../components/Heading";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
@@ -141,9 +141,7 @@ const UserPage: React.FC = () => {
           </GridItem>
           <GridItem colSpan={[12, 12, 9, 9]}>
             <Box>
-              <Heading mb={10} variant="section-heading">
-                My libraries
-              </Heading>
+              <Heading title="My libraries" />
               {posts.isLoading && (
                 <Flex justifyContent="center">
                   <Spinner />

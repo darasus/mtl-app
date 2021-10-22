@@ -3,7 +3,6 @@ import * as yup from "yup";
 import {
   Textarea,
   Input,
-  Heading,
   Box,
   Button,
   Flex,
@@ -18,6 +17,7 @@ import { CodeEditor } from "../components/CodeEditor";
 import { useTagsQuery } from "../hooks/query/useTagsQuery";
 import { GridItem, Grid } from "@chakra-ui/layout";
 import { AutoComplete } from "../components/Autocomplete";
+import { Heading } from "../components/Heading";
 
 interface Props {
   handlePublish?: React.FormEventHandler;
@@ -148,9 +148,7 @@ export const PostForm: React.FC<Props> = ({
 
   return (
     <>
-      <Heading mb={10} variant="section-heading">
-        Create new javascript library
-      </Heading>
+      <Heading title="Create new javascript library" />
       <Grid templateColumns="repeat(12, 1fr)" gap={4}>
         <GridItem colSpan={[12, 12, 3, 3]}>
           <form>

@@ -49,10 +49,14 @@ export const theme = extendTheme({
       baseStyle: {
         fontFamily: "Bree Serif, serif",
       },
+    },
+    Button: {
       variants: {
-        "section-heading": {
-          borderBottom: `3px solid ${token.color.brand}`,
-          paddingBottom: "0.5rem",
+        cta: {
+          bg: `${token.color.brand}CC`,
+          _hover: {
+            bg: `${token.color.brand}`,
+          },
         },
       },
     },

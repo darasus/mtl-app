@@ -19,7 +19,7 @@ export const usePostDeleteMutation = (id: number) => {
     {
       async onSettled() {
         await queryClient.removeQueries(createUsePostQueryCacheKey(id));
-        await queryClient.removeQueries(createUseFeedQueryCacheKey());
+        await queryClient.removeQueries(["feed"]);
       },
     }
   );

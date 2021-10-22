@@ -35,8 +35,8 @@ model User {
   posts         Post[]
   comments      Comment[]
   likes         Like[]
-  followers     Follow[]  @relation("follower")
-  following     Follow[]  @relation("following")
+  following     Follow[]  @relation("follower")
+  followers     Follow[]  @relation("following")
 
   @@map(name: "users")
 }
