@@ -15,17 +15,17 @@ export class ClientHttpConnector {
     this.request = this.createRequest();
   }
 
-  get(url: string, headers: Headers) {
-    return this.request("GET", { url, headers });
+  get(url: string) {
+    return this.request("GET", { url });
   }
-  post(url: string, headers: Headers, body: Record<string, any>) {
-    return this.request("POST", { url, headers, data: body });
+  post(url: string, body: Record<string, any>) {
+    return this.request("POST", { url, data: body });
   }
-  put(url: string, headers: Headers, body: Record<string, any>) {
-    return this.request("PUT", { url, headers, data: body });
+  put(url: string, body: Record<string, any>) {
+    return this.request("PUT", { url, data: body });
   }
-  delete(url: string, headers: Headers) {
-    return this.request("DELETE", { url, headers });
+  delete(url: string) {
+    return this.request("DELETE", { url });
   }
 
   createRequest = () => {

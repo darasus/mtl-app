@@ -1132,6 +1132,11 @@
   resolved "https://registry.yarnpkg.com/@sqltools/formatter/-/formatter-1.2.3.tgz#1185726610acc37317ddab11c3c7f9066966bd20"
   integrity sha512-O3uyB/JbkAEMZaP3YqyHH7TMnex7tWyCbCI4EfJdOCoN6HIhqdJBWTM6aCCiWQ/5f5wxjgU735QAIpJbjDvmzg==
 
+"@stackblitz/sdk@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@stackblitz/sdk/-/sdk-1.5.2.tgz#8589c4f6dd8df69bc82f67c2677754ef87ab16f3"
+  integrity sha512-rV8HJb7pti8UBROgVUbxc6f1DGxuUpaGCdQvxvHcGecwqqVMB4XAOzeGuk4HkQLmyCrH/9qTbNA6ch4FwQZRDQ==
+
 "@types/hast@^2.0.0":
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/@types/hast/-/hast-2.3.4.tgz#8aa5ef92c117d20d974a82bdfb6a648b08c0bafc"

@@ -1,4 +1,3 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { CodeLanguage } from ".prisma/client";
 import { CommentService } from "./api/CommentService";
 import { Post } from "../types/Post";

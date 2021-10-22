@@ -15,6 +15,7 @@ import { usePostQuery } from "../../hooks/query/usePostQuery";
 import { CodeLanguage } from ".prisma/client";
 import { TweetButton } from "./TweetButton";
 import { CopyButton } from "./CopyButton";
+import { OpenInRemoteCodeEditorButton } from "./OpenInRemoteCodeEditorButton";
 
 interface Props {
   postId: number;
@@ -71,6 +72,8 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <CopyButton content={post.content!} />
                 <Box mr={2} />
                 <ScreenshotButton post={post} />
+                <Box mr={2} />
+                <OpenInRemoteCodeEditorButton post={post} />
                 <Box flexGrow={1} />
                 <ActionMenu isMyPost={isMyPost} post={post} />
               </Flex>
