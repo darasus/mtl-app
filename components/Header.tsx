@@ -46,10 +46,8 @@ export const Header: React.FC = () => {
                 <Link href="/p/create" passHref>
                   <Button
                     size="sm"
-                    variant="outline"
-                    color="brand"
-                    borderColor="brand"
-                    leftIcon={<PlusCircleIcon width="15" height="15" />}
+                    variant="cta"
+                    // leftIcon={<PlusCircleIcon width="15" height="15" />}
                   >
                     Create
                   </Button>

@@ -32,6 +32,7 @@ export const useColors = () => {
   );
 
   return {
+    isDark,
     borderColor,
     darkerBgColor,
     secondaryTextColor,

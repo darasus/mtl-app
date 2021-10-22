@@ -24,16 +24,12 @@ import { ServerHttpConnector } from "../lib/ServerHttpConnector";
 import { Fetcher } from "../lib/Fetcher";
 import { FeedType } from "../types/FeedType";
 import { Heading } from "../components/Heading";
+import { useColors } from "../hooks/useColors";
 
 const Index: React.FC = () => {
   const [feedType, setFeedType] = React.useState(FeedType.Latest);
   const feed = useFeedQuery({ feedType });
   const me = useMeQuery();
-
-  const activeButtonStyles = {
-    bg: "brand",
-    color: "white",
-  };
 
   return (
     <>

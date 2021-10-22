@@ -54,6 +54,7 @@ export const theme = extendTheme({
       variants: {
         cta: {
           bg: `${token.color.brand}CC`,
+          color: "white",
           _hover: {
             bg: `${token.color.brand}`,
           },
