@@ -13,6 +13,7 @@ export const useFollowMutation = () => {
       onSuccess(_, { userId }) {
         qc.invalidateQueries(createUseFollowersCountQueryCacheKey(userId));
         qc.invalidateQueries(createUseDoIFollowUserQueryQueryCache(userId));
+        qc.invalidateQueries(["feed"]);
       },
     }
   );
