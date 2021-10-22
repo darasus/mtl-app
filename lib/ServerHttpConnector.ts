@@ -1,12 +1,21 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { IncomingMessage } from "http";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
+import * as AxiosLogger from "axios-logger";
 
 interface Props {
   req?: IncomingMessage & {
     cookies: NextApiRequestCookies;
   };
 }
+
+const config = {
+  dateFormat: "HH:MM:ss",
+  status: true,
+  headers: true,
+  method: true,
+  url: true,
+};
 
 export class ServerHttpConnector {
   request: AxiosInstance;
@@ -40,16 +49,30 @@ export class ServerHttpConnector {
       ...props?.config,
     });
 
+    client.interceptors.request.use(
+      (req) =>
+        AxiosLogger.requestLogger(req, {
+          ...config,
+          logger: console.info.bind(this),
+        }),
+      (err) =>
+        AxiosLogger.errorLogger(err, {
+          ...config,
+          logger: console.error.bind(this),
+        })
+    );
+
     client.interceptors.response.use(
-      function (response) {
-        return response;
-      },
-      function (error) {
-        if (error?.response?.status === 401) {
-          window.location.href = "/api/auth/signin";
-        }
-        return Promise.reject(error);
-      }
+      (req) =>
+        AxiosLogger.responseLogger(req, {
+          ...config,
+          logger: console.info.bind(this),
+        }),
+      (err) =>
+        AxiosLogger.errorLogger(err, {
+          ...config,
+          logger: console.error.bind(this),
+        })
     );
 
     return client;
