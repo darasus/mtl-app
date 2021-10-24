@@ -7,7 +7,7 @@ export const useMeQuery = () => {
   const fetcher = useFetcher();
 
   return useQuery(createUseMeQueryCacheKey(), fetcher.getMe, {
-    staleTime: 1000 * 60 * 5,
     keepPreviousData: true,
+    refetchOnWindowFocus: false,
   });
 };

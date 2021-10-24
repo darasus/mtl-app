@@ -102,6 +102,11 @@ export default Index;
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
 
+  ctx.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=1, stale-while-revalidate=59"
+  );
+
   if (!createIsFirstServerCall(ctx)) {
     return {
       props: {
