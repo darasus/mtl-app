@@ -4,5 +4,7 @@ module.exports = withPlugins([], {
   images: {
     domains: ["avatars.githubusercontent.com"],
   },
-  webpack5: true,
+  experimental: {
+    esmExternals: false,
+  },
 });
