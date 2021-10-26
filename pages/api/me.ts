@@ -13,7 +13,6 @@ export default async function handle(
 
   try {
     const user = await new UserSessionService({ req }).get();
-    res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate=59");
     res.send(user);
   } catch (error) {
     return res.end(error);
