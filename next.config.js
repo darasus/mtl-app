@@ -6,5 +6,6 @@ module.exports = withPlugins([], {
   },
   experimental: {
     esmExternals: false,
+    concurrentFeatures: true,
   },
 });
