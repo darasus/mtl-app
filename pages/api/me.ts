@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { UserSessionService } from "../../lib/api/UserSessionService";
+import { getToken } from "next-auth/jwt";
 
 export default async function handle(
   req: NextApiRequest,

@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getCsrfToken } from "next-auth/client";
+import { getToken } from "next-auth/jwt";
 import { createUseMeQueryCacheKey } from "../../../../hooks/query/useMeQuery";
 import cache from "../../../../lib/cache";
 
@@ -14,15 +15,20 @@ export default async function handle(
   );
   invariant(typeof req.query.id === "string", "User ID is not provided");
 
-  const csrfToken = await getCsrfToken({ req });
+  const token = await getToken({
+    req,
+    secret: process.env.SECRET,
+  });
 
   try {
-    if (csrfToken) {
+    if (token && token.email) {
+      const { name, email } = token;
       await cache.del(
-        JSON.stringify([...createUseMeQueryCacheKey(), csrfToken])
+        JSON.stringify([...createUseMeQueryCacheKey(), { name, email }])
       );
+      return res.json({ success: true });
     }
-    res.json({ success: true });
+    return res.json({ success: false });
   } catch (error) {
     return res.end(error);
   }

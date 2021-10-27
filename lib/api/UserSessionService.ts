@@ -5,6 +5,7 @@ import prisma from "../prisma";
 import cache from "../cache";
 import { User } from "../../types/User";
 import { userFragment } from "../fragments/userFragment";
+import { getToken } from "next-auth/jwt";
 
 export class UserSessionService {
   req: NextApiRequest | null;
@@ -14,27 +15,25 @@ export class UserSessionService {
   }
 
   async get(): Promise<User | null> {
-    const csrfToken = await getCsrfToken({ req: this.req! });
+    const token = await getToken({
+      req: this.req!,
+      secret: process.env.SECRET,
+    });
 
-    if (!csrfToken) {
+    if (!token || !token.email) {
       return null;
     }
 
+    const { name, email } = token;
+
     const user = await cache.fetch(
-      JSON.stringify([...createUseMeQueryCacheKey(), csrfToken]),
-      async () => {
-        const session = await getSession({ req: this.req! });
-
-        if (!session) return null;
-
-        return prisma.user.findUnique({
-          where: {
-            email: session?.user?.email!,
-          },
+      JSON.stringify([...createUseMeQueryCacheKey(), { name, email }]),
+      async () =>
+        prisma.user.findUnique({
+          where: { email },
           select: userFragment,
-        });
-      },
-      60 * 60 * 24
+        }),
+      60 * 60 * 24 * 7
     );
 
     return user;
