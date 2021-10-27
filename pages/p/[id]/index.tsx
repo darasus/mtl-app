@@ -76,7 +76,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const httpConnector = new ServerHttpConnector(ctx);
   const fetcher = new Fetcher(httpConnector);
-
   const postId = Number(ctx.query.id);
 
   try {
