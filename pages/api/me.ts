@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { UserSessionService } from "../../lib/api/UserSessionService";
+import { getUserSession } from "../../lib/getUserSession";
 
 export default async function handle(
   req: NextApiRequest,
@@ -12,7 +12,7 @@ export default async function handle(
   );
 
   try {
-    const user = await new UserSessionService({ req }).get();
+    const user = await getUserSession({ req });
     res.send(user);
   } catch (error) {
     return res.end(error);

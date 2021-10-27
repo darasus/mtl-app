@@ -21,7 +21,6 @@ export const Comments: React.FC<Props> = ({ postId }) => {
     take,
   });
   const { me, isLoading } = useMe();
-  console.log({ me1: me });
   const { borderColor, secondaryTextColor } = useColors();
   const { mutateAsync: commentPost } = useAddCommentMutation();
   const { control, handleSubmit, reset } = useForm({

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
 import { PostService } from "../../../../lib/api/PostService";
-import { UserSessionService } from "../../../../lib/api/UserSessionService";
+import { getUserSession } from "../../../../lib/getUserSession";
 
 export default async function handle(
   req: NextApiRequest,
@@ -19,7 +19,7 @@ export default async function handle(
   invariant(typeof req.body.tagId === "number", "tagId is required.");
 
   try {
-    const user = await new UserSessionService({ req }).get();
+    const user = await getUserSession({ req });
 
     if (!user?.id) {
       return res.status(401).end();

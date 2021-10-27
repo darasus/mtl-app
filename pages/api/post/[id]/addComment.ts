@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
 import { CommentService } from "../../../../lib/api/CommentService";
-import { UserSessionService } from "../../../../lib/api/UserSessionService";
+import { getUserSession } from "../../../../lib/getUserSession";
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,7 +13,7 @@ export default async function handle(
   );
 
   try {
-    const user = await new UserSessionService({ req }).get();
+    const user = await getUserSession({ req });
 
     if (!user?.id) {
       return res.status(401).end();

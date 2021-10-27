@@ -1,12 +1,12 @@
-import { Session } from "next-auth";
 import { useSession } from "next-auth/client";
-import { User } from "../types/User";
+import { MeSession } from "../types/MeSession";
 
-type Me = { me: (User & Session) | null; isLoading: boolean };
-
-export const useMe = (): Me => {
+export const useMe = (): {
+  me: MeSession | null;
+  isLoading: boolean;
+} => {
   const [I, isLoading] = useSession();
-  const me = I as (User & Session) | null;
+  const me = I as MeSession | null;
 
   return { me, isLoading };
 };

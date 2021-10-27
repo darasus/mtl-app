@@ -1,4 +1,5 @@
 import { useQuery } from "react-query";
+import { days } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 
 export const createUseDoIFollowUserQueryQueryCache = (userId: number) => [
@@ -13,7 +14,7 @@ export const useDoIFollowUserQuery = (userId: number) => {
     createUseDoIFollowUserQueryQueryCache(userId),
     () => fetcher.doIFollowUser(userId),
     {
-      staleTime: 60 * 60 * 24,
+      staleTime: days(1),
     }
   );
 };

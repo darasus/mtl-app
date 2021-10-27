@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
 import { PostService } from "../../../../lib/api/PostService";
 import { LikeService } from "../../../../lib/api/LikeService";
-import { UserSessionService } from "../../../../lib/api/UserSessionService";
 import cache from "../../../../lib/cache";
 import { createUsePostQueryCacheKey } from "../../../../hooks/query/usePostQuery";
+import { getUserSession } from "../../../../lib/getUserSession";
 
 export default async function handle(
   req: NextApiRequest,
@@ -16,7 +16,7 @@ export default async function handle(
   );
 
   try {
-    const user = await new UserSessionService({ req }).get();
+    const user = await getUserSession({ req });
     if (!user) return null;
     const postService = new PostService();
     const likeService = new LikeService();

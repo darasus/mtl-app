@@ -1,8 +1,10 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/client";
 import { FeedService } from "../../lib/api/FeedService";
-import { UserSessionService } from "../../lib/api/UserSessionService";
+import { getUserSession } from "../../lib/getUserSession";
 import { FeedType } from "../../types/FeedType";
+import { MeSession } from "../../types/MeSession";
 
 export default async function handle(
   req: NextApiRequest,
@@ -20,7 +22,7 @@ export default async function handle(
   const feedType = req.query.feedType as FeedType;
 
   try {
-    const user = await new UserSessionService({ req }).get();
+    const user = await getUserSession({ req });
     const feedService = new FeedService();
 
     if (feedType === FeedType.Following) {

@@ -7,8 +7,6 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
   function UserPreview({ ...props }, ref) {
     const { me, isLoading } = useMe();
 
-    console.log({ me });
-
     if (!me) return null;
 
     return (

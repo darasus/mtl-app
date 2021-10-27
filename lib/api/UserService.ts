@@ -7,6 +7,7 @@ import { commentFragment } from "../fragments/commentFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { tagsFragment } from "../fragments/tagsFragment";
 import { preparePost } from "../utils/preparePost";
+import { RedisCacheKey } from "../RedisCacheKey";
 
 const selectQueryFragment = {
   select: {
@@ -23,8 +24,10 @@ const selectQueryFragment = {
 
 export class UserService {
   async getUserByEmail(email: string) {
+    const redisCacheKey = new RedisCacheKey();
+
     return cache.fetch(
-      `user:${email}`,
+      redisCacheKey.createUserSessionKey(email),
       () =>
         prisma.user.findUnique({
           where: {

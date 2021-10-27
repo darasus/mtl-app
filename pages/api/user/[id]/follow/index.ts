@@ -1,7 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { FollowService } from "../../../../../lib/api/FollowService";
-import { UserSessionService } from "../../../../../lib/api/UserSessionService";
+import { getUserSession } from "../../../../../lib/getUserSession";
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,10 +13,10 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
+  const user = await getUserSession({ req });
+
   if (req.method === "GET") {
     try {
-      const user = await new UserSessionService({ req }).get();
-
       if (!user?.id) {
         return res.status(401).end();
       }
@@ -34,10 +34,6 @@ export default async function handle(
 
   if (req.method === "POST") {
     try {
-      const user = await new UserSessionService({ req }).get();
-
-      console.log(user);
-
       if (!user?.id) {
         return res.status(401).end();
       }
