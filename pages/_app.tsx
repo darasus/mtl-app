@@ -4,6 +4,7 @@ import React from "react";
 import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { Provider } from "next-auth/client";
 import {
   ChakraProvider,
   cookieStorageManager,
@@ -75,7 +76,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
               content="width=device-width, initial-scale=1, maximum-scale=1"
             />
           </Head>
-          <Component {...pageProps} />
+          <Provider session={pageProps.session}>
+            <Component {...pageProps} />
+          </Provider>
         </ChakraProvider>
       </Hydrate>
       <ReactQueryDevtools />

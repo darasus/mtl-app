@@ -1,8 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getCsrfToken } from "next-auth/client";
 import { getToken } from "next-auth/jwt";
-import { createUseMeQueryCacheKey } from "../../../../hooks/query/useMeQuery";
 import cache from "../../../../lib/cache";
 
 export default async function handle(
@@ -22,10 +20,8 @@ export default async function handle(
 
   try {
     if (token && token.email) {
-      const { name, email } = token;
-      await cache.del(
-        JSON.stringify([...createUseMeQueryCacheKey(), { name, email }])
-      );
+      const { email } = token;
+      await cache.del(`user:${email}`);
       return res.json({ success: true });
     }
     return res.json({ success: false });

@@ -22,6 +22,20 @@ const selectQueryFragment = {
 };
 
 export class UserService {
+  async getUserByEmail(email: string) {
+    return cache.fetch(
+      `user:${email}`,
+      () =>
+        prisma.user.findUnique({
+          where: {
+            email,
+          },
+          ...selectQueryFragment,
+        }),
+      60 * 60 * 24
+    );
+  }
+
   async getUserById(userId: number) {
     return cache.fetch(
       JSON.stringify(createUseUserQueryCacheKey(userId)),

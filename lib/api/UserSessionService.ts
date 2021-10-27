@@ -1,6 +1,4 @@
 import { NextApiRequest } from "next";
-import { getCsrfToken, getSession } from "next-auth/client";
-import { createUseMeQueryCacheKey } from "../../hooks/query/useMeQuery";
 import prisma from "../prisma";
 import cache from "../cache";
 import { User } from "../../types/User";
@@ -24,10 +22,10 @@ export class UserSessionService {
       return null;
     }
 
-    const { name, email } = token;
+    const { email } = token;
 
     const user = await cache.fetch(
-      JSON.stringify([...createUseMeQueryCacheKey(), { name, email }]),
+      `user:${email}`,
       async () =>
         prisma.user.findUnique({
           where: { email },

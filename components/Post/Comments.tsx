@@ -4,10 +4,10 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useColors } from "../../hooks/useColors";
 import { useCommentsQuery } from "../../hooks/query/useCommentsQuery";
-import { useMeQuery } from "../../hooks/query/useMeQuery";
 import { DeleteCommentButton } from "./DeleteCommentButton";
 import { useAddCommentMutation } from "../../hooks/mutation/useAddCommentMutation";
 import { usePrevious } from "../../hooks/usePrevious";
+import { useMe } from "../../hooks/useMe";
 
 interface Props {
   postId: number;
@@ -20,7 +20,8 @@ export const Comments: React.FC<Props> = ({ postId }) => {
     postId,
     take,
   });
-  const me = useMeQuery();
+  const { me, isLoading } = useMe();
+  console.log({ me1: me });
   const { borderColor, secondaryTextColor } = useColors();
   const { mutateAsync: commentPost } = useAddCommentMutation();
   const { control, handleSubmit, reset } = useForm({
@@ -99,7 +100,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
                       comment.author.name
                     } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                   </Box>
-                  {me.data?.id === comment.author.id && (
+                  {me?.id === comment.author.id && (
                     <DeleteCommentButton
                       commentId={comment.id}
                       postId={postId}
@@ -114,13 +115,13 @@ export const Comments: React.FC<Props> = ({ postId }) => {
           );
         })}
       </Box>
-      {me.data && (
+      {me && (
         <>
           <Box borderColor={borderColor} borderBottomWidth="thin" />
           <form onSubmit={submit}>
             <Box p={3}>
               <Flex>
-                {me.data?.image && (
+                {me?.image && (
                   <Box
                     width={7}
                     height={7}
@@ -130,7 +131,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
                     mr={2}
                   >
                     <Image
-                      src={me.data?.image}
+                      src={me?.image}
                       width="100"
                       height="100"
                       alt="Avatar"

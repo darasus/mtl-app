@@ -2,15 +2,15 @@ import React from "react";
 import { Post } from "../../../components/Post";
 import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { useRouter } from "next/router";
-import { useMeQuery } from "../../../hooks/query/useMeQuery";
 import { PreviewLayout } from "../../../layouts/PreviewLayout";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Logo } from "../../../components/Logo";
+import { useMe } from "../../../hooks/useMe";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
-  const me = useMeQuery();
+  const { me, isLoading } = useMe();
 
   if (!post.data) return null;
 
@@ -19,7 +19,7 @@ const PostPage: React.FC = () => {
       <main>
         <Post
           postId={post.data.id}
-          isMyPost={post.data.authorId === me.data?.id}
+          isMyPost={post.data.authorId === me?.id}
           showActionMenu={false}
           showMetaInfo={false}
         />

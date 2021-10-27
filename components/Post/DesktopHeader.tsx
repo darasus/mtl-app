@@ -7,7 +7,7 @@ import { PostUserPreview } from "../PostUserPreview";
 import { RouterLink } from "../RouterLinkt";
 import { useColors } from "../../hooks/useColors";
 import { CodeLanguageIcon } from "./CodeLanguageIcon";
-import { useMeQuery } from "../../hooks/query/useMeQuery";
+import { useMe } from "../../hooks/useMe";
 
 interface Props {
   post: PostType;
@@ -21,11 +21,11 @@ export const DesktopHeader: React.FC<Props> = React.memo(
     showMetaInfo = true,
     isPostStatusVisible = false,
   }) {
-    const me = useMeQuery();
+    const { me, isLoading } = useMe();
     const { secondaryTextColor } = useColors();
     const breakpoint = useBreakpoint();
     const isMetaInfoVisible = breakpoint !== "base" && showMetaInfo;
-    const isMyPost = me.data?.id === post?.authorId;
+    const isMyPost = me?.id === post?.authorId;
 
     return (
       <Box p={4}>

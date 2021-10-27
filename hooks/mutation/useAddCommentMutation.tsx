@@ -3,8 +3,8 @@ import { toast } from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import { CommentService } from "../../lib/api/CommentService";
 import { commentsKey } from "../query/useCommentsQuery";
-import { useMeQuery } from "../query/useMeQuery";
 import { useFetcher } from "../useFetcher";
+import { useMe } from "../useMe";
 
 type Page = ReturnType<CommentService["getCommentsByPostId"]>;
 
@@ -16,7 +16,7 @@ type Variables = { postId: number; content: string; take: number };
 
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
-  const me = useMeQuery();
+  const { me, isLoading } = useMe();
   const fetcher = useFetcher();
 
   return useMutation(
@@ -42,8 +42,8 @@ export const useAddCommentMutation = () => {
               items: [
                 ...old.items,
                 {
-                  author: me.data,
-                  authorId: me.data?.id,
+                  author: me,
+                  authorId: me?.id,
                   content,
                   createdAt: new Date().toISOString(),
                   id: Math.random(),

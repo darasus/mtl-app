@@ -1,13 +1,15 @@
 import { Flex, Text, Box } from "@chakra-ui/react";
 import Image from "next/image";
 import React from "react";
-import { useMeQuery } from "../hooks/query/useMeQuery";
+import { useMe } from "../hooks/useMe";
 
 export const UserPreview = React.forwardRef<HTMLDivElement>(
   function UserPreview({ ...props }, ref) {
-    const me = useMeQuery();
+    const { me, isLoading } = useMe();
 
-    if (!me.data) return null;
+    console.log({ me });
+
+    if (!me) return null;
 
     return (
       <div {...props}>
@@ -21,7 +23,7 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
               boxShadow="base"
             >
               <Image
-                src={me.data?.image as string}
+                src={me?.image as string}
                 width="100"
                 height="100"
                 alt="Avatar"
@@ -29,7 +31,7 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
             </Box>
           </Box>
           <Text fontSize="sm" fontWeight="semibold">
-            {me.data.name}
+            {me?.name}
           </Text>
         </Flex>
       </div>

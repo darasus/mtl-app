@@ -19,10 +19,6 @@ import {
 } from "../../hooks/query/useUserQuery";
 import { useRouter } from "next/router";
 import { useUserPostsQuery } from "../../hooks/query/useUserPostsQuery";
-import {
-  createUseMeQueryCacheKey,
-  useMeQuery,
-} from "../../hooks/query/useMeQuery";
 import { useFollowMutation } from "../../hooks/mutation/useFollowMutation";
 import { useFollowersCountQuery } from "../../hooks/query/useFollowersCountQuery";
 import { useUnfollowMutation } from "../../hooks/mutation/useUnfollowMutation";
@@ -35,19 +31,20 @@ import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 import { Fetcher } from "../../lib/Fetcher";
 import { ServerHttpConnector } from "../../lib/ServerHttpConnector";
 import { Heading } from "../../components/Heading";
+import { useMe } from "../../hooks/useMe";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
   const router = useRouter();
   const userId = Number(router.query.id);
   const user = useUserQuery(userId);
-  const me = useMeQuery();
+  const { me, isLoading } = useMe();
   const posts = useUserPostsQuery(userId);
   const followMutation = useFollowMutation();
   const unfollowMutation = useUnfollowMutation();
   const followersCount = useFollowersCountQuery(userId);
   const doIFollowUser = useDoIFollowUserQuery(userId);
-  const isMyPage = me.data?.id === userId;
+  const isMyPage = me?.id === userId;
 
   const handleFollow = () => {
     followMutation.mutateAsync({
@@ -151,7 +148,7 @@ const UserPage: React.FC = () => {
                 <Box key={post.id} mb={6}>
                   <Post
                     postId={post.id}
-                    isMyPost={post.authorId === me.data?.id}
+                    isMyPost={post.authorId === me?.id}
                     isPostStatusVisible
                   />
                 </Box>
@@ -182,9 +179,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const userId = Number(ctx.query.id);
 
   await Promise.all([
-    queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
-      fetcher.getMe()
-    ),
     queryClient.prefetchQuery(createUseUserQueryCacheKey(userId), () =>
       fetcher.getUser(userId)
     ),

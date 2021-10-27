@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import Adapters from "next-auth/adapters";
 import prisma from "../../../lib/prisma";
+import { UserService } from "../../../lib/api/UserService";
 
 const authHandler: NextApiHandler = (req, res) =>
   NextAuth(req, res, {
@@ -22,6 +23,22 @@ const authHandler: NextApiHandler = (req, res) =>
       jwt: true,
       maxAge: 30 * 24 * 60 * 60,
       updateAge: 24 * 60 * 60,
+    },
+    callbacks: {
+      async session(session) {
+        const { user } = session;
+
+        if (user && user.email) {
+          const userService = new UserService();
+          const dbUser = await userService.getUserByEmail(user.email);
+
+          if (dbUser) {
+            return { ...session, ...dbUser };
+          }
+        }
+
+        return session;
+      },
     },
   });
 export default authHandler;

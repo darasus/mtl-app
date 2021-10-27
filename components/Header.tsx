@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { UserPreview } from "./UserPreview";
-import { useMeQuery } from "../hooks/query/useMeQuery";
 import {
   Button,
   Flex,
@@ -22,11 +21,12 @@ import {
 } from "@heroicons/react/outline";
 import { Logo } from "./Logo";
 import { useLogoutMutation } from "../hooks/mutation/useLogoutMutation";
+import { useMe } from "../hooks/useMe";
 
 export const Header: React.FC = () => {
   const router = useRouter();
-  const me = useMeQuery();
-  const logout = useLogoutMutation(me.data?.id!);
+  const { me, isLoading } = useMe();
+  const logout = useLogoutMutation(me?.id!);
   const breakpoint = useBreakpoint();
 
   return (
@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
             </ChakraLink>
           </Link>
         </Flex>
-        {me.data ? (
+        {me ? (
           <>
             {breakpoint !== "base" && (
               <Box mr={4}>
@@ -60,7 +60,7 @@ export const Header: React.FC = () => {
                 <MenuList>
                   <MenuItem
                     icon={<UserIcon width="20" height="20" />}
-                    onClick={() => router.push(`/u/${me.data?.id}`)}
+                    onClick={() => router.push(`/u/${me?.id}`)}
                   >
                     Profile
                   </MenuItem>

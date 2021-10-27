@@ -6,10 +6,6 @@ import {
   usePostQuery,
 } from "../../../hooks/query/usePostQuery";
 import { useRouter } from "next/router";
-import {
-  createUseMeQueryCacheKey,
-  useMeQuery,
-} from "../../../hooks/query/useMeQuery";
 import { Layout } from "../../../layouts/Layout";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
@@ -20,11 +16,12 @@ import { commentsKey } from "../../../hooks/query/useCommentsQuery";
 import { Fetcher } from "../../../lib/Fetcher";
 import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
 import { Post as PostType } from "../../../types/Post";
+import { useMe } from "../../../hooks/useMe";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
-  const me = useMeQuery();
+  const { me, isLoading } = useMe();
   const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${
     process.env.NEXTAUTH_URL
   }/p/${router.query.id}/thumbnail?updateDate=${new Date(
@@ -50,7 +47,7 @@ const PostPage: React.FC = () => {
           {post.data && (
             <Post
               postId={post.data.id}
-              isMyPost={post.data.authorId === me.data?.id}
+              isMyPost={post.data.authorId === me?.id}
               isPostLoading={post.isFetching}
               isPostStatusVisible={true}
             />
@@ -82,9 +79,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const post = await fetcher.getPost(postId);
 
     await Promise.all([
-      queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
-        fetcher.getMe()
-      ),
       queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
         Promise.resolve(post)
       ),

@@ -14,7 +14,6 @@ import { FullscreenLayout } from "../../../layouts/FullscreenLayout";
 import { Head } from "../../../components/Head";
 import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
 import { Fetcher } from "../../../lib/Fetcher";
-import { createUseMeQueryCacheKey } from "../../../hooks/query/useMeQuery";
 
 const EditPostPage: React.FC = () => {
   const router = useRouter();
@@ -71,27 +70,9 @@ const EditPostPage: React.FC = () => {
 export default EditPostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const queryClient = new QueryClient();
-
-  if (!createIsFirstServerCall(ctx)) {
-    return {
-      props: {
-        cookies: ctx.req.headers.cookie ?? "",
-      },
-    };
-  }
-
-  const httpConnector = new ServerHttpConnector(ctx);
-  const fetcher = new Fetcher(httpConnector);
-
-  await queryClient.prefetchQuery(createUseMeQueryCacheKey(), () =>
-    fetcher.getMe()
-  );
-
   return {
     props: {
       cookies: ctx.req.headers.cookie ?? "",
-      dehydratedState: dehydrate(queryClient),
     },
   };
 };
