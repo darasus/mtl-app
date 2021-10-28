@@ -24,6 +24,7 @@
     "babel-plugin-superjson-next": "^0.3.0",
     "change-case": "^4.1.2",
     "clsx": "^1.1.1",
+    "colors": "^1.4.0",
     "copy-to-clipboard": "^3.3.1",
     "downshift": "^6.1.7",
     "fathom-client": "^3.2.0",
