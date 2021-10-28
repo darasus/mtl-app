@@ -8,6 +8,7 @@ import { RouterLink } from "../RouterLinkt";
 import { useColors } from "../../hooks/useColors";
 import { CodeLanguageIcon } from "./CodeLanguageIcon";
 import { useMe } from "../../hooks/useMe";
+import { CodeLanguage } from ".prisma/client";
 
 interface Props {
   post: PostType;
@@ -21,7 +22,7 @@ export const DesktopHeader: React.FC<Props> = React.memo(
     showMetaInfo = true,
     isPostStatusVisible = false,
   }) {
-    const { me, isLoading } = useMe();
+    const { me } = useMe();
     const { secondaryTextColor } = useColors();
     const breakpoint = useBreakpoint();
     const isMetaInfoVisible = breakpoint !== "base" && showMetaInfo;
@@ -31,7 +32,9 @@ export const DesktopHeader: React.FC<Props> = React.memo(
       <Box p={4}>
         <Flex alignItems="center">
           <Flex mr={2}>
-            <CodeLanguageIcon codeLanguage={post.codeLanguage!} />
+            <CodeLanguageIcon
+              codeLanguage={post.codeLanguage as CodeLanguage}
+            />
           </Flex>
           <Flex alignItems="center" pr={2} maxWidth="100%" minWidth="0">
             <Box maxWidth="100%">

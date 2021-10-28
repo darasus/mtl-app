@@ -26,6 +26,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   if (!queryClientRef.current) {
     queryClientRef.current = new QueryClient({
       queryCache: new QueryCache({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (error: any, query) => {
           if (query.state.data !== undefined) {
             toast.error(`Something went wrong: ${error.message}`);

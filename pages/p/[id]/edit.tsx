@@ -1,19 +1,15 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { dehydrate } from "react-query/hydration";
 import { GetServerSideProps } from "next";
-import { QueryClient } from "react-query";
 import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { PostForm, postSchema } from "../../../features/PostForm";
 import invariant from "invariant";
 import { usePostEditMutation } from "../../../hooks/mutation/usePostEditMutation";
 import { FullscreenLayout } from "../../../layouts/FullscreenLayout";
 import { Head } from "../../../components/Head";
-import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
-import { Fetcher } from "../../../lib/Fetcher";
+import { CodeLanguage } from ".prisma/client";
 
 const EditPostPage: React.FC = () => {
   const router = useRouter();
@@ -31,9 +27,9 @@ const EditPostPage: React.FC = () => {
 
     reset({
       title,
-      description: description!,
-      content: content!,
-      codeLanguage: codeLanguage!,
+      description: description as string,
+      content: content as string,
+      codeLanguage: codeLanguage as CodeLanguage,
       tagId: tags?.[0]?.tag?.id || null,
     });
   }, [post.data, reset]);

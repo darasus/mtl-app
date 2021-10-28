@@ -1,8 +1,6 @@
 import React from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
-import { syntaxStylesDark, syntaxStylesLight } from "../constants/codeTheme";
 import { useColorMode } from "@chakra-ui/react";
-import { useColors } from "../hooks/useColors";
 import darkTheme from "prism-react-renderer/themes/vsDark";
 import lightTheme from "prism-react-renderer/themes/vsLight";
 import { CodeLanguage } from ".prisma/client";
@@ -15,16 +13,7 @@ interface Props {
 }
 
 export const Syntax: React.FC<Props> = ({ value, codeLanguage, slice }) => {
-  const { darkerBgColor } = useColors();
   const { colorMode } = useColorMode();
-
-  // const theme = {
-  //   styles: colorMode === "dark" ? syntaxStylesDark : syntaxStylesLight,
-  //   plain: {
-  //     color: "#9CDCFE",
-  //     backgroundColor: darkerBgColor,
-  //   },
-  // };
 
   return (
     <Highlight

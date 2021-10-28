@@ -15,24 +15,23 @@ import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall"
 import { commentsKey } from "../../../hooks/query/useCommentsQuery";
 import { Fetcher } from "../../../lib/Fetcher";
 import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
-import { Post as PostType } from "../../../types/Post";
 import { useMe } from "../../../hooks/useMe";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
-  const { me, isLoading } = useMe();
+  const { me } = useMe();
   const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${
     process.env.NEXTAUTH_URL
   }/p/${router.query.id}/thumbnail?updateDate=${new Date(
-    post.data?.updatedAt!
+    post.data?.updatedAt as Date
   ).getTime()}`;
 
   return (
     <>
       <Head
-        title={post.data?.title!}
-        description={post.data?.description!}
+        title={post.data?.title as string}
+        description={post.data?.description as string}
         urlPath={`p/${post.data?.id}`}
         facebookImage={imageUrl}
         twitterImage={imageUrl}
@@ -90,6 +89,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         })
       ),
     ]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     if (e?.response?.status === 404) {
       return {

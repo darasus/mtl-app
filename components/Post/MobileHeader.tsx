@@ -44,7 +44,7 @@ export const MobileHeader: React.FC<Props> = ({ post }) => {
               </Box>
               <Box>
                 <Text fontSize="sm">
-                  {codeExtensionMap[post.codeLanguage!]}
+                  {codeExtensionMap[post.codeLanguage as CodeLanguage]}
                 </Text>
               </Box>
             </Flex>

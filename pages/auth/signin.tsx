@@ -75,7 +75,7 @@ const SignIn: React.FC<Props> = ({ providers }) => {
 
 export default SignIn;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const providers = await getProviders();
 
   return {

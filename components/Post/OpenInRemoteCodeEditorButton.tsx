@@ -1,3 +1,4 @@
+import { CodeLanguage } from ".prisma/client";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Text } from "@chakra-ui/layout";
 import { useBreakpointValue } from "@chakra-ui/media-query";
@@ -7,10 +8,10 @@ import { Post } from "../../types/Post";
 
 export const OpenInRemoteCodeEditorButton = ({ post }: { post: Post }) => {
   const onClick = useOpenInRemoveCodeEditor({
-    codeLanguage: post.codeLanguage!,
+    codeLanguage: post.codeLanguage as CodeLanguage,
     title: post.title,
-    content: post.content!,
-    description: post.description!,
+    content: post.content as string,
+    description: post.description as string,
     tags: post.tags.map((tag) => tag.tag.name),
   });
 

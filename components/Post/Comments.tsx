@@ -20,7 +20,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
     postId,
     take,
   });
-  const { me, isLoading } = useMe();
+  const { me } = useMe();
   const { borderColor, secondaryTextColor } = useColors();
   const { mutateAsync: commentPost } = useAddCommentMutation();
   const { control, handleSubmit, reset } = useForm({
@@ -71,7 +71,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
             </Button>
           </Flex>
         )}
-        {(comments.data?.items || []).map((comment, i) => {
+        {(comments.data?.items || []).map((comment) => {
           if (!comment.author) return null;
           if (!comment.author.image) return null;
 

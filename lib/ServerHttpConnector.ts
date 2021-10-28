@@ -33,10 +33,10 @@ export class ServerHttpConnector {
   get(url: string) {
     return this.request("GET", { url });
   }
-  post(url: string, body: Record<string, any>) {
+  post(url: string, body: Record<string, unknown>) {
     return this.request("POST", { url, data: body });
   }
-  put(url: string, body: Record<string, any>) {
+  put(url: string, body: Record<string, unknown>) {
     return this.request("PUT", { url, data: body });
   }
   delete(url: string) {

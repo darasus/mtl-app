@@ -40,11 +40,7 @@ const set = async <T>(key: string, fetcher: () => T, expires: number) => {
   return value;
 };
 
-const setBuffer = async <T>(
-  key: string,
-  value: ArrayBuffer,
-  expires: number
-) => {
+const setBuffer = async (key: string, value: ArrayBuffer, expires: number) => {
   const dbT0 = performance.now();
   await redis.set(key, Buffer.from(new Uint8Array(value)), "EX", expires);
   const dbT1 = performance.now();

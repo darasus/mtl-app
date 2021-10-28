@@ -1,14 +1,11 @@
 import React from "react";
 import { Markdown } from "../Markdown";
-import { Flex, Box, Text, Button } from "@chakra-ui/react";
-import useCopyClipboard from "../../hooks/useClipboard";
+import { Flex, Box } from "@chakra-ui/react";
 import { Syntax } from "../Syntax";
 import { LikeButton } from "./LikeButton";
 import { Comments } from "./Comments";
-import { ShareIcon, DocumentDuplicateIcon } from "@heroicons/react/outline";
 import { useColors } from "../../hooks/useColors";
 import { ActionMenu } from "./ActionMenu";
-import { paramCase } from "change-case";
 import { Header } from "./Header";
 import { ScreenshotButton } from "./ScreenshotButton";
 import { usePostQuery } from "../../hooks/query/usePostQuery";
@@ -69,7 +66,7 @@ export const Post: React.FC<Props> = React.memo(function Post({
                 <Box mr={2} />
                 <TweetButton post={post} />
                 <Box mr={2} />
-                <CopyButton content={post.content!} />
+                <CopyButton content={post.content as string} />
                 <Box mr={2} />
                 <ScreenshotButton post={post} />
                 <Box mr={2} />

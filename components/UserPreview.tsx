@@ -5,7 +5,7 @@ import { useMe } from "../hooks/useMe";
 
 export const UserPreview = React.forwardRef<HTMLDivElement>(
   function UserPreview({ ...props }, ref) {
-    const { me, isLoading } = useMe();
+    const { me } = useMe();
 
     if (!me) return null;
 

@@ -1,6 +1,6 @@
 import prisma from "../prisma";
 import { Post } from "../../types/Post";
-import Prisma, { CodeLanguage } from ".prisma/client";
+import { CodeLanguage } from ".prisma/client";
 import { authorFragment } from "../fragments/authorFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
@@ -44,7 +44,7 @@ export class PostService {
         where: {
           postId_tagId: {
             postId,
-            tagId: oldPost?.tags[0].tagId!,
+            tagId: oldPost?.tags?.[0]?.tagId,
           },
         },
       });

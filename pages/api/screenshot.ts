@@ -4,8 +4,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import qs from "query-string";
 import cache from "../../lib/cache";
 import { createUseScreenshotQueryCacheKey } from "../../hooks/query/useScreenshotQuery";
-import { Stream } from "stream";
-import { redis } from "../../lib/redis";
 
 export default async function handle(
   req: NextApiRequest,

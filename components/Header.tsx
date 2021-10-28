@@ -13,20 +13,15 @@ import {
   MenuList,
   useBreakpoint,
 } from "@chakra-ui/react";
-import {
-  PlusSmIcon,
-  UserIcon,
-  PlusCircleIcon,
-  LogoutIcon,
-} from "@heroicons/react/outline";
+import { PlusSmIcon, UserIcon, LogoutIcon } from "@heroicons/react/outline";
 import { Logo } from "./Logo";
 import { useLogoutMutation } from "../hooks/mutation/useLogoutMutation";
 import { useMe } from "../hooks/useMe";
 
 export const Header: React.FC = () => {
   const router = useRouter();
-  const { me, isLoading } = useMe();
-  const logout = useLogoutMutation(me?.id!);
+  const { me } = useMe();
+  const logout = useLogoutMutation(me?.id as number);
   const breakpoint = useBreakpoint();
 
   return (

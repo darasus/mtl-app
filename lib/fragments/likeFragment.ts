@@ -1,5 +1,3 @@
-import { commentFragment } from "./commentFragment";
-
 export const likeFragment = {
   id: true,
   postId: true,

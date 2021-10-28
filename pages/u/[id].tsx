@@ -38,7 +38,7 @@ const UserPage: React.FC = () => {
   const router = useRouter();
   const userId = Number(router.query.id);
   const user = useUserQuery(userId);
-  const { me, isLoading } = useMe();
+  const { me } = useMe();
   const posts = useUserPostsQuery(userId);
   const followMutation = useFollowMutation();
   const unfollowMutation = useUnfollowMutation();
@@ -48,13 +48,13 @@ const UserPage: React.FC = () => {
 
   const handleFollow = () => {
     followMutation.mutateAsync({
-      userId: user.data?.id!,
+      userId: user.data?.id as number,
     });
   };
 
   const handleUnfollow = () => {
     unfollowMutation.mutateAsync({
-      userId: user.data?.id!,
+      userId: user.data?.id as number,
     });
   };
 
@@ -84,7 +84,7 @@ const UserPage: React.FC = () => {
 
   return (
     <>
-      <Head title={user.data?.name!} urlPath={`u/${user.data?.id}`} />
+      <Head title={user.data?.name as string} urlPath={`u/${user.data?.id}`} />
       <Layout>
         <Grid templateColumns="repeat(12, 1fr)" gap={4}>
           <GridItem colSpan={[12, 12, 3, 3]}>

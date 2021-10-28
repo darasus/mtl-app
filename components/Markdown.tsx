@@ -21,9 +21,11 @@ import {
 
 type GetCoreProps = {
   children?: React.ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   "data-sourcepos"?: any;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getCoreProps(props: GetCoreProps): any {
   return props["data-sourcepos"]
     ? { "data-sourcepos": props["data-sourcepos"] }
@@ -70,7 +72,7 @@ const defaults: Record<string, ElementType> = {
     const { children } = props;
     return <Text as="del">{children}</Text>;
   },
-  hr: (props) => {
+  hr: () => {
     return <Divider />;
   },
   a: Link,
@@ -125,7 +127,7 @@ const defaults: Record<string, ElementType> = {
   },
   li: (props) => {
     const { children, checked } = props;
-    let checkbox: any = null;
+    let checkbox: null | JSX.Element = null;
     if (checked !== null && checked !== undefined) {
       checkbox = (
         <Checkbox isChecked={checked} isReadOnly>
@@ -146,6 +148,7 @@ const defaults: Record<string, ElementType> = {
     <Heading
       my={4}
       as={`h${level}`}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       size={sizes[`${level - 1}`]}
       {...getCoreProps({ level, children, ...props })}
@@ -157,6 +160,7 @@ const defaults: Record<string, ElementType> = {
     <Heading
       my={4}
       as={`h${level}`}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       size={sizes[`${level - 1}`]}
       {...getCoreProps({ level, children, ...props })}
@@ -168,6 +172,7 @@ const defaults: Record<string, ElementType> = {
     <Heading
       my={4}
       as={`h${level}`}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       size={sizes[`${level - 1}`]}
       {...getCoreProps({ level, children, ...props })}
@@ -179,6 +184,7 @@ const defaults: Record<string, ElementType> = {
     <Heading
       my={4}
       as={`h${level}`}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       size={sizes[`${level - 1}`]}
       {...getCoreProps({ level, children, ...props })}
@@ -190,6 +196,7 @@ const defaults: Record<string, ElementType> = {
     <Heading
       my={4}
       as={`h${level}`}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       size={sizes[`${level - 1}`]}
       {...getCoreProps({ level, children, ...props })}
@@ -201,6 +208,7 @@ const defaults: Record<string, ElementType> = {
     <Heading
       my={4}
       as={`h${level}`}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       size={sizes[`${level - 1}`]}
       {...getCoreProps({ level, children, ...props })}
@@ -214,6 +222,7 @@ const defaults: Record<string, ElementType> = {
       <Heading
         my={4}
         as={`h${level}`}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         size={sizes[`${level - 1}`]}
         {...getCoreProps(props)}

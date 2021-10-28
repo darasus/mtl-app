@@ -13,6 +13,7 @@ import { Input } from "@chakra-ui/input";
 import { Tag, TagCloseButton, TagLabel } from "@chakra-ui/tag";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import { useColors } from "../../hooks/useColors";
+import { noop } from "react-query/types/core/utils";
 
 export interface Item {
   label: string;
@@ -77,7 +78,6 @@ export const AutoComplete = <T extends Item>(
   const {
     isOpen,
     getToggleButtonProps,
-    getLabelProps,
     getMenuProps,
     getInputProps,
     getComboboxProps,
@@ -126,6 +126,7 @@ export const AutoComplete = <T extends Item>(
           return changes;
       }
     },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     onStateChange: ({ inputValue, type, selectedItem }) => {
       switch (type) {
@@ -148,6 +149,7 @@ export const AutoComplete = <T extends Item>(
               }
             }
 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             selectItem(null);
           }
@@ -161,6 +163,7 @@ export const AutoComplete = <T extends Item>(
   React.useEffect(() => {
     if (inputItems.length === 0 && !disableCreateItem) {
       setIsCreating(true);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       setInputItems([{ label: `${inputValue}`, value: inputValue }]);
       setHighlightedIndex(0);
@@ -209,8 +212,8 @@ export const AutoComplete = <T extends Item>(
           {...getInputProps(
             getDropdownProps({
               placeholder,
-              onClick: isOpen ? () => {} : openMenu,
-              onFocus: isOpen ? () => {} : openMenu,
+              onClick: isOpen ? noop : openMenu,
+              onFocus: isOpen ? noop : openMenu,
               ref: disclosureRef,
             })
           )}

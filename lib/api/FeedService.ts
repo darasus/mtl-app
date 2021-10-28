@@ -1,7 +1,7 @@
 import prisma from "../prisma";
 import { Post } from "../../types/Post";
 import * as R from "ramda";
-import Prisma from ".prisma/client";
+import Prisma, { Like, User } from ".prisma/client";
 import { authorFragment } from "../fragments/authorFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
@@ -24,7 +24,7 @@ export type FetchFeedResponse = {
 export class FeedService {
   preparePost = (post: InputPost, userId: number | undefined): Post => {
     const isLikedByMe = post.likes.some(
-      (like: any) => like.author?.id === userId
+      (like: Like & { author: User | null }) => like.author?.id === userId
     );
 
     return {
