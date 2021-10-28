@@ -4,6 +4,8 @@ module.exports = withPlugins([], {
   images: {
     domains: ["avatars.githubusercontent.com"],
   },
+  reactStrictMode: true,
+  swcMinify: true,
   experimental: {
     esmExternals: false,
     concurrentFeatures: true,
