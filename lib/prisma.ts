@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { createPrismaRedisCache } from "./createPrismaRedisCache";
+import { redis } from "./redis";
 
 // PrismaClient is attached to the `global` object in development to prevent
 // exhausting your database connection limit.
@@ -35,5 +37,12 @@ prisma.$use(async (params, next) => {
 
   return result;
 });
+
+// const cache = {
+//   model: "Post",
+//   cacheTime: 1000 * 60 * 60 * 24 * 30, // 30 days
+// };
+
+// prisma.$use(createPrismaRedisCache(cache, redis));
 
 export default prisma;

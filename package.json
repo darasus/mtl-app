@@ -50,6 +50,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
     "@types/invariant": "^2.2.34",
     "@types/ioredis": "^4.27.7",
     "@types/node": "^14.14.35",

@@ -39,11 +39,18 @@ export default async function handle(
     }
 
     if (feedType === FeedType.Latest) {
+      console.log({
+        userId: user?.id,
+        take: Number(req.query.take) || undefined,
+        cursor: Number(req.query.cursor) || undefined,
+      });
       const feed = await feedService.fetchLatestFeed({
         userId: user?.id,
         take: Number(req.query.take) || undefined,
         cursor: Number(req.query.cursor) || undefined,
       });
+
+      console.log({ feed });
 
       return res.send(feed);
     }

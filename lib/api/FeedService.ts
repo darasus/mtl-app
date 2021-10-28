@@ -148,6 +148,8 @@ export class FeedService {
       },
     });
 
+    console.log({ total });
+
     const posts = await prisma.post.findMany({
       where: {
         published: true,
