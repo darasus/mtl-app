@@ -7,7 +7,7 @@ const fetch = async <T>(key: string, fetcher: () => T, expires: number) => {
 
   if (existing !== null) return existing;
 
-  return set(key, fetcher, expires);
+  return set(key, fetcher, expires / 1000);
 };
 
 const get = async <T>(key: string): Promise<T | null> => {
@@ -43,7 +43,7 @@ const set = async <T>(key: string, fetcher: () => T, expires: number) => {
     `for ${key} took ${t2 - t1} milliseconds.`
   );
   const t3 = performance.now();
-  await redis.set(key, JSON.stringify(value), "EX", expires);
+  await redis.set(key, JSON.stringify(value), "EX", expires / 1000);
   const t4 = performance.now();
   console.log(
     `[Redis][Set]`.yellow,
@@ -54,7 +54,12 @@ const set = async <T>(key: string, fetcher: () => T, expires: number) => {
 
 const setBuffer = async (key: string, value: ArrayBuffer, expires: number) => {
   const t1 = performance.now();
-  await redis.set(key, Buffer.from(new Uint8Array(value)), "EX", expires);
+  await redis.set(
+    key,
+    Buffer.from(new Uint8Array(value)),
+    "EX",
+    expires / 1000
+  );
   const t2 = performance.now();
   console.log(
     `[Redis][Set]`.yellow,

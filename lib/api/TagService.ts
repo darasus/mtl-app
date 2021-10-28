@@ -1,6 +1,7 @@
 import { createUseTagsQueryQueryCacheKey } from "../../hooks/query/useTagsQuery";
 import prisma from "../prisma";
 import cache from "../cache";
+import { days } from "../../utils/duration";
 
 export class TagService {
   async getAllTags() {
@@ -15,7 +16,7 @@ export class TagService {
             updatedAt: true,
           },
         }),
-      60 * 60 * 24
+      days(365)
     );
   }
 }

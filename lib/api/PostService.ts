@@ -8,6 +8,7 @@ import { preparePost } from "../utils/preparePost";
 import cache from "../cache";
 import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import { tagsFragment } from "../fragments/tagsFragment";
+import { days } from "../../utils/duration";
 
 export class PostService {
   async updatePost(
@@ -212,7 +213,7 @@ export class PostService {
             tags: tagsFragment,
           },
         }),
-      60 * 60 * 24
+      days(365)
     );
 
     if (!post || (!post.published && post.authorId !== userId)) return null;

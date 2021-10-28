@@ -1,5 +1,6 @@
 import { createUseDoIFollowUserQueryQueryCache } from "../../hooks/query/useDoIFollowUserQuery";
 import { createUseFollowersCountQueryCacheKey } from "../../hooks/query/useFollowersCountQuery";
+import { days } from "../../utils/duration";
 import cache from "../cache";
 import prisma from "../prisma";
 
@@ -15,7 +16,7 @@ export class FollowService {
         });
         return response;
       },
-      60 * 60 * 24
+      days(365)
     );
 
     return response;
@@ -92,7 +93,7 @@ export class FollowService {
         });
         return response || false;
       },
-      60 * 60 * 24
+      days(365)
     );
 
     return { doIFollow: !!response };

@@ -8,6 +8,7 @@ import { likeFragment } from "../fragments/likeFragment";
 import { tagsFragment } from "../fragments/tagsFragment";
 import { preparePost } from "../utils/preparePost";
 import { RedisCacheKey } from "../RedisCacheKey";
+import { days } from "../../utils/duration";
 
 const selectQueryFragment = {
   select: {
@@ -35,7 +36,7 @@ export class UserService {
           },
           ...selectQueryFragment,
         }),
-      60 * 60 * 24
+      days(365)
     );
   }
 
@@ -49,7 +50,7 @@ export class UserService {
           },
           ...selectQueryFragment,
         }),
-      60 * 60 * 24
+      days(365)
     );
   }
 
