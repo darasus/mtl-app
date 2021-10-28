@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext, NextApiRequest } from "next";
+import { GetServerSidePropsContext } from "next";
 import { ParsedUrlQuery } from "querystring";
 
 export const createIsFirstServerCall = (
