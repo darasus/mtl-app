@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { createPrismaRedisCache } from "./createPrismaRedisCache";
 import { redis } from "./redis";
+import "colors";
 
 // PrismaClient is attached to the `global` object in development to prevent
 // exhausting your database connection limit.
@@ -26,23 +27,45 @@ if (process.env.NODE_ENV === "production") {
 
 prisma.$use(async (params, next) => {
   const before = Date.now();
-
   const result = await next(params);
-
   const after = Date.now();
 
   console.log(
-    `Query ${params.model}.${params.action} took ${after - before}ms`
+    "[prisma:query]".green,
+    `${params.model}.${params.action} took ${after - before}ms`
   );
 
   return result;
 });
 
-// const cache = {
-//   model: "Post",
-//   cacheTime: 1000 * 60 * 60 * 24 * 30, // 30 days
-// };
+prisma.$use(
+  createPrismaRedisCache(
+    {
+      model: "User",
+      cacheTime: 1000 * 60 * 60 * 24 * 30, // 30 days
+    },
+    redis
+  )
+);
 
-// prisma.$use(createPrismaRedisCache(cache, redis));
+prisma.$use(
+  createPrismaRedisCache(
+    {
+      model: "Tag",
+      cacheTime: 1000 * 60 * 60 * 24 * 30, // 30 days
+    },
+    redis
+  )
+);
+
+prisma.$use(
+  createPrismaRedisCache(
+    {
+      model: "Post",
+      cacheTime: 1000 * 60 * 60 * 24 * 30, // 30 days
+    },
+    redis
+  )
+);
 
 export default prisma;

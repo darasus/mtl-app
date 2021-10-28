@@ -82,8 +82,6 @@ export class PostService {
       },
     });
 
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
-
     return post;
   }
 
@@ -94,8 +92,6 @@ export class PostService {
         published: false,
       },
     });
-
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 
   async publishPost(postId: number) {
@@ -105,8 +101,6 @@ export class PostService {
         published: true,
       },
     });
-
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 
   async createPost(
@@ -192,28 +186,23 @@ export class PostService {
   }
 
   async fetchPost(postId: number, userId?: number): Promise<Post | null> {
-    const post = await cache.fetch(
-      JSON.stringify(createUsePostQueryCacheKey(postId)),
-      () =>
-        prisma.post.findUnique({
-          where: {
-            id: postId,
-          },
-          include: {
-            author: {
-              select: authorFragment,
-            },
-            likes: {
-              select: likeFragment,
-            },
-            comments: {
-              select: commentFragment,
-            },
-            tags: tagsFragment,
-          },
-        }),
-      60 * 60 * 24
-    );
+    const post = await prisma.post.findFirst({
+      where: {
+        id: postId,
+      },
+      include: {
+        author: {
+          select: authorFragment,
+        },
+        likes: {
+          select: likeFragment,
+        },
+        comments: {
+          select: commentFragment,
+        },
+        tags: tagsFragment,
+      },
+    });
 
     if (!post || (!post.published && post.authorId !== userId)) return null;
 
@@ -263,7 +252,5 @@ export class PostService {
     await prisma.post.delete({
       where: { id: postId },
     });
-
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
   }
 }

@@ -1,13 +1,10 @@
-import { createUseUserQueryCacheKey } from "../../hooks/query/useUserQuery";
 import prisma from "../prisma";
-import cache from "../cache";
 import { Post } from "../../types/Post";
 import { authorFragment } from "../fragments/authorFragment";
 import { commentFragment } from "../fragments/commentFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { tagsFragment } from "../fragments/tagsFragment";
 import { preparePost } from "../utils/preparePost";
-import { RedisCacheKey } from "../RedisCacheKey";
 
 const selectQueryFragment = {
   select: {
@@ -24,33 +21,21 @@ const selectQueryFragment = {
 
 export class UserService {
   async getUserByEmail(email: string) {
-    const redisCacheKey = new RedisCacheKey();
-
-    return cache.fetch(
-      redisCacheKey.createUserSessionKey(email),
-      () =>
-        prisma.user.findUnique({
-          where: {
-            email,
-          },
-          ...selectQueryFragment,
-        }),
-      60 * 60 * 24
-    );
+    return prisma.user.findUnique({
+      where: {
+        email,
+      },
+      ...selectQueryFragment,
+    });
   }
 
   async getUserById(userId: number) {
-    return cache.fetch(
-      JSON.stringify(createUseUserQueryCacheKey(userId)),
-      () =>
-        prisma.user.findUnique({
-          where: {
-            id: userId,
-          },
-          ...selectQueryFragment,
-        }),
-      60 * 60 * 24
-    );
+    return prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      ...selectQueryFragment,
+    });
   }
 
   async getUserPosts(userId: number, isMe: boolean): Promise<Post[]> {

@@ -1,6 +1,7 @@
 import Redis from "ioredis";
 import debug from "debug";
 import { Prisma } from ".prisma/client";
+import "colors";
 
 export type PrismaAction =
   | "findUnique"
@@ -39,7 +40,7 @@ export type PrismaAction =
 debug("prisma-redis-middleware");
 
 function log(message: string) {
-  debug.log(`[prisma:redis:middleware][DEBUG] ${message}`);
+  debug.log(`[prisma:redis:middleware]`.yellow, message);
 }
 
 export function createPrismaRedisCache(
@@ -48,7 +49,7 @@ export function createPrismaRedisCache(
 ) {
   return async function prismaCacheMiddleware(
     params: Prisma.MiddlewareParams,
-    next: (params: any) => Promise<any>
+    next: (params: Prisma.MiddlewareParams) => Promise<any>
   ) {
     let result;
 
@@ -68,10 +69,10 @@ export function createPrismaRedisCache(
 
       // We need to create a cache that contains enough information to cache the data correctly
       // The cache key looks like this: User_findUnique_{"where":{"email":"alice@prisma.io"}}
-      const cacheKey = `${params.model}_${params.action}_${args}`;
+      const cacheKey = `${params.model}_${args}`;
 
       // Try to retrieve the data from the cache first
-      result = JSON.parse((await redis.get(cacheKey)) || "");
+      result = JSON.parse((await redis.get(cacheKey)) as string);
 
       if (result) {
         log(
@@ -95,6 +96,18 @@ export function createPrismaRedisCache(
           `Caching action ${params.action} on ${params.model} with key ${cacheKey}.`
         );
       }
+    } else if (
+      params.model === model &&
+      ["delete", "create"].includes(params.action)
+    ) {
+      const args = JSON.stringify(params.args);
+
+      // We need to create a cache that contains enough information to cache the data correctly
+      // The cache key looks like this: User_findUnique_{"where":{"email":"alice@prisma.io"}}
+      const cacheKey = `${params.model}_${args}`;
+
+      // Try to retrieve the data from the cache first
+      await redis.del(cacheKey);
     } else {
       // Any Prisma action not defined above will fall through to here
       log(`${params.action} on ${params.model} is skipped.`);

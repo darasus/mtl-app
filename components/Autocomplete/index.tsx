@@ -13,7 +13,7 @@ import { Input } from "@chakra-ui/input";
 import { Tag, TagCloseButton, TagLabel } from "@chakra-ui/tag";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/outline";
 import { useColors } from "../../hooks/useColors";
-import { noop } from "react-query/types/core/utils";
+import { noop } from "../../utils/noop";
 
 export interface Item {
   label: string;
