@@ -8,6 +8,5 @@ module.exports = withPlugins([], {
   swcMinify: true,
   experimental: {
     esmExternals: false,
-    concurrentFeatures: true,
   },
 });
