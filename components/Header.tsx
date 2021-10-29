@@ -12,6 +12,7 @@ import {
   MenuItem,
   MenuList,
   useBreakpoint,
+  Spinner,
 } from "@chakra-ui/react";
 import { PlusSmIcon, UserIcon, LogoutIcon } from "@heroicons/react/outline";
 import { Logo } from "./Logo";
@@ -20,7 +21,7 @@ import { useMe } from "../hooks/useMe";
 
 export const Header: React.FC = () => {
   const router = useRouter();
-  const { me } = useMe();
+  const { me, isLoading } = useMe();
   const logout = useLogoutMutation(me?.id as number);
   const breakpoint = useBreakpoint();
 
@@ -34,6 +35,7 @@ export const Header: React.FC = () => {
             </ChakraLink>
           </Link>
         </Flex>
+        {isLoading && <Spinner />}
         {me ? (
           <>
             {breakpoint !== "base" && (
