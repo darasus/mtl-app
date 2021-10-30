@@ -1,5 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { ActivityService } from "../../../../../lib/api/ActivityService";
 import { FollowService } from "../../../../../lib/api/FollowService";
 import { getUserSession } from "../../../../../lib/getUserSession";
 
@@ -12,20 +13,22 @@ export default async function handle(
     req.method === "POST" || req.method === "GET",
     `The HTTP ${req.method} method is not supported at this route.`
   );
-
-  const user = await getUserSession({ req });
+  const followService = new FollowService();
+  const activityService = new ActivityService();
 
   if (req.method === "GET") {
     try {
+      const user = await getUserSession({ req });
+
       if (!user?.id) {
-        return res.status(401).end();
+        return res.json({ doIFollow: false });
       }
 
-      const followService = new FollowService();
       const response = await followService.doIFollow({
         followingUserId: Number(req.query.id),
         followerUserId: user.id,
       });
+
       return res.json({ doIFollow: response.doIFollow });
     } catch (error) {
       return res.end(error);
@@ -34,13 +37,25 @@ export default async function handle(
 
   if (req.method === "POST") {
     try {
+      const user = await getUserSession({ req });
+
       if (!user?.id) {
         return res.status(401).end();
       }
 
-      const followService = new FollowService();
-      await followService.followUser(Number(req.query.id), user.id);
-      return res.json({ status: "success" });
+      const response = await followService.followUser({
+        followingUserId: Number(req.query.id),
+        followerUserId: user.id,
+      });
+
+      await activityService.addFollowActivity({
+        ownerId: user.id,
+        authorId: Number(req.query.id),
+        followFollowerId: response.followerId,
+        followFollowingId: response.followingId,
+      });
+
+      return res.json(response);
     } catch (error) {
       return res.end(error);
     }

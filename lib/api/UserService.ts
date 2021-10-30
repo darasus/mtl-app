@@ -9,6 +9,7 @@ import { tagsFragment } from "../fragments/tagsFragment";
 import { preparePost } from "../utils/preparePost";
 import { RedisCacheKey } from "../RedisCacheKey";
 import { days } from "../../utils/duration";
+import { activityFragment } from "../fragments/activityFragment";
 
 const selectQueryFragment = {
   select: {
@@ -89,5 +90,63 @@ export class UserService {
         userId
       )
     );
+  }
+
+  async getUserActivity({
+    userId,
+    cursor,
+    take = 2,
+  }: {
+    userId: number;
+    cursor?: number;
+    take?: number;
+  }) {
+    const activityCount = await prisma.activity.count({
+      where: {
+        ownerId: userId,
+      },
+    });
+
+    const activity = await prisma.activity.findMany({
+      where: {
+        ownerId: userId,
+      },
+      include: {
+        ...activityFragment,
+      },
+      orderBy: [
+        {
+          id: "desc",
+        },
+      ],
+      ...(cursor
+        ? {
+            cursor: {
+              id: cursor,
+            },
+          }
+        : {}),
+      take,
+      skip: cursor ? 1 : 0,
+    });
+
+    if (activity.length === 0) {
+      return {
+        items: [],
+        count: 0,
+        total: 0,
+        cursor: 0,
+      };
+    }
+
+    const lastActivityInResults = activity[activity.length - 1];
+    const newCursor = lastActivityInResults.id;
+
+    return {
+      items: activity,
+      count: activity.length,
+      total: activityCount,
+      cursor: newCursor,
+    };
   }
 }

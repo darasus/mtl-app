@@ -11,6 +11,8 @@ import { LikeService } from "./api/LikeService";
 import { ServerHttpConnector } from "./ServerHttpConnector";
 import { ClientHttpConnector } from "./ClientHttpConnector";
 import { FeedType } from "../types/FeedType";
+import { UserService } from "./api/UserService";
+import { ActivityService } from "./api/ActivityService";
 
 export class Fetcher {
   httpConnector: ServerHttpConnector | ClientHttpConnector;
@@ -207,6 +209,37 @@ export class Fetcher {
 
   // tags
 
-  getAllTags = (): ReturnType<TagService["getAllTags"]> =>
-    this.httpConnector.request(`/api/tags`).then((res) => res.data);
+  getAllTags = (): ReturnType<TagService["getAllTags"]> => {
+    return this.httpConnector.request(`/api/tags`).then((res) => res.data);
+  };
+
+  // activity
+
+  getUserActivity = ({
+    userId,
+    cursor,
+  }: {
+    userId: number;
+    cursor: number;
+  }): ReturnType<UserService["getUserActivity"]> => {
+    return this.httpConnector
+      .request(`/api/user/${userId}/activity?${qs.stringify({ cursor })}`)
+      .then((res) => res.data);
+  };
+
+  markActivityAsRead = (
+    activityId: number
+  ): ReturnType<ActivityService["markActivityAsRead"]> => {
+    return this.httpConnector
+      .request(`/api/activity/${activityId}/markAsRead`, { method: "POST" })
+      .then((res) => res.data);
+  };
+
+  markAllActivityAsRead = (): ReturnType<
+    ActivityService["markAllActivityAsRead"]
+  > => {
+    return this.httpConnector
+      .request(`/api/activity/markAllAsRead`, { method: "POST" })
+      .then((res) => res.data);
+  };
 }

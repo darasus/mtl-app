@@ -2,7 +2,7 @@ import prisma from "../prisma";
 
 export class LikeService {
   async likePost(postId: number, userId: number) {
-    await prisma.like.create({
+    return prisma.like.create({
       data: {
         post: { connect: { id: postId } },
         author: { connect: { id: userId } },

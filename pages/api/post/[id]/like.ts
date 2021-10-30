@@ -5,6 +5,7 @@ import { LikeService } from "../../../../lib/api/LikeService";
 import cache from "../../../../lib/cache";
 import { createUsePostQueryCacheKey } from "../../../../hooks/query/usePostQuery";
 import { getUserSession } from "../../../../lib/getUserSession";
+import { ActivityService } from "../../../../lib/api/ActivityService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -22,6 +23,7 @@ export default async function handle(
 
     const postService = new PostService();
     const likeService = new LikeService();
+    const activityService = new ActivityService();
     const post = await postService.fetchPost(Number(req.query.id), user.id);
 
     if (!post) {
@@ -32,8 +34,14 @@ export default async function handle(
       return res.status(400).json({ message: "Post is already liked by you" });
     }
 
-    await likeService.likePost(Number(req.query.id), user.id);
+    const like = await likeService.likePost(Number(req.query.id), user.id);
     await cache.del(JSON.stringify(createUsePostQueryCacheKey(post.id)));
+    await activityService.addLikeActivity({
+      authorId: user.id,
+      likeId: like.id,
+      ownerId: post.authorId as number,
+      postId: post.id,
+    });
     res.json({ status: "success" });
   } catch (error) {
     return res.end(error);

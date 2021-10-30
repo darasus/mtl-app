@@ -22,10 +22,6 @@ export default async function handle(
   try {
     const user = await getUserSession({ req });
 
-    if (!user) {
-      return res.status(401).end();
-    }
-
     const feedService = new FeedService();
 
     if (feedType === FeedType.Following) {

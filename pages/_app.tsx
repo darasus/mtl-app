@@ -1,4 +1,5 @@
 import { AppProps } from "next/app";
+import { PusherProvider } from "@harelpls/use-pusher";
 import Head from "next/head";
 import React from "react";
 import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
@@ -78,7 +79,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             />
           </Head>
           <Provider session={pageProps.session}>
-            <Component {...pageProps} />
+            <PusherProvider
+              clientKey={process.env.NEXT_PUBLIC_PUSHER_APP_KEY}
+              cluster="eu"
+            >
+              <Component {...pageProps} />
+            </PusherProvider>
           </Provider>
         </ChakraProvider>
       </Hydrate>

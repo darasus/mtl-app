@@ -18,6 +18,7 @@ import { PlusSmIcon, UserIcon, LogoutIcon } from "@heroicons/react/outline";
 import { Logo } from "./Logo";
 import { useLogoutMutation } from "../hooks/mutation/useLogoutMutation";
 import { useMe } from "../hooks/useMe";
+import { ActivityBadge } from "../components/ActivityBadge/ActivityBadge";
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -76,10 +77,13 @@ export const Header: React.FC = () => {
                   </MenuItem>
                 </MenuList>
               </Menu>
+              <Box mr={3} />
+              <ActivityBadge />
             </Flex>
           </>
         ) : (
-          router.pathname !== "/" && (
+          router.pathname !== "/" &&
+          !isLoading && (
             <Flex>
               <Button
                 variant="outline"

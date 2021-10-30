@@ -16,7 +16,7 @@ type Variables = { postId: number; content: string; take: number };
 
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
-  const { me, isLoading } = useMe();
+  const { me } = useMe();
   const fetcher = useFetcher();
 
   return useMutation(

@@ -1,5 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { ActivityService } from "../../../lib/api/ActivityService";
 import { CommentService } from "../../../lib/api/CommentService";
 import { PostService } from "../../../lib/api/PostService";
 import { getUserSession } from "../../../lib/getUserSession";
@@ -12,6 +13,10 @@ export default async function handle(
     req.method === "DELETE",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  const commentId = Number(req.query.id);
+  const commentService = new CommentService();
+  const postService = new PostService();
+  const activityService = new ActivityService();
 
   try {
     const user = await getUserSession({ req });
@@ -19,9 +24,6 @@ export default async function handle(
     if (!user?.id) {
       return res.status(401).end();
     }
-
-    const commentService = new CommentService();
-    const postService = new PostService();
 
     const isMyComment = await commentService.isMyComment({
       commentId: Number(req.query.id),
@@ -36,10 +38,14 @@ export default async function handle(
       });
     }
 
-    const post = await postService.findPostByCommentId(Number(req.query.id));
+    const post = await postService.findPostByCommentId(commentId);
 
     if (!post) return null;
 
+    await activityService.removeCommentActivity({
+      commentId,
+      ownerId: user.id,
+    });
     await commentService.deleteComment(Number(req.query.id), post.id);
     res.json({ status: "success" });
   } catch (error) {

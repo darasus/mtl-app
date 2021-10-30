@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
 import { CommentService } from "../../../../lib/api/CommentService";
 import { getUserSession } from "../../../../lib/getUserSession";
+import { ActivityService } from "../../../../lib/api/ActivityService";
+import { PostService } from "../../../../lib/api/PostService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -11,6 +13,10 @@ export default async function handle(
     req.method === "POST",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  const postId = Number(req.query.id);
+  const postService = new PostService();
+  const activityService = new ActivityService();
+  const commentService = new CommentService();
 
   try {
     const user = await getUserSession({ req });
@@ -19,11 +25,17 @@ export default async function handle(
       return res.status(401).end();
     }
 
-    const postService = new CommentService();
-    await postService.addComment({
+    const comment = await commentService.addComment({
       content: String(req.body.content),
-      postId: Number(req.query.id),
+      postId,
       userId: user.id,
+    });
+    const post = await postService.fetchPost(postId);
+    await activityService.addCommentActivity({
+      postId,
+      authorId: user.id,
+      commentId: comment.id,
+      ownerId: post?.authorId as number,
     });
     res.json({ status: "success" });
   } catch (error) {
