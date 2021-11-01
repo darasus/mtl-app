@@ -1,6 +1,11 @@
 import { Activity } from ".prisma/client";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { MenuItem } from "@chakra-ui/menu";
+import {
+  ChatAltIcon,
+  ThumbUpIcon,
+  UserAddIcon,
+} from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import React from "react";
 import { useMarkActivityAsReadMutation } from "../../hooks/mutation/useMarkActivityAsReadMutation";
@@ -16,15 +21,32 @@ export const Notification = ({ activity }: { activity: Activity & any }) => {
   const composeActivityMessage = React.useCallback(
     (activity: Activity & any) => {
       if (isLikeNotification) {
-        return `${activity.author.name} liked your post ${activity.post.title}`;
+        return (
+          <>
+            <Text as="span">{activity.author.name}</Text>
+            <Text as="span" color="gray.500">{` liked your post `}</Text>
+            <Text as="span">{activity.post.title}</Text>
+          </>
+        );
       }
 
       if (isCommentNotification) {
-        return `${activity.author.name} commented on your post ${activity.post.title}`;
+        return (
+          <>
+            <Text as="span">{activity.author.name}</Text>
+            <Text as="span" color="gray.500">{` commented on your post `}</Text>
+            <Text as="span">{activity.post.title}</Text>
+          </>
+        );
       }
 
       if (isFollowNotification) {
-        return `${activity?.follow?.follower?.name} followed you`;
+        return (
+          <>
+            <Text as="span">{activity?.follow?.follower?.name}</Text>
+            <Text as="span" color="gray.500">{` followed you`}</Text>
+          </>
+        );
       }
 
       return null;
@@ -54,17 +76,28 @@ export const Notification = ({ activity }: { activity: Activity & any }) => {
 
   return (
     <MenuItem onClick={onClick} key={activity.id}>
-      <Flex alignItems="center" width="100%">
+      <Flex alignItems="start" width="100%">
+        <Box mt="5px" mr={1} height="100%">
+          {isLikeNotification && <ThumbUpIcon width="15px" height="15px" />}
+          {isCommentNotification && <ChatAltIcon width="15px" height="15px" />}
+          {isFollowNotification && <UserAddIcon width="15px" height="15px" />}
+        </Box>
         <Box flexGrow={1} maxWidth="100%" overflow="hidden">
           <Text noOfLines={2} size="sm">
             {message}
           </Text>
         </Box>
-        <Box ml={2} minWidth={3}>
+        <Flex alighItems="center" ml={2} minWidth={3}>
           {activity.unread && (
-            <Box width={2} height={2} borderRadius="full" bg="blue.500" />
+            <Box
+              mt="7px"
+              width={2}
+              height={2}
+              borderRadius="full"
+              bg="blue.500"
+            />
           )}
-        </Box>
+        </Flex>
       </Flex>
     </MenuItem>
   );
