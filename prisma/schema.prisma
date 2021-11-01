@@ -21,22 +21,25 @@ model Post {
   tags         TagsOnPosts[]
   createdAt    DateTime      @default(now()) @map(name: "created_at")
   updatedAt    DateTime      @default(now()) @map(name: "updated_at")
+  activity     Activity[]
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String?
-  userName      String?   @unique @default(uuid())
-  email         String    @unique
-  emailVerified DateTime? @map(name: "email_verified")
-  image         String?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  posts         Post[]
-  comments      Comment[]
-  likes         Like[]
-  following     Follow[]  @relation("follower")
-  followers     Follow[]  @relation("following")
+  id               Int        @id @default(autoincrement())
+  name             String?
+  userName         String?    @unique @default(uuid())
+  email            String     @unique
+  emailVerified    DateTime?  @map(name: "email_verified")
+  image            String?
+  createdAt        DateTime   @default(now()) @map(name: "created_at")
+  updatedAt        DateTime   @updatedAt @map(name: "updated_at")
+  posts            Post[]
+  comments         Comment[]
+  likes            Like[]
+  following        Follow[]   @relation("follower")
+  followers        Follow[]   @relation("following")
+  authoredActivity Activity[] @relation("author")
+  ownedActivity    Activity[] @relation("owner")
 
   @@map(name: "users")
 }
@@ -85,33 +88,57 @@ model VerificationRequest {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  post      Post     @relation(fields: [postId], references: [id])
+  id        Int        @id @default(autoincrement())
+  post      Post       @relation(fields: [postId], references: [id])
   postId    Int
   content   String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-  author    User?    @relation(fields: [authorId], references: [id])
+  createdAt DateTime   @default(now()) @map(name: "created_at")
+  updatedAt DateTime   @default(now()) @map(name: "updated_at")
+  author    User?      @relation(fields: [authorId], references: [id])
   authorId  Int?
+  Activity  Activity[]
 }
 
 model Like {
-  id        Int      @id @default(autoincrement())
-  post      Post     @relation(fields: [postId], references: [id])
+  id        Int        @id @default(autoincrement())
+  post      Post       @relation(fields: [postId], references: [id])
   postId    Int
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-  author    User?    @relation(fields: [authorId], references: [id])
+  createdAt DateTime   @default(now()) @map(name: "created_at")
+  updatedAt DateTime   @default(now()) @map(name: "updated_at")
+  author    User?      @relation(fields: [authorId], references: [id])
   authorId  Int?
+  activity  Activity[]
 }
 
 model Follow {
-  follower    User @relation("follower", fields: [followerId], references: [id])
+  follower    User       @relation("follower", fields: [followerId], references: [id])
   followerId  Int
-  following   User @relation("following", fields: [followingId], references: [id])
+  following   User       @relation("following", fields: [followingId], references: [id])
   followingId Int
+  activity    Activity[]
 
   @@id([followerId, followingId])
+}
+
+model Activity {
+  id                Int      @id @default(autoincrement())
+  unread            Boolean  @default(true)
+  post              Post?    @relation(fields: [postId], references: [id])
+  postId            Int?
+  like              Like?    @relation(fields: [likeId], references: [id])
+  likeId            Int?
+  follow            Follow?  @relation(fields: [followFollowerId, followFollowingId], references: [followerId, followingId])
+  followId          Int?
+  comment           Comment? @relation(fields: [commentId], references: [id])
+  commentId         Int?
+  createdAt         DateTime @default(now()) @map(name: "created_at")
+  updatedAt         DateTime @default(now()) @map(name: "updated_at")
+  author            User     @relation(name: "author", fields: [authorId], references: [id])
+  authorId          Int
+  owner             User     @relation(name: "owner", fields: [ownerId], references: [id])
+  ownerId           Int
+  followFollowerId  Int?
+  followFollowingId Int?
 }
 
 model Tag {

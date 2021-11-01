@@ -5,6 +5,7 @@ import { LikeService } from "../../../../lib/api/LikeService";
 import cache from "../../../../lib/cache";
 import { createUsePostQueryCacheKey } from "../../../../hooks/query/usePostQuery";
 import { getUserSession } from "../../../../lib/getUserSession";
+import { ActivityService } from "../../../../lib/api/ActivityService";
 
 export default async function handle(
   req: NextApiRequest,
@@ -15,12 +16,15 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
+  const postId = Number(req.query.id);
+
   try {
     const user = await getUserSession({ req });
     if (!user) return null;
     const postService = new PostService();
     const likeService = new LikeService();
-    const post = await postService.fetchPost(Number(req.query.id), user.id);
+    const activityService = new ActivityService();
+    const post = await postService.fetchPost(postId, user.id);
 
     if (!post) {
       return res.json({ status: "failure" });
@@ -30,7 +34,12 @@ export default async function handle(
       return res.status(400).json({ message: "Post is not liked by you yet" });
     }
 
-    await likeService.unlikePost(Number(req.query.id), user.id);
+    await activityService.removeLikeActivity({
+      postId,
+      authorId: user.id,
+      ownerId: post?.authorId as number,
+    });
+    await likeService.unlikePost(postId, user.id);
     await cache.del(JSON.stringify(createUsePostQueryCacheKey(post.id)));
     res.json({ status: "success" });
   } catch (error) {

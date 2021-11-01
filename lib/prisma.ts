@@ -23,17 +23,17 @@ if (process.env.NODE_ENV === "production") {
   prisma = (global as any).prisma;
 }
 
-prisma.$use(async (params, next) => {
-  const before = Date.now();
-  const result = await next(params);
-  const after = Date.now();
+// prisma.$use(async (params, next) => {
+//   const before = Date.now();
+//   const result = await next(params);
+//   const after = Date.now();
 
-  console.log(
-    `[Prisma][Query]`.green,
-    `${params.model}.${params.action} took ${after - before}ms`
-  );
+//   console.log(
+//     `[Prisma][Query]`.green,
+//     `${params.model}.${params.action} took ${after - before}ms`
+//   );
 
-  return result;
-});
+//   return result;
+// });
 
 export default prisma;

@@ -43,6 +43,15 @@ export class FeedService {
     take?: number;
     cursor?: number;
   }): Promise<FetchFeedResponse> {
+    if (!userId) {
+      return {
+        items: [],
+        count: 0,
+        total: 0,
+        cursor: 0,
+      };
+    }
+
     const me = await prisma.user.findMany({
       where: {
         id: userId,

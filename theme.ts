@@ -59,6 +59,13 @@ export const theme = extendTheme({
             bg: `${token.color.brand}`,
           },
         },
+        red: {
+          bg: "red.500",
+          color: "white",
+          // _hover: {
+          //   bg: `${token.color.brand}`,
+          // },
+        },
       },
     },
     Menu: {

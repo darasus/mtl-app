@@ -22,8 +22,14 @@ export class FollowService {
     return response;
   }
 
-  async followUser(followingUserId: number, followerUserId: number) {
-    await prisma.follow.create({
+  async followUser({
+    followingUserId,
+    followerUserId,
+  }: {
+    followingUserId: number;
+    followerUserId: number;
+  }) {
+    const response = await prisma.follow.create({
       data: {
         follower: {
           connect: {
@@ -44,12 +50,21 @@ export class FollowService {
         ...createUseDoIFollowUserQueryQueryCache(followerUserId),
       ])
     );
+
     await cache.del(
       JSON.stringify(createUseFollowersCountQueryCacheKey(followingUserId))
     );
+
+    return response;
   }
 
-  async unfollowUser(followingUserId: number, followerUserId: number) {
+  async unfollowUser({
+    followingUserId,
+    followerUserId,
+  }: {
+    followingUserId: number;
+    followerUserId: number;
+  }) {
     await prisma.follow.delete({
       where: {
         followerId_followingId: {

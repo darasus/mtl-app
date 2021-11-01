@@ -78,14 +78,18 @@ export class CommentService {
     postId: number;
     userId: number;
   }) {
-    await prisma.comment.create({
-      data: {
-        content,
-        post: { connect: { id: postId } },
-        author: { connect: { id: userId } },
-      },
-    });
+    return prisma.comment
+      .create({
+        data: {
+          content,
+          post: { connect: { id: postId } },
+          author: { connect: { id: userId } },
+        },
+      })
+      .then(async (res) => {
+        await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
 
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
+        return res;
+      });
   }
 }

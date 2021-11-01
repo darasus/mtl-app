@@ -114,7 +114,7 @@ const UserPage: React.FC = () => {
                       alt="Avatar"
                     />
                   </Box>
-                  <Text fontWeight="bold" fontSize="2xl" mb={1}>
+                  <Text fontWeight="bold" fontSize="2xl" mb={1} isTruncated>
                     {user.data?.name}
                   </Text>
                   {followButton}
