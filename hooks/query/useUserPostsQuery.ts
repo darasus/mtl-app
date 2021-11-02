@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
+import { minutes } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 
 export const createUseUserPostsQueryCacheKey = (userId: number) => [
@@ -16,7 +17,7 @@ export const useUserPostsQuery = (userId: number) => {
     () => fetcher.getUserPosts(userId),
     {
       enabled: !!userId,
-      staleTime: 1000 * 60 * 5,
+      staleTime: minutes(5),
       onSuccess(data) {
         data.forEach((post) => {
           const postCache = queryClient.getQueryData(

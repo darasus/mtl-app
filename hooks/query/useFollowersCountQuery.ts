@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
+import { days } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 
 export const useFollowersCountQuery = (userId: number) => {
@@ -9,7 +10,7 @@ export const useFollowersCountQuery = (userId: number) => {
     clientCacheKey.createFollowersCountKey(userId),
     () => fetcher.getFollowersCount(userId),
     {
-      staleTime: 60 * 60 * 24,
+      staleTime: days(1),
     }
   );
 };

@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
+import { days } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 
 export const useCommentsQuery = ({
@@ -17,7 +18,7 @@ export const useCommentsQuery = ({
     {
       enabled: !!postId,
       keepPreviousData: true,
-      staleTime: 1000 * 60 * 60,
+      staleTime: days(1),
     }
   );
 };
