@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import qs from "query-string";
 import cache from "../../lib/cache";
 import { createUseScreenshotQueryCacheKey } from "../../hooks/query/useScreenshotQuery";
+import { days } from "../../utils/duration";
 
 export default async function handle(
   req: NextApiRequest,
@@ -36,7 +37,7 @@ export default async function handle(
     responseType: "arraybuffer",
   });
 
-  await cache.setBuffer(cacheKey, response.data, 60 * 60 * 24);
+  await cache.setBuffer(cacheKey, response.data, days(365));
 
   return res.status(200).end(Buffer.from(new Uint8Array(response.data)));
 }
