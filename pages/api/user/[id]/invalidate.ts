@@ -2,7 +2,7 @@ import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 import cache from "../../../../lib/cache";
-import { RedisCacheKey } from "../../../../lib/RedisCacheKey";
+import { redisCacheKey } from "../../../../lib/RedisCacheKey";
 
 export default async function handle(
   req: NextApiRequest,
@@ -13,7 +13,6 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
   invariant(typeof req.query.id === "string", "User ID is not provided");
-  const redisCacheKey = new RedisCacheKey();
 
   const token = await getToken({
     req,

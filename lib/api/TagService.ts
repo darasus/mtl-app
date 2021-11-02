@@ -1,12 +1,12 @@
-import { createUseTagsQueryQueryCacheKey } from "../../hooks/query/useTagsQuery";
 import prisma from "../prisma";
 import cache from "../cache";
 import { days } from "../../utils/duration";
+import { redisCacheKey } from "../RedisCacheKey";
 
 export class TagService {
   async getAllTags() {
     return cache.fetch(
-      JSON.stringify(createUseTagsQueryQueryCacheKey()),
+      redisCacheKey.createTagsKey(),
       () =>
         prisma.tag.findMany({
           select: {

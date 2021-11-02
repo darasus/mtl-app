@@ -3,8 +3,8 @@ import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import qs from "query-string";
 import cache from "../../lib/cache";
-import { createUseScreenshotQueryCacheKey } from "../../hooks/query/useScreenshotQuery";
 import { days } from "../../utils/duration";
+import { redisCacheKey } from "../../lib/RedisCacheKey";
 
 export default async function handle(
   req: NextApiRequest,
@@ -22,9 +22,7 @@ export default async function handle(
     height: Number(req.query.height) || undefined,
   });
 
-  const cacheKey = JSON.stringify(
-    createUseScreenshotQueryCacheKey(req.query.url)
-  );
+  const cacheKey = redisCacheKey.createScreenshotKey(req.query.url);
 
   const cachedResponse = await cache.getBuffer(cacheKey);
 

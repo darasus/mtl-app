@@ -3,9 +3,9 @@ import invariant from "invariant";
 import { PostService } from "../../../../lib/api/PostService";
 import { LikeService } from "../../../../lib/api/LikeService";
 import cache from "../../../../lib/cache";
-import { createUsePostQueryCacheKey } from "../../../../hooks/query/usePostQuery";
 import { getUserSession } from "../../../../lib/getUserSession";
 import { ActivityService } from "../../../../lib/api/ActivityService";
+import { redisCacheKey } from "../../../../lib/RedisCacheKey";
 
 export default async function handle(
   req: NextApiRequest,
@@ -40,7 +40,7 @@ export default async function handle(
       ownerId: post?.authorId as number,
     });
     await likeService.unlikePost(postId, user.id);
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(post.id)));
+    await cache.del(redisCacheKey.createPostKey(postId));
     res.json({ status: "success" });
   } catch (error) {
     return res.end(error);

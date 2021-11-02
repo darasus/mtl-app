@@ -1,7 +1,7 @@
-import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import prisma from "../prisma";
 import cache from "../cache";
 import { commentFragment } from "../fragments/commentFragment";
+import { redisCacheKey } from "../RedisCacheKey";
 
 export class CommentService {
   async isMyComment({
@@ -30,7 +30,7 @@ export class CommentService {
       },
     });
 
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
+    await cache.del(redisCacheKey.createPostKey(postId));
   }
 
   async getCommentsByPostId({
@@ -87,7 +87,7 @@ export class CommentService {
         },
       })
       .then(async (res) => {
-        await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
+        await cache.del(redisCacheKey.createPostKey(postId));
 
         return res;
       });

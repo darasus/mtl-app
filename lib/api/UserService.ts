@@ -1,4 +1,3 @@
-import { createUseUserQueryCacheKey } from "../../hooks/query/useUserQuery";
 import prisma from "../prisma";
 import cache from "../cache";
 import { Post } from "../../types/Post";
@@ -7,7 +6,7 @@ import { commentFragment } from "../fragments/commentFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { tagsFragment } from "../fragments/tagsFragment";
 import { preparePost } from "../utils/preparePost";
-import { RedisCacheKey } from "../RedisCacheKey";
+import { redisCacheKey } from "../RedisCacheKey";
 import { days } from "../../utils/duration";
 import { activityFragment } from "../fragments/activityFragment";
 
@@ -26,10 +25,8 @@ const selectQueryFragment = {
 
 export class UserService {
   async getUserByEmail(email: string) {
-    const redisCacheKey = new RedisCacheKey();
-
     return cache.fetch(
-      redisCacheKey.createUserSessionKey(email),
+      redisCacheKey.createUserByEmailKey(email),
       () =>
         prisma.user.findUnique({
           where: {
@@ -43,7 +40,7 @@ export class UserService {
 
   async getUserById(userId: number) {
     return cache.fetch(
-      JSON.stringify(createUseUserQueryCacheKey(userId)),
+      redisCacheKey.createUserKey(userId),
       () =>
         prisma.user.findUnique({
           where: {

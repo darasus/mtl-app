@@ -6,9 +6,9 @@ import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
 import { preparePost } from "../utils/preparePost";
 import cache from "../cache";
-import { createUsePostQueryCacheKey } from "../../hooks/query/usePostQuery";
 import { tagsFragment } from "../fragments/tagsFragment";
 import { days } from "../../utils/duration";
+import { redisCacheKey } from "../RedisCacheKey";
 
 export class PostService {
   async updatePost(
@@ -83,7 +83,7 @@ export class PostService {
       },
     });
 
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
+    await cache.del(redisCacheKey.createPostKey(postId));
 
     return post;
   }
@@ -96,7 +96,7 @@ export class PostService {
       },
     });
 
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
+    await cache.del(redisCacheKey.createPostKey(postId));
   }
 
   async publishPost(postId: number) {
@@ -107,7 +107,7 @@ export class PostService {
       },
     });
 
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
+    await cache.del(redisCacheKey.createPostKey(postId));
   }
 
   async createPost(
@@ -194,7 +194,7 @@ export class PostService {
 
   async fetchPost(postId: number, userId?: number): Promise<Post | null> {
     const post = await cache.fetch(
-      JSON.stringify(createUsePostQueryCacheKey(postId)),
+      redisCacheKey.createPostKey(postId),
       () =>
         prisma.post.findUnique({
           where: {
@@ -265,6 +265,6 @@ export class PostService {
       where: { id: postId },
     });
 
-    await cache.del(JSON.stringify(createUsePostQueryCacheKey(postId)));
+    await cache.del(redisCacheKey.createPostKey(postId));
   }
 }
