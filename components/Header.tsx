@@ -13,6 +13,7 @@ import {
   MenuList,
   useBreakpoint,
   Spinner,
+  Text,
 } from "@chakra-ui/react";
 import { PlusSmIcon, UserIcon, LogoutIcon } from "@heroicons/react/outline";
 import { Logo } from "./Logo";
@@ -35,6 +36,11 @@ export const Header: React.FC = () => {
               <Logo />
             </ChakraLink>
           </Link>
+          <Box ml={1} mt="2px">
+            <Text color="brand" fontWeight="bold">
+              Beta
+            </Text>
+          </Box>
         </Flex>
         {isLoading && <Spinner />}
         {me ? (
