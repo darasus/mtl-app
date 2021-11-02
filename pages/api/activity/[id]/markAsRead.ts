@@ -2,6 +2,7 @@ import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ActivityService } from "../../../../lib/api/ActivityService";
 import { getUserSession } from "../../../../lib/getUserSession";
+import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -27,6 +28,6 @@ export default async function handle(
     });
     return res.json(activity);
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

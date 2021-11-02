@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { TagService } from "../../../lib/api/TagService";
+import { processErrorResponse } from "../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -16,6 +17,6 @@ export default async function handle(
     const tags = await tagService.getAllTags();
     res.send(tags);
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

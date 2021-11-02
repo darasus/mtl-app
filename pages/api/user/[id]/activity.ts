@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { UserService } from "../../../../lib/api/UserService";
+import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -21,6 +22,6 @@ export default async function handle(
     });
     res.json(response);
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

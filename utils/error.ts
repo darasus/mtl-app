@@ -21,3 +21,9 @@ function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
 export function getErrorMessage(error: unknown) {
   return toErrorWithMessage(error).message;
 }
+
+export function processErrorResponse(error: unknown) {
+  const errorMessage = getErrorMessage(error);
+  console.error(errorMessage);
+  return errorMessage;
+}

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { FeedService } from "../../lib/api/FeedService";
 import { getUserSession } from "../../lib/getUserSession";
 import { FeedType } from "../../types/FeedType";
+import { processErrorResponse } from "../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -44,6 +45,6 @@ export default async function handle(
       return res.send(feed);
     }
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

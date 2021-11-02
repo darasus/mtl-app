@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
 import { CommentService } from "../../../../lib/api/CommentService";
+import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -21,6 +22,6 @@ export default async function handle(
     });
     res.json(comments);
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

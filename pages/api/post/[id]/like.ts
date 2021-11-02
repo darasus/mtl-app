@@ -6,6 +6,7 @@ import cache from "../../../../lib/cache";
 import { getUserSession } from "../../../../lib/getUserSession";
 import { ActivityService } from "../../../../lib/api/ActivityService";
 import { redisCacheKey } from "../../../../lib/RedisCacheKey";
+import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -44,6 +45,6 @@ export default async function handle(
     });
     res.json({ status: "success" });
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 import cache from "../../../../lib/cache";
 import { redisCacheKey } from "../../../../lib/RedisCacheKey";
+import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -27,6 +28,6 @@ export default async function handle(
     }
     return res.json({ success: false });
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

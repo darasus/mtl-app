@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { ActivityService } from "../../../../../lib/api/ActivityService";
 import { FollowService } from "../../../../../lib/api/FollowService";
 import { getUserSession } from "../../../../../lib/getUserSession";
+import { processErrorResponse } from "../../../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -31,7 +32,7 @@ export default async function handle(
 
       return res.json({ doIFollow: response.doIFollow });
     } catch (error) {
-      return res.end(error);
+      return res.end(processErrorResponse(error));
     }
   }
 
@@ -57,7 +58,7 @@ export default async function handle(
 
       return res.json(response);
     } catch (error) {
-      return res.end(error);
+      return res.end(processErrorResponse(error));
     }
   }
 }

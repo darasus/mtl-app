@@ -4,6 +4,7 @@ import { ActivityService } from "../../../lib/api/ActivityService";
 import { CommentService } from "../../../lib/api/CommentService";
 import { PostService } from "../../../lib/api/PostService";
 import { getUserSession } from "../../../lib/getUserSession";
+import { processErrorResponse } from "../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -49,6 +50,6 @@ export default async function handle(
     await commentService.deleteComment(Number(req.query.id), post.id);
     res.json({ status: "success" });
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

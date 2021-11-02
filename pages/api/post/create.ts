@@ -2,6 +2,7 @@ import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostService } from "../../../lib/api/PostService";
 import { getUserSession } from "../../../lib/getUserSession";
+import { processErrorResponse } from "../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -32,6 +33,6 @@ export default async function handle(
     const post = await postService.createPost(user.id, req.body);
     res.json(post);
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }

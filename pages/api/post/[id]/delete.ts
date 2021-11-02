@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostService } from "../../../../lib/api/PostService";
+import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -16,6 +17,6 @@ export default async function handle(
     await postService.deletePost(Number(req.query.id));
     res.json({ status: "success" });
   } catch (error) {
-    return res.end(error);
+    return res.end(processErrorResponse(error));
   }
 }
