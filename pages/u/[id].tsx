@@ -184,7 +184,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   ctx.res.setHeader(
     "Cache-Control",
-    "public, s-maxage=1, stale-while-revalidate=59"
+    "public, s-maxage=10, stale-while-revalidate=604800"
   );
 
   return {
