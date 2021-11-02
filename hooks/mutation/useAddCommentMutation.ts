@@ -1,8 +1,7 @@
-import { Text } from "@chakra-ui/react";
-import { toast } from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { CommentService } from "../../lib/prismaServices/CommentService";
+import { withToast } from "../../utils/withToast";
 import { useFetcher } from "../useFetcher";
 import { useMe } from "../useMe";
 
@@ -14,6 +13,12 @@ type Comments = {
 
 type Variables = { postId: number; content: string; take: number };
 
+const toastConfig = {
+  loading: "Posting comment...",
+  success: "Comment posted!",
+  error: "Comment is not posted.",
+};
+
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
   const { me } = useMe();
@@ -21,11 +26,7 @@ export const useAddCommentMutation = () => {
 
   return useMutation(
     ({ postId, content }: Variables) =>
-      toast.promise(fetcher.addComment(postId, content), {
-        loading: <Text fontSize="sm">{"Posting comment..."}</Text>,
-        success: <Text fontSize="sm">{"Comment posted!"}</Text>,
-        error: <Text fontSize="sm">{"Comment is not posted."}</Text>,
-      }),
+      withToast(fetcher.addComment(postId, content), toastConfig),
     {
       onMutate: async ({ postId, content }) => {
         await queryClient.cancelQueries(

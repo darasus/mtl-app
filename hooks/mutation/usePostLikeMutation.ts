@@ -1,20 +1,21 @@
-import { Text } from "@chakra-ui/react";
-import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
+import { withToast } from "../../utils/withToast";
 
-export const usePostUnlikeMutation = () => {
+const toastConfig = {
+  loading: "Liking...",
+  success: "Liked!",
+  error: "Did not like.",
+};
+
+export const usePostLikeMutation = () => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
-  return useMutation<unknown, unknown, { postId: number }>(
-    ({ postId }) =>
-      toast.promise(fetcher.unlikePost(postId), {
-        loading: <Text fontSize="sm">{"Unliking..."}</Text>,
-        success: <Text fontSize="sm">{"Unliked!"}</Text>,
-        error: <Text fontSize="sm">{"Did not unlike."}</Text>,
-      }),
+  return useMutation(
+    ({ postId }: { postId: number }) =>
+      withToast(fetcher.likePost(postId), toastConfig),
     {
       onMutate: async ({ postId }) => {
         await queryClient.cancelQueries(clientCacheKey.createPostKey(postId));
@@ -28,8 +29,8 @@ export const usePostUnlikeMutation = () => {
           (old: any) => {
             return {
               ...old,
-              likesCount: old.likesCount - 1,
-              isLikedByMe: false,
+              likesCount: old.likesCount + 1,
+              isLikedByMe: true,
             };
           }
         );

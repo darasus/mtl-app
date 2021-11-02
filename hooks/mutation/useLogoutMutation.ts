@@ -1,6 +1,7 @@
 import { signOut } from "next-auth/client";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
+import { withToast } from "../../utils/withToast";
 import { useFetcher } from "../useFetcher";
 
 export const useLogoutMutation = (userId: number) => {
@@ -9,7 +10,11 @@ export const useLogoutMutation = (userId: number) => {
 
   return useMutation(
     async () => {
-      await fetcher.invalidateUser(userId);
+      await withToast(fetcher.invalidateUser(userId), {
+        success: "Logged out",
+        loading: "Logging out...",
+        error: "Error logging out",
+      });
       return signOut();
     },
     {

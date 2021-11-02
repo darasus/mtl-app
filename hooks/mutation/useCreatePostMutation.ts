@@ -1,8 +1,7 @@
 import { CodeLanguage } from ".prisma/client";
-import { Text } from "@chakra-ui/react";
-import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
+import { withToast } from "../../utils/withToast";
 import { useFetcher } from "../useFetcher";
 
 interface Variables {
@@ -14,17 +13,19 @@ interface Variables {
   isPublished: boolean;
 }
 
+const toastConfig = {
+  loading: "Creating library...",
+  success: "Library created!",
+  error: "Library is not created.",
+};
+
 export const useCreatePostMutation = () => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
   return useMutation(
     (variables: Variables) =>
-      toast.promise(fetcher.createPost(variables), {
-        loading: <Text fontSize="sm">{"Creating library..."}</Text>,
-        success: <Text fontSize="sm">{"Library created!"}</Text>,
-        error: <Text fontSize="sm">{"Library is not created."}</Text>,
-      }),
+      withToast(fetcher.createPost(variables), toastConfig),
     {
       async onSettled() {
         await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);

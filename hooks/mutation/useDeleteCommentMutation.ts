@@ -1,8 +1,13 @@
 import { useMutation, useQueryClient } from "react-query";
-import { toast } from "react-hot-toast";
-import { Text } from "@chakra-ui/layout";
 import { useFetcher } from "../useFetcher";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
+import { withToast } from "../../utils/withToast";
+
+const toastConfig = {
+  loading: "Deleting comment...",
+  success: "Comment deleted!",
+  error: "Comment is not deleted.",
+};
 
 export const useDeleteCommentMutation = () => {
   const queryClient = useQueryClient();
@@ -10,11 +15,7 @@ export const useDeleteCommentMutation = () => {
 
   return useMutation(
     ({ commentId }: { commentId: number; postId: number }) =>
-      toast.promise(fetcher.deleteComment(commentId), {
-        loading: <Text fontSize="sm">{"Deleting comment..."}</Text>,
-        success: <Text fontSize="sm">{"Comment deleted!"}</Text>,
-        error: <Text fontSize="sm">{"Comment is not deleted."}</Text>,
-      }),
+      withToast(fetcher.deleteComment(commentId), toastConfig),
     {
       onMutate: async ({ postId, commentId }) => {
         await queryClient.cancelQueries(
