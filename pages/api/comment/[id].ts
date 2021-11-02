@@ -1,8 +1,8 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ActivityService } from "../../../lib/api/ActivityService";
-import { CommentService } from "../../../lib/api/CommentService";
-import { PostService } from "../../../lib/api/PostService";
+import { ActivityService } from "../../../lib/prismaServices/ActivityService";
+import { CommentService } from "../../../lib/prismaServices/CommentService";
+import { PostService } from "../../../lib/prismaServices/PostService";
 import { getUserSession } from "../../../lib/getUserSession";
 import { processErrorResponse } from "../../../utils/error";
 

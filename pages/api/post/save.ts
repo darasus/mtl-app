@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PostService } from "../../../lib/api/PostService";
+import { PostService } from "../../../lib/prismaServices/PostService";
 import invariant from "invariant";
 import { getUserSession } from "../../../lib/getUserSession";
 import { processErrorResponse } from "../../../utils/error";

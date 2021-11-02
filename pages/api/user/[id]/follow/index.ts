@@ -1,7 +1,7 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ActivityService } from "../../../../../lib/api/ActivityService";
-import { FollowService } from "../../../../../lib/api/FollowService";
+import { ActivityService } from "../../../../../lib/prismaServices/ActivityService";
+import { FollowService } from "../../../../../lib/prismaServices/FollowService";
 import { getUserSession } from "../../../../../lib/getUserSession";
 import { processErrorResponse } from "../../../../../utils/error";
 

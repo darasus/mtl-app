@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
-import { CommentService } from "../../../../lib/api/CommentService";
+import { CommentService } from "../../../../lib/prismaServices/CommentService";
 import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(

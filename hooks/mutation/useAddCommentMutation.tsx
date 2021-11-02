@@ -1,7 +1,7 @@
 import { Text } from "@chakra-ui/react";
 import { toast } from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { CommentService } from "../../lib/api/CommentService";
+import { CommentService } from "../../lib/prismaServices/CommentService";
 import { commentsKey } from "../query/useCommentsQuery";
 import { useFetcher } from "../useFetcher";
 import { useMe } from "../useMe";

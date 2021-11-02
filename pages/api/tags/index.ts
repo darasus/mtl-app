@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { TagService } from "../../../lib/api/TagService";
+import { TagService } from "../../../lib/prismaServices/TagService";
 import { processErrorResponse } from "../../../utils/error";
 
 export default async function handle(

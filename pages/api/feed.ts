@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { FeedService } from "../../lib/api/FeedService";
+import { FeedService } from "../../lib/prismaServices/FeedService";
 import { getUserSession } from "../../lib/getUserSession";
 import { FeedType } from "../../types/FeedType";
 import { processErrorResponse } from "../../utils/error";

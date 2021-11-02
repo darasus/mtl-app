@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ActivityService } from "../../../../lib/api/ActivityService";
+import { ActivityService } from "../../../../lib/prismaServices/ActivityService";
 import { getUserSession } from "../../../../lib/getUserSession";
 import { processErrorResponse } from "../../../../utils/error";
 

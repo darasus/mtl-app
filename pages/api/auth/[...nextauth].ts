@@ -3,7 +3,7 @@ import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import Adapters from "next-auth/adapters";
 import prisma from "../../../lib/prisma";
-import { UserService } from "../../../lib/api/UserService";
+import { UserService } from "../../../lib/prismaServices/UserService";
 
 const authHandler: NextApiHandler = (req, res) =>
   NextAuth(req, res, {

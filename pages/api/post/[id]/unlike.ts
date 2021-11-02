@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
-import { PostService } from "../../../../lib/api/PostService";
-import { LikeService } from "../../../../lib/api/LikeService";
+import { PostService } from "../../../../lib/prismaServices/PostService";
+import { LikeService } from "../../../../lib/prismaServices/LikeService";
 import cache from "../../../../lib/cache";
 import { getUserSession } from "../../../../lib/getUserSession";
-import { ActivityService } from "../../../../lib/api/ActivityService";
+import { ActivityService } from "../../../../lib/prismaServices/ActivityService";
 import { redisCacheKey } from "../../../../lib/RedisCacheKey";
 import { processErrorResponse } from "../../../../utils/error";
 

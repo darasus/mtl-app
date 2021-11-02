@@ -1,18 +1,18 @@
 import { CodeLanguage } from ".prisma/client";
-import { CommentService } from "./api/CommentService";
+import { CommentService } from "./prismaServices/CommentService";
 import { Post } from "../types/Post";
 import { User } from "../types/User";
 import qs from "query-string";
-import { FeedService } from "./api/FeedService";
-import { FollowService } from "./api/FollowService";
-import { PostService } from "./api/PostService";
-import { TagService } from "./api/TagService";
-import { LikeService } from "./api/LikeService";
+import { FeedService } from "./prismaServices/FeedService";
+import { FollowService } from "./prismaServices/FollowService";
+import { PostService } from "./prismaServices/PostService";
+import { TagService } from "./prismaServices/TagService";
+import { LikeService } from "./prismaServices/LikeService";
 import { ServerHttpConnector } from "./ServerHttpConnector";
 import { ClientHttpConnector } from "./ClientHttpConnector";
 import { FeedType } from "../types/FeedType";
-import { UserService } from "./api/UserService";
-import { ActivityService } from "./api/ActivityService";
+import { UserService } from "./prismaServices/UserService";
+import { ActivityService } from "./prismaServices/ActivityService";
 
 export class Fetcher {
   httpConnector: ServerHttpConnector | ClientHttpConnector;

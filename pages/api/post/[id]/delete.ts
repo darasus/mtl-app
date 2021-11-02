@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { PostService } from "../../../../lib/api/PostService";
+import { PostService } from "../../../../lib/prismaServices/PostService";
 import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(

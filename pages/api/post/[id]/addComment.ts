@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
-import { CommentService } from "../../../../lib/api/CommentService";
+import { CommentService } from "../../../../lib/prismaServices/CommentService";
 import { getUserSession } from "../../../../lib/getUserSession";
-import { ActivityService } from "../../../../lib/api/ActivityService";
-import { PostService } from "../../../../lib/api/PostService";
+import { ActivityService } from "../../../../lib/prismaServices/ActivityService";
+import { PostService } from "../../../../lib/prismaServices/PostService";
 import { processErrorResponse } from "../../../../utils/error";
 
 export default async function handle(
