@@ -10,6 +10,7 @@ export class ClientCacheKey {
   screenshotBaseKey = ["post"];
   tagsBaseKey = ["tags"];
   userActivityBaseKey = ["user_activity"];
+  userPostsBaseKey = ["user-posts"];
 
   createUserKey(userId: number) {
     return [...this.userBaseKey, { userId }];
@@ -41,6 +42,10 @@ export class ClientCacheKey {
 
   createUserActivityKey(userId: number) {
     return [...this.userActivityBaseKey, { userId }];
+  }
+
+  createUserPostsKey(userId: number) {
+    return [...this.userPostsBaseKey, { userId }];
   }
 }
 

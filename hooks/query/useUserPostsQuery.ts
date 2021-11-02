@@ -3,17 +3,12 @@ import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { minutes } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 
-export const createUseUserPostsQueryCacheKey = (userId: number) => [
-  "userPosts",
-  userId,
-];
-
 export const useUserPostsQuery = (userId: number) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
   return useQuery(
-    createUseUserPostsQueryCacheKey(userId),
+    clientCacheKey.createUserPostsKey(userId),
     () => fetcher.getUserPosts(userId),
     {
       enabled: !!userId,
