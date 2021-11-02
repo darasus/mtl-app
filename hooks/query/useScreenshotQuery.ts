@@ -1,16 +1,12 @@
 import { useQuery } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
-
-export const createUseScreenshotQueryCacheKey = (url: string) => [
-  "screehshot",
-  url,
-];
 
 export const useScreenshotQuery = (url: string) => {
   const fetcher = useFetcher();
 
   return useQuery(
-    createUseScreenshotQueryCacheKey(url),
+    clientCacheKey.createScreenshotKey(url),
     () => fetcher.getScreenshot({ url }),
     {
       refetchOnWindowFocus: false,

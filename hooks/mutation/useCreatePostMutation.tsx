@@ -2,6 +2,7 @@ import { CodeLanguage } from ".prisma/client";
 import { Text } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
 
 interface Variables {
@@ -26,7 +27,7 @@ export const useCreatePostMutation = () => {
       }),
     {
       async onSettled() {
-        await queryClient.invalidateQueries("feed");
+        await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);
       },
     }
   );

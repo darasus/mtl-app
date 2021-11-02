@@ -1,15 +1,11 @@
 import { useQuery } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
-
-export const createUseUserQueryCacheKey = (userId: number) => [
-  "user",
-  { userId },
-];
 
 export const useUserQuery = (userId: number) => {
   const fetcher = useFetcher();
 
-  return useQuery(createUseUserQueryCacheKey(userId), () =>
+  return useQuery(clientCacheKey.createUserKey(userId), () =>
     fetcher.getUser(userId)
   );
 };

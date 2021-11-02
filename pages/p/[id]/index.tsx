@@ -1,10 +1,7 @@
 import React from "react";
 import { GetServerSideProps } from "next";
 import { Post } from "../../../components/Post";
-import {
-  createUsePostQueryCacheKey,
-  usePostQuery,
-} from "../../../hooks/query/usePostQuery";
+import { usePostQuery } from "../../../hooks/query/usePostQuery";
 import { useRouter } from "next/router";
 import { Layout } from "../../../layouts/Layout";
 import { QueryClient } from "react-query";
@@ -78,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const post = await fetcher.getPost(postId);
 
     await Promise.all([
-      queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
+      queryClient.prefetchQuery(clientCacheKey.createPostKey(postId), () =>
         Promise.resolve(post)
       ),
       queryClient.prefetchQuery(

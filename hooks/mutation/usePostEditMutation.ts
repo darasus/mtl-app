@@ -1,5 +1,6 @@
 import { CodeLanguage } from ".prisma/client";
 import { useMutation, useQueryClient } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
 
 interface Variables {
@@ -18,8 +19,8 @@ export const usePostEditMutation = (id: number) => {
     (variables: Variables) => fetcher.updatePost(id, variables),
     {
       async onSettled() {
-        await queryClient.invalidateQueries(["post", id]);
-        await queryClient.invalidateQueries("feed");
+        await queryClient.invalidateQueries(clientCacheKey.createPostKey(id));
+        await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);
       },
     }
   );

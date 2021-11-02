@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "react-query";
-import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 import { toast } from "react-hot-toast";
 import { Text } from "@chakra-ui/react";
 import { useFetcher } from "../useFetcher";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 
 export const usePostLikeMutation = () => {
   const queryClient = useQueryClient();
@@ -17,14 +17,14 @@ export const usePostLikeMutation = () => {
       }),
     {
       onMutate: async ({ postId }) => {
-        await queryClient.cancelQueries(createUsePostQueryCacheKey(postId));
+        await queryClient.cancelQueries(clientCacheKey.createPostKey(postId));
 
         const prev = queryClient.getQueryData(
-          createUsePostQueryCacheKey(postId)
+          clientCacheKey.createPostKey(postId)
         );
 
         queryClient.setQueryData(
-          createUsePostQueryCacheKey(postId),
+          clientCacheKey.createPostKey(postId),
           (old: any) => {
             return {
               ...old,
@@ -39,13 +39,13 @@ export const usePostLikeMutation = () => {
       onError: (_, { postId }, context: any) => {
         if (context?.prev) {
           queryClient.setQueryData(
-            createUsePostQueryCacheKey(postId),
+            clientCacheKey.createPostKey(postId),
             context.prev
           );
         }
       },
       onSettled(_, __, { postId }) {
-        queryClient.invalidateQueries(createUsePostQueryCacheKey(postId));
+        queryClient.invalidateQueries(clientCacheKey.createPostKey(postId));
       },
     }
   );

@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
-import { createUsePostQueryCacheKey } from "./usePostQuery";
 
 export const createUseUserPostsQueryCacheKey = (userId: number) => [
   "userPosts",
@@ -21,14 +20,17 @@ export const useUserPostsQuery = (userId: number) => {
       onSuccess(data) {
         data.forEach((post) => {
           const postCache = queryClient.getQueryData(
-            createUsePostQueryCacheKey(post.id)
+            clientCacheKey.createPostKey(post.id)
           );
           const postCommentsCache = queryClient.getQueryData(
             clientCacheKey.createPostCommentsKey(post.id)
           );
 
           if (!postCache) {
-            queryClient.setQueryData(createUsePostQueryCacheKey(post.id), post);
+            queryClient.setQueryData(
+              clientCacheKey.createPostKey(post.id),
+              post
+            );
           }
 
           if (!postCommentsCache) {

@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
-import { createUseFollowersCountQueryCacheKey } from "../query/useFollowersCountQuery";
 import { useFetcher } from "../useFetcher";
 
 export const useFollowMutation = () => {
@@ -11,9 +10,9 @@ export const useFollowMutation = () => {
     ({ userId }) => fetcher.followUser(userId),
     {
       onSuccess(_, { userId }) {
-        qc.invalidateQueries(createUseFollowersCountQueryCacheKey(userId));
+        qc.invalidateQueries(clientCacheKey.createFollowersCountKey(userId));
         qc.invalidateQueries(clientCacheKey.createDoIFollowUserKey(userId));
-        qc.invalidateQueries(["feed"]);
+        qc.invalidateQueries(clientCacheKey.feedBaseKey);
       },
     }
   );

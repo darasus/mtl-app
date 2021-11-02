@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "react-query";
-import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 import { toast } from "react-hot-toast";
 import { Text } from "@chakra-ui/layout";
 import { useFetcher } from "../useFetcher";
@@ -52,7 +51,7 @@ export const useDeleteCommentMutation = () => {
         queryClient.invalidateQueries(
           clientCacheKey.createPostCommentsKey(postId)
         );
-        queryClient.invalidateQueries(createUsePostQueryCacheKey(postId));
+        queryClient.invalidateQueries(clientCacheKey.createPostKey(postId));
       },
     }
   );

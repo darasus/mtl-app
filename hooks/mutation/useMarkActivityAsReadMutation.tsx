@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { createUseUserActivityQueryCacheKey } from "../query/useUserActivityQuery";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
 import { useMe } from "../useMe";
 
@@ -11,7 +11,7 @@ export const useMarkActivityAsReadMutation = (activityId: number) => {
   return useMutation(() => fetcher.markActivityAsRead(activityId), {
     async onSettled() {
       await queryClient.invalidateQueries(
-        createUseUserActivityQueryCacheKey(me?.id as number)
+        clientCacheKey.createUserActivityKey(me?.id as number)
       );
     },
   });

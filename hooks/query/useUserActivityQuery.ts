@@ -1,17 +1,13 @@
 import { useInfiniteQuery } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { days } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
-
-export const createUseUserActivityQueryCacheKey = (userId: number) => [
-  "user-activity",
-  { userId },
-];
 
 export const useUserActivityQuery = (userId: number) => {
   const fetcher = useFetcher();
 
   return useInfiniteQuery(
-    createUseUserActivityQueryCacheKey(userId),
+    clientCacheKey.createUserActivityKey(userId),
     ({ pageParam = undefined }) =>
       fetcher.getUserActivity({ userId, cursor: pageParam }),
     {

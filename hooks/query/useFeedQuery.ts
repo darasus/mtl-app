@@ -3,20 +3,13 @@ import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { FeedType } from "../../types/FeedType";
 import { hours } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
-import { createUsePostQueryCacheKey } from "./usePostQuery";
-
-export const createUseFeedQueryCacheKey = ({
-  feedType,
-}: {
-  feedType: FeedType;
-}) => ["feed", { feedType }];
 
 export const useFeedQuery = ({ feedType }: { feedType: FeedType }) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
   return useInfiniteQuery(
-    createUseFeedQueryCacheKey({ feedType }),
+    clientCacheKey.createFeedKey(feedType),
     ({ pageParam = undefined }) =>
       fetcher.getFeed({ feedType, cursor: pageParam }),
     {
@@ -34,7 +27,7 @@ export const useFeedQuery = ({ feedType }: { feedType: FeedType }) => {
         data.pages.forEach((page) => {
           page.items.forEach((post) => {
             const postCache = queryClient.getQueryData(
-              createUsePostQueryCacheKey(post.id)
+              clientCacheKey.createPostKey(post.id)
             );
             const postCommentsCache = queryClient.getQueryData(
               clientCacheKey.createPostCommentsKey(post.id)
@@ -42,7 +35,7 @@ export const useFeedQuery = ({ feedType }: { feedType: FeedType }) => {
 
             if (!postCache) {
               queryClient.setQueryData(
-                createUsePostQueryCacheKey(post.id),
+                clientCacheKey.createPostKey(post.id),
                 post
               );
             }

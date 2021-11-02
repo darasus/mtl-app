@@ -1,8 +1,7 @@
 import { Text } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
-import { createUseFeedQueryCacheKey } from "../query/useFeedQuery";
-import { createUsePostQueryCacheKey } from "../query/usePostQuery";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
 
 export const usePostDeleteMutation = (id: number) => {
@@ -18,8 +17,8 @@ export const usePostDeleteMutation = (id: number) => {
       }),
     {
       async onSettled() {
-        await queryClient.removeQueries(createUsePostQueryCacheKey(id));
-        await queryClient.removeQueries(["feed"]);
+        await queryClient.removeQueries(clientCacheKey.createPostKey(id));
+        await queryClient.removeQueries(clientCacheKey.feedBaseKey);
       },
     }
   );

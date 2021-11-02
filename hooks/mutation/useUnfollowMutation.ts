@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
-import { createUseFollowersCountQueryCacheKey } from "../query/useFollowersCountQuery";
+
 import { useFetcher } from "../useFetcher";
 
 export const useUnfollowMutation = () => {
@@ -11,7 +11,7 @@ export const useUnfollowMutation = () => {
     ({ userId }) => fetcher.unfollowUser(userId),
     {
       onSuccess(_, { userId }) {
-        qc.invalidateQueries(createUseFollowersCountQueryCacheKey(userId));
+        qc.invalidateQueries(clientCacheKey.createFollowersCountKey(userId));
         qc.invalidateQueries(clientCacheKey.createDoIFollowUserKey(userId));
       },
     }

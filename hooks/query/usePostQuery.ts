@@ -4,15 +4,13 @@ import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { days } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 
-export const createUsePostQueryCacheKey = (id: number) => ["post", id];
-
 export const usePostQuery = (id: number) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
   const router = useRouter();
   const isUserPage = router.pathname === "/p/[id]";
 
-  return useQuery(createUsePostQueryCacheKey(id), () => fetcher.getPost(id), {
+  return useQuery(clientCacheKey.createPostKey(id), () => fetcher.getPost(id), {
     enabled: !!id,
     staleTime: isUserPage ? 0 : days(1),
     onSuccess(data) {
