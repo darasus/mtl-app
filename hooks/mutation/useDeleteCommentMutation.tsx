@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "react-query";
-import { commentsKey } from "../query/useCommentsQuery";
 import { createUsePostQueryCacheKey } from "../query/usePostQuery";
 import { toast } from "react-hot-toast";
 import { Text } from "@chakra-ui/layout";
 import { useFetcher } from "../useFetcher";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 
 export const useDeleteCommentMutation = () => {
   const queryClient = useQueryClient();
@@ -18,12 +18,16 @@ export const useDeleteCommentMutation = () => {
       }),
     {
       onMutate: async ({ postId, commentId }) => {
-        await queryClient.cancelQueries(commentsKey.postComments(postId));
+        await queryClient.cancelQueries(
+          clientCacheKey.createPostCommentsKey(postId)
+        );
 
-        const prev = queryClient.getQueryData(commentsKey.postComments(postId));
+        const prev = queryClient.getQueryData(
+          clientCacheKey.createPostCommentsKey(postId)
+        );
 
         queryClient.setQueryData(
-          commentsKey.postComments(postId),
+          clientCacheKey.createPostCommentsKey(postId),
           (old: any) => {
             return {
               ...old,
@@ -39,13 +43,15 @@ export const useDeleteCommentMutation = () => {
       onError: (_, { postId }, context: any) => {
         if (context?.prev) {
           queryClient.setQueryData(
-            commentsKey.postComments(postId),
+            clientCacheKey.createPostCommentsKey(postId),
             context.prev
           );
         }
       },
       onSettled(_, __, { postId }) {
-        queryClient.invalidateQueries(commentsKey.postComments(postId));
+        queryClient.invalidateQueries(
+          clientCacheKey.createPostCommentsKey(postId)
+        );
         queryClient.invalidateQueries(createUsePostQueryCacheKey(postId));
       },
     }

@@ -1,8 +1,8 @@
 import { useInfiniteQuery, useQueryClient } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { FeedType } from "../../types/FeedType";
 import { hours } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
-import { commentsKey } from "./useCommentsQuery";
 import { createUsePostQueryCacheKey } from "./usePostQuery";
 
 export const createUseFeedQueryCacheKey = ({
@@ -37,7 +37,7 @@ export const useFeedQuery = ({ feedType }: { feedType: FeedType }) => {
               createUsePostQueryCacheKey(post.id)
             );
             const postCommentsCache = queryClient.getQueryData(
-              commentsKey.postComments(post.id)
+              clientCacheKey.createPostCommentsKey(post.id)
             );
 
             if (!postCache) {
@@ -48,11 +48,14 @@ export const useFeedQuery = ({ feedType }: { feedType: FeedType }) => {
             }
 
             if (!postCommentsCache) {
-              queryClient.setQueryData(commentsKey.postComments(post.id), {
-                items: post.comments,
-                count: post.comments.length,
-                total: post.commentsCount,
-              });
+              queryClient.setQueryData(
+                clientCacheKey.createPostCommentsKey(post.id),
+                {
+                  items: post.comments,
+                  count: post.comments.length,
+                  total: post.commentsCount,
+                }
+              );
             }
           });
         });

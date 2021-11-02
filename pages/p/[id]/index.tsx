@@ -12,10 +12,10 @@ import { dehydrate } from "react-query/hydration";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { Head } from "../../../components/Head";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
-import { commentsKey } from "../../../hooks/query/useCommentsQuery";
 import { Fetcher } from "../../../lib/Fetcher";
 import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
 import { useMe } from "../../../hooks/useMe";
+import { clientCacheKey } from "../../../lib/ClientCacheKey";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -81,12 +81,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       queryClient.prefetchQuery(createUsePostQueryCacheKey(postId), () =>
         Promise.resolve(post)
       ),
-      queryClient.prefetchQuery(commentsKey.postComments(post.id), () =>
-        Promise.resolve({
-          items: post.comments,
-          total: post.commentsCount,
-          count: post.comments.length,
-        })
+      queryClient.prefetchQuery(
+        clientCacheKey.createPostCommentsKey(post.id),
+        () =>
+          Promise.resolve({
+            items: post.comments,
+            total: post.commentsCount,
+            count: post.comments.length,
+          })
       ),
     ]);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

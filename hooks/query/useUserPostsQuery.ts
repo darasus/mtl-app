@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
-import { commentsKey } from "./useCommentsQuery";
 import { createUsePostQueryCacheKey } from "./usePostQuery";
 
 export const createUseUserPostsQueryCacheKey = (userId: number) => [
@@ -24,7 +24,7 @@ export const useUserPostsQuery = (userId: number) => {
             createUsePostQueryCacheKey(post.id)
           );
           const postCommentsCache = queryClient.getQueryData(
-            commentsKey.postComments(post.id)
+            clientCacheKey.createPostCommentsKey(post.id)
           );
 
           if (!postCache) {
@@ -32,11 +32,14 @@ export const useUserPostsQuery = (userId: number) => {
           }
 
           if (!postCommentsCache) {
-            queryClient.setQueryData(commentsKey.postComments(post.id), {
-              items: post.comments,
-              count: post.comments.length,
-              total: post.commentsCount,
-            });
+            queryClient.setQueryData(
+              clientCacheKey.createPostCommentsKey(post.id),
+              {
+                items: post.comments,
+                count: post.comments.length,
+                total: post.commentsCount,
+              }
+            );
           }
         });
       },

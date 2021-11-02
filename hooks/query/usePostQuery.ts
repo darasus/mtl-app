@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useQuery, useQueryClient } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { days } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
-import { commentsKey } from "./useCommentsQuery";
 
 export const createUsePostQueryCacheKey = (id: number) => ["post", id];
 
@@ -16,14 +16,19 @@ export const usePostQuery = (id: number) => {
     enabled: !!id,
     staleTime: isUserPage ? 0 : days(1),
     onSuccess(data) {
-      const comments = queryClient.getQueryData(commentsKey.postComments(id));
+      const comments = queryClient.getQueryData(
+        clientCacheKey.createPostCommentsKey(id)
+      );
 
       if (!comments && data && data.comments.length > 0) {
-        queryClient.setQueryData(commentsKey.postComments(data.id), {
-          items: data.comments,
-          count: data.comments.length,
-          total: data.commentsCount,
-        });
+        queryClient.setQueryData(
+          clientCacheKey.createPostCommentsKey(data.id),
+          {
+            items: data.comments,
+            count: data.comments.length,
+            total: data.commentsCount,
+          }
+        );
       }
     },
   });

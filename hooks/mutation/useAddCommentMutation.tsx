@@ -1,8 +1,8 @@
 import { Text } from "@chakra-ui/react";
 import { toast } from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { CommentService } from "../../lib/prismaServices/CommentService";
-import { commentsKey } from "../query/useCommentsQuery";
 import { useFetcher } from "../useFetcher";
 import { useMe } from "../useMe";
 
@@ -28,14 +28,16 @@ export const useAddCommentMutation = () => {
       }),
     {
       onMutate: async ({ postId, content }) => {
-        await queryClient.cancelQueries(commentsKey.postComments(postId));
+        await queryClient.cancelQueries(
+          clientCacheKey.createPostCommentsKey(postId)
+        );
 
         const prev = queryClient.getQueryData<Comments>(
-          commentsKey.postComments(postId)
+          clientCacheKey.createPostCommentsKey(postId)
         );
 
         queryClient.setQueryData(
-          commentsKey.postComments(postId),
+          clientCacheKey.createPostCommentsKey(postId),
           (old: any) => {
             return {
               ...old,
@@ -60,13 +62,15 @@ export const useAddCommentMutation = () => {
       onError: (_, { postId }, context: any) => {
         if (context?.prev) {
           queryClient.setQueryData<Comments>(
-            commentsKey.postComments(postId),
+            clientCacheKey.createPostCommentsKey(postId),
             context.prev
           );
         }
       },
       onSettled(_, __, { postId }) {
-        queryClient.invalidateQueries(commentsKey.postComments(postId));
+        queryClient.invalidateQueries(
+          clientCacheKey.createPostCommentsKey(postId)
+        );
       },
     }
   );

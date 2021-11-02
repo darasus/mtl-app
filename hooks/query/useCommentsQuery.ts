@@ -1,10 +1,6 @@
 import { useQuery } from "react-query";
+import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
-
-export const commentsKey = {
-  base: ["comments"],
-  postComments: (postId: number) => [...commentsKey.base, { postId }],
-} as const;
 
 export const useCommentsQuery = ({
   postId,
@@ -16,7 +12,7 @@ export const useCommentsQuery = ({
   const fetcher = useFetcher();
 
   return useQuery(
-    commentsKey.postComments(postId),
+    clientCacheKey.createPostCommentsKey(postId),
     () => fetcher.getComments({ postId, take }),
     {
       enabled: !!postId,
