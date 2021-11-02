@@ -98,6 +98,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
+  ctx.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=1, stale-while-revalidate=59"
+  );
+
   return {
     props: {
       cookies: ctx.req.headers.cookie ?? "",

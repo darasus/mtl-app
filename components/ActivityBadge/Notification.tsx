@@ -87,7 +87,7 @@ export const Notification = ({ activity }: { activity: Activity & any }) => {
             {message}
           </Text>
         </Box>
-        <Flex alighItems="center" ml={2} minWidth={3}>
+        <Flex alignItems="center" ml={2} minWidth={3}>
           {activity.unread && (
             <Box
               mt="7px"

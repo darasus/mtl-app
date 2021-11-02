@@ -9,11 +9,7 @@ export const createUseUserQueryCacheKey = (userId: number) => [
 export const useUserQuery = (userId: number) => {
   const fetcher = useFetcher();
 
-  return useQuery(
-    createUseUserQueryCacheKey(userId),
-    () => fetcher.getUser(userId),
-    {
-      staleTime: 1000 * 60 * 5,
-    }
+  return useQuery(createUseUserQueryCacheKey(userId), () =>
+    fetcher.getUser(userId)
   );
 };

@@ -23,6 +23,9 @@ export class ClientHttpConnector {
   createRequest = () => {
     const client = axios.create({
       baseURL: process.env.NEXTAUTH_URL,
+      headers: {
+        Pragma: "no-cache",
+      },
     });
 
     client.interceptors.response.use(

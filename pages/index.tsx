@@ -88,7 +88,10 @@ const Index: React.FC = () => {
 export default Index;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  ctx.res.setHeader("Cache-Control", "s-maxage=1, stale-while-revalidate");
+  ctx.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=1, stale-while-revalidate=59"
+  );
 
   return {
     props: {
