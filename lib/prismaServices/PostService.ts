@@ -216,7 +216,9 @@ export class PostService {
       days(365)
     );
 
-    if (!post || (!post.published && post.authorId !== userId)) return null;
+    if (!post || (!post.published && userId && post.authorId !== userId)) {
+      return null;
+    }
 
     return preparePost(
       {
