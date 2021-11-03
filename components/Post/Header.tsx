@@ -15,16 +15,18 @@ export const Header: React.FC<Props> = ({
   showMetaInfo = true,
   isPostStatusVisible,
 }) => {
+  const base = <MobileHeader post={post} />;
+  const md = (
+    <DesktopHeader
+      post={post}
+      showMetaInfo={showMetaInfo}
+      isPostStatusVisible={isPostStatusVisible}
+    />
+  );
   const header = useBreakpointValue({
-    base: <MobileHeader post={post} />,
-    md: (
-      <DesktopHeader
-        post={post}
-        showMetaInfo={showMetaInfo}
-        isPostStatusVisible={isPostStatusVisible}
-      />
-    ),
+    base,
+    md,
   });
 
-  return header || null;
+  return header || base;
 };
