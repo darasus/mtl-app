@@ -1,0 +1,15 @@
+name: mtl
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-prisma:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn install
+      - name: Run production migration
+        run: yarn prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
