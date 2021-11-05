@@ -51,7 +51,7 @@ export const Header: React.FC = () => {
                   <Button
                     size="sm"
                     variant="cta"
-                    // leftIcon={<PlusCircleIcon width="15" height="15" />}
+                    data-testid="create-post-button"
                   >
                     Create
                   </Button>

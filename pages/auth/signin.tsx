@@ -60,7 +60,11 @@ const SignIn: React.FC<Props> = ({ providers }) => {
         </Box>
         {Object.values(providers).map((provider) => (
           <div key={provider.name}>
-            <Button variant="outline" onClick={() => signIn(provider.id)}>
+            <Button
+              variant="outline"
+              onClick={() => signIn(provider.id)}
+              data-testid="github-signin-button"
+            >
               <Flex alignItems="center">
                 <Text mr={2}>Sign in with</Text>
                 <BrandLogo name={provider.name} />

@@ -29,7 +29,11 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
               />
             </Box>
           </Box>
-          <Text fontSize="sm" fontWeight="semibold">
+          <Text
+            fontSize="sm"
+            fontWeight="semibold"
+            data-testid="user-preview-name"
+          >
             {me?.name}
           </Text>
         </Flex>

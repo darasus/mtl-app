@@ -41,6 +41,7 @@ export const Intro: React.FC<Props> = ({ withSignIn }) => {
             borderColor="brand"
             color="brand"
             onClick={() => router.push("/auth/signin")}
+            data-testid="intro-signin-button"
           >
             Sign in
           </Button>
