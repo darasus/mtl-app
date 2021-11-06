@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostService } from "../../../lib/prismaServices/PostService";
 import invariant from "invariant";
-import { getUserSession } from "../../../lib/getUserSession";
 import { processErrorResponse } from "../../../utils/error";
+import { requireSession, RequireSessionProp } from "@clerk/nextjs/api";
 
-export default async function handle(
-  req: NextApiRequest,
+export default requireSession(async function handle(
+  req: RequireSessionProp<NextApiRequest>,
   res: NextApiResponse
 ) {
   invariant(
@@ -13,13 +13,9 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
+  const userId = String(req.session.userId);
+
   try {
-    const user = await getUserSession({ req });
-
-    if (!user?.id) {
-      return res.status(401).end();
-    }
-
     const postService = new PostService();
     await postService.savePost(
       {
@@ -27,10 +23,10 @@ export default async function handle(
         content: req.body.content,
         description: req.body.description,
       },
-      user.id
+      userId
     );
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

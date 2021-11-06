@@ -28,35 +28,31 @@ import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
 import { Fetcher } from "../../lib/Fetcher";
 import { ServerHttpConnector } from "../../lib/ServerHttpConnector";
 import { Heading } from "../../components/Heading";
-import { useMe } from "../../hooks/useMe";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
+import { SignedIn, useUser } from "@clerk/nextjs";
 
-const UserPage: React.FC = () => {
-  const { secondaryTextColor } = useColors();
-  const router = useRouter();
-  const userId = Number(router.query.id);
-  const user = useUserQuery(userId);
-  const { me } = useMe();
-  const posts = useUserPostsQuery(userId);
+const FollowButton = () => {
+  const user = useUser();
   const followMutation = useFollowMutation();
   const unfollowMutation = useUnfollowMutation();
-  const followersCount = useFollowersCountQuery(userId);
-  const doIFollowUser = useDoIFollowUserQuery(userId);
-  const isMyPage = me?.id === userId;
+  const doIFollowUser = useDoIFollowUserQuery(user.id);
+  const router = useRouter();
+  const { id: userId } = router.query;
+  const isMyPage = user.id === userId;
 
   const handleFollow = () => {
     followMutation.mutateAsync({
-      userId: user.data?.id as number,
+      userId: user.data.id,
     });
   };
 
   const handleUnfollow = () => {
     unfollowMutation.mutateAsync({
-      userId: user.data?.id as number,
+      userId: user.data.id,
     });
   };
 
-  const followButton = !isMyPage ? (
+  return !isMyPage ? (
     doIFollowUser.data?.doIFollow ? (
       <Button
         variant="outline"
@@ -79,10 +75,22 @@ const UserPage: React.FC = () => {
       </Button>
     )
   ) : null;
+};
+
+const UserPage: React.FC = () => {
+  const { secondaryTextColor } = useColors();
+  const router = useRouter();
+  const userId = String(router.query.id);
+  const user = useUserQuery(userId);
+  const posts = useUserPostsQuery(userId);
+  const followersCount = useFollowersCountQuery(userId);
 
   return (
     <>
-      <Head title={user.data?.name as string} urlPath={`u/${user.data?.id}`} />
+      <Head
+        title={user.data?.fullname as string}
+        urlPath={`u/${user.data?.id}`}
+      />
       <Layout>
         <Grid templateColumns="repeat(12, 1fr)" gap={4}>
           <GridItem colSpan={[12, 12, 3, 3]}>
@@ -106,16 +114,18 @@ const UserPage: React.FC = () => {
                     mb={2}
                   >
                     <Image
-                      src={user.data?.image as string}
+                      src={user.data?.image}
                       width="500"
                       height="500"
                       alt="Avatar"
                     />
                   </Box>
                   <Text fontWeight="bold" fontSize="2xl" mb={1} isTruncated>
-                    {user.data?.name}
+                    {user.data?.fullname}
                   </Text>
-                  {followButton}
+                  <SignedIn>
+                    <FollowButton />
+                  </SignedIn>
                   <Flex alignItems="center">
                     <Text mr={1} color={secondaryTextColor}>
                       <UserGroupIcon
@@ -144,11 +154,7 @@ const UserPage: React.FC = () => {
               )}
               {posts.data?.map((post) => (
                 <Box key={post.id} mb={6}>
-                  <Post
-                    postId={post.id}
-                    isMyPost={post.authorId === me?.id}
-                    isPostStatusVisible
-                  />
+                  <Post postId={post.id} isPostStatusVisible />
                 </Box>
               ))}
             </Box>
@@ -174,7 +180,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const httpConnector = new ServerHttpConnector(ctx);
   const fetcher = new Fetcher(httpConnector);
-  const userId = Number(ctx.query.id);
+  const userId = String(ctx.query.id);
 
   await Promise.all([
     queryClient.prefetchQuery(clientCacheKey.createUserKey(userId), () =>

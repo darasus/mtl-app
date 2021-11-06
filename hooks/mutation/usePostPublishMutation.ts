@@ -9,14 +9,19 @@ const toastConfig = {
   error: "Library is not published.",
 };
 
-export const usePostPublishMutation = (id: number) => {
+export const usePostPublishMutation = (postId: string) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
-  return useMutation(() => withToast(fetcher.publishPost(id), toastConfig), {
-    async onSettled() {
-      await queryClient.invalidateQueries(clientCacheKey.createPostKey(id));
-      await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);
-    },
-  });
+  return useMutation(
+    () => withToast(fetcher.publishPost(postId), toastConfig),
+    {
+      async onSettled() {
+        await queryClient.invalidateQueries(
+          clientCacheKey.createPostKey(postId)
+        );
+        await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);
+      },
+    }
+  );
 };

@@ -1,3 +1,5 @@
+import { authorFragment } from "./authorFragment";
+
 export const commentFragment = {
   id: true,
   content: true,
@@ -6,15 +8,6 @@ export const commentFragment = {
   updatedAt: true,
   authorId: true,
   author: {
-    select: {
-      id: true,
-      name: true,
-      userName: true,
-      image: true,
-      emailVerified: true,
-      createdAt: true,
-      email: true,
-      updatedAt: true,
-    },
+    select: authorFragment,
   },
 };

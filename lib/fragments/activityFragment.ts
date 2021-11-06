@@ -1,9 +1,8 @@
+import { authorFragment } from "./authorFragment";
+
 export const activityFragment = {
   author: {
-    select: {
-      id: true,
-      name: true,
-    },
+    select: authorFragment,
   },
   post: {
     select: {

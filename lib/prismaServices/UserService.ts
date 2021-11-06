@@ -9,19 +9,7 @@ import { preparePost } from "../utils/preparePost";
 import { redisCacheKey } from "../RedisCacheKey";
 import { days } from "../../utils/duration";
 import { activityFragment } from "../fragments/activityFragment";
-
-const selectQueryFragment = {
-  select: {
-    userName: true,
-    email: true,
-    id: true,
-    image: true,
-    name: true,
-    emailVerified: true,
-    createdAt: true,
-    updatedAt: true,
-  },
-};
+import { userFragment } from "../fragments/userFragment";
 
 export class UserService {
   async getUserByEmail(email: string) {
@@ -32,13 +20,13 @@ export class UserService {
           where: {
             email,
           },
-          ...selectQueryFragment,
+          select: userFragment,
         }),
       days(365)
     );
   }
 
-  async getUserById(userId: number) {
+  async getUserById(userId: string) {
     return cache.fetch(
       redisCacheKey.createUserKey(userId),
       () =>
@@ -46,13 +34,13 @@ export class UserService {
           where: {
             id: userId,
           },
-          ...selectQueryFragment,
+          select: userFragment,
         }),
       days(365)
     );
   }
 
-  async getUserPosts(userId: number, isMe: boolean): Promise<Post[]> {
+  async getUserPosts(userId: string, isMe: boolean): Promise<Post[]> {
     const posts = await prisma.post.findMany({
       where: {
         authorId: userId,
@@ -94,8 +82,8 @@ export class UserService {
     cursor,
     take = 10,
   }: {
-    userId: number;
-    cursor?: number;
+    userId: string;
+    cursor?: string;
     take?: number;
   }) {
     const activityCount = await prisma.activity.count({
@@ -115,7 +103,7 @@ export class UserService {
             follower: {
               select: {
                 id: true,
-                name: true,
+                fullname: true,
               },
             },
           },
@@ -123,7 +111,7 @@ export class UserService {
       },
       orderBy: [
         {
-          id: "desc",
+          createdAt: "desc",
         },
       ],
       ...(cursor
@@ -142,7 +130,7 @@ export class UserService {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 

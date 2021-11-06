@@ -13,14 +13,18 @@ export default async function handle(
   );
   invariant(typeof req.query.id === "string", "User ID is not provided");
 
+  const userId = req.query.id as string;
+  const take = Number(req.query.take) || undefined;
+  const cursor = (req.query.cursor as string) || undefined;
+
   try {
     const userService = new UserService();
     const response = await userService.getUserActivity({
-      userId: Number(req.query.id),
-      take: Number(req.query.take) || undefined,
-      cursor: Number(req.query.cursor) || undefined,
+      userId,
+      take,
+      cursor,
     });
-    res.json(response);
+    res.end(response);
   } catch (error) {
     return res.end(processErrorResponse(error));
   }

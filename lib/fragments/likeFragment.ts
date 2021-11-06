@@ -1,3 +1,5 @@
+import { authorFragment } from "./authorFragment";
+
 export const likeFragment = {
   id: true,
   postId: true,
@@ -5,15 +7,6 @@ export const likeFragment = {
   updatedAt: true,
   authorId: true,
   author: {
-    select: {
-      id: true,
-      name: true,
-      userName: true,
-      image: true,
-      emailVerified: true,
-      createdAt: true,
-      email: true,
-      updatedAt: true,
-    },
+    select: authorFragment,
   },
 };

@@ -5,7 +5,12 @@ import React from "react";
 import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Provider } from "next-auth/client";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  RedirectToSignIn,
+} from "@clerk/nextjs";
 import {
   ChakraProvider,
   cookieStorageManager,
@@ -54,42 +59,42 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClientRef.current}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
-          <Toaster
-            toastOptions={{
-              style: {
-                borderRadius: "100px",
-                borderColor:
-                  colorModeManager.get() === "dark"
-                    ? "rgba(0,0,0,0.2)"
-                    : "rgba(255,255,255,0.2)",
-                borderWidth: "1px",
-                ...(colorModeManager.get() === "dark"
-                  ? { background: "white", color: "#black" }
-                  : { background: "black", color: "#fff" }),
-              },
-            }}
-          />
-          <Head>
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1, maximum-scale=1"
+    <ClerkProvider>
+      <QueryClientProvider client={queryClientRef.current}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+            <Toaster
+              toastOptions={{
+                style: {
+                  borderRadius: "100px",
+                  borderColor:
+                    colorModeManager.get() === "dark"
+                      ? "rgba(0,0,0,0.2)"
+                      : "rgba(255,255,255,0.2)",
+                  borderWidth: "1px",
+                  ...(colorModeManager.get() === "dark"
+                    ? { background: "white", color: "#black" }
+                    : { background: "black", color: "#fff" }),
+                },
+              }}
             />
-          </Head>
-          <Provider session={pageProps.session}>
+            <Head>
+              <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1, maximum-scale=1"
+              />
+            </Head>
             <PusherProvider
               clientKey={process.env.NEXT_PUBLIC_PUSHER_APP_KEY}
               cluster="eu"
             >
               <Component {...pageProps} />
             </PusherProvider>
-          </Provider>
-        </ChakraProvider>
-      </Hydrate>
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+          </ChakraProvider>
+        </Hydrate>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </ClerkProvider>
   );
 };
 

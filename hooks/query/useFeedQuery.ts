@@ -24,8 +24,8 @@ export const useFeedQuery = ({ feedType }: { feedType: FeedType }) => {
       },
       staleTime: hours(1),
       onSuccess(data) {
-        data.pages.forEach((page) => {
-          page.items.forEach((post) => {
+        data.pages?.forEach((page) => {
+          page.items?.forEach((post) => {
             const postCache = queryClient.getQueryData(
               clientCacheKey.createPostKey(post.id)
             );

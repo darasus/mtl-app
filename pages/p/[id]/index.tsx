@@ -11,13 +11,11 @@ import { Head } from "../../../components/Head";
 import { createIsFirstServerCall } from "../../../utils/createIsFirstServerCall";
 import { Fetcher } from "../../../lib/Fetcher";
 import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
-import { useMe } from "../../../hooks/useMe";
 import { clientCacheKey } from "../../../lib/ClientCacheKey";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
-  const post = usePostQuery(Number(router.query.id));
-  const { me } = useMe();
+  const post = usePostQuery(String(router.query.id));
   const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${
     process.env.NEXTAUTH_URL
   }/p/${router.query.id}/thumbnail?updateDate=${new Date(
@@ -43,7 +41,6 @@ const PostPage: React.FC = () => {
           {post.data && (
             <Post
               postId={post.data.id}
-              isMyPost={post.data.authorId === me?.id}
               isPostLoading={post.isFetching}
               isPostStatusVisible={true}
             />
@@ -69,7 +66,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const httpConnector = new ServerHttpConnector(ctx);
   const fetcher = new Fetcher(httpConnector);
-  const postId = Number(ctx.query.id);
+  const postId = String(ctx.query.id);
 
   try {
     const post = await fetcher.getPost(postId);

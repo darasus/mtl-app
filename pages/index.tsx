@@ -15,23 +15,22 @@ import { Head } from "../components/Head";
 import { Intro } from "../components/Intro";
 import { FeedType } from "../types/FeedType";
 import { Heading } from "../components/Heading";
-import { useMe } from "../hooks/useMe";
+import { SignedOut } from "@clerk/nextjs";
 
 const Index: React.FC = () => {
   const [feedType, setFeedType] = React.useState(FeedType.Latest);
   const feed = useFeedQuery({ feedType });
-  const { me, isLoading } = useMe();
 
   return (
     <>
       <Head title="Home" urlPath="" />
       <Layout>
         <main>
-          {!me && !isLoading && (
+          <SignedOut>
             <Center height="50vh">
               <Intro withSignIn />
             </Center>
-          )}
+          </SignedOut>
           <Heading title="Library feed">
             <ButtonGroup isAttached variant="solid">
               <Button
@@ -57,10 +56,10 @@ const Index: React.FC = () => {
             </Flex>
           )}
           {feed.data?.pages.map((page) => {
-            return page.items.map((post) => {
+            return page.items?.map((post) => {
               return (
                 <Box key={post.id} mb={6}>
-                  <Post postId={post.id} isMyPost={post.authorId === me?.id} />
+                  <Post postId={post.id} />
                 </Box>
               );
             });

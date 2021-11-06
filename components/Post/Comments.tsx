@@ -7,11 +7,14 @@ import { useCommentsQuery } from "../../hooks/query/useCommentsQuery";
 import { DeleteCommentButton } from "./DeleteCommentButton";
 import { useAddCommentMutation } from "../../hooks/mutation/useAddCommentMutation";
 import { usePrevious } from "../../hooks/usePrevious";
-import { useMe } from "../../hooks/useMe";
+import { SignedIn, useUser } from "@clerk/nextjs";
+import { noop } from "../../utils/noop";
 
 interface Props {
-  postId: number;
+  postId: string;
 }
+
+const TakeContext = React.createContext<any>({ take: 5, setTake: noop });
 
 export const Comments: React.FC<Props> = ({ postId }) => {
   const [take, setTake] = React.useState(5);
@@ -20,22 +23,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
     postId,
     take,
   });
-  const { me } = useMe();
   const { borderColor, secondaryTextColor } = useColors();
-  const { mutateAsync: commentPost } = useAddCommentMutation();
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: { comment: "" },
-  });
-
-  const submit = React.useMemo(
-    () =>
-      handleSubmit(async (data) => {
-        reset();
-        setTake(take + 1);
-        await commentPost({ postId, content: data.comment, take });
-      }),
-    [handleSubmit, reset, commentPost, postId, take, setTake]
-  );
 
   const hasComments =
     comments.data?.items?.length && comments.data?.items.length > 0;
@@ -79,32 +67,32 @@ export const Comments: React.FC<Props> = ({ postId }) => {
             <Box key={comment.id}>
               <Flex mt={1} flexDirection="column">
                 <Flex alignItems="center">
-                  <Box
-                    width={5}
-                    height={5}
-                    borderRadius={100}
-                    overflow="hidden"
-                    boxShadow="base"
-                    mr={2}
-                  >
-                    <Image
-                      src={comment.author.image}
-                      width="100"
-                      height="100"
-                      alt="Avatar"
-                    />
-                  </Box>
+                  {console.log(comment.author.image)}
+                  {comment.author.image && (
+                    <Box
+                      width={5}
+                      height={5}
+                      borderRadius={100}
+                      overflow="hidden"
+                      boxShadow="base"
+                      mr={2}
+                    >
+                      <Image
+                        src={comment.author.image}
+                        width="100px"
+                        height="100px"
+                        alt="Avatar"
+                      />
+                    </Box>
+                  )}
                   <Box mr={2}>
                     <Text fontSize="sm" color={secondaryTextColor}>{`${
-                      comment.author.name
+                      comment.author.fullname
                     } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                   </Box>
-                  {me?.id === comment.author.id && (
-                    <DeleteCommentButton
-                      commentId={comment.id}
-                      postId={postId}
-                    />
-                  )}
+                  <SignedIn>
+                    <DeleteCommentButton comment={comment} />
+                  </SignedIn>
                 </Flex>
                 <Box ml={7}>
                   <Text fontSize="sm">{comment.content}</Text>
@@ -114,53 +102,80 @@ export const Comments: React.FC<Props> = ({ postId }) => {
           );
         })}
       </Box>
-      {me && (
-        <>
-          <Box borderColor={borderColor} borderBottomWidth="thin" />
-          <form onSubmit={submit}>
-            <Box p={3}>
-              <Flex>
-                {me?.image && (
-                  <Box
-                    width={7}
-                    height={7}
-                    borderRadius={100}
-                    overflow="hidden"
-                    boxShadow="base"
-                    mr={2}
-                  >
-                    <Image
-                      src={me?.image}
-                      width="100"
-                      height="100"
-                      alt="Avatar"
-                    />
-                  </Box>
-                )}
-                <Box flexGrow={1}>
-                  <Controller
-                    name="comment"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        width="100%"
-                        name={field.name}
-                        onBlur={field.onBlur}
-                        value={field.value}
-                        aria-label="comment field"
-                        onChange={(value) => field.onChange(value)}
-                        placeholder="Type your comment here..."
-                        required
-                        autoComplete="off"
-                      />
-                    )}
+      <TakeContext.Provider value={{ take, setTake }}>
+        <SignedIn>
+          <CommentForm postId={postId} />
+        </SignedIn>
+      </TakeContext.Provider>
+    </>
+  );
+};
+
+const CommentForm = ({ postId }: { postId: string }) => {
+  const me = useUser();
+  const { borderColor } = useColors();
+  const { take, setTake } = React.useContext(TakeContext);
+  const { mutateAsync: commentPost } = useAddCommentMutation();
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: { comment: "" },
+  });
+
+  const submit = React.useMemo(
+    () =>
+      handleSubmit(async (data) => {
+        reset();
+        setTake(take + 1);
+        await commentPost({ postId, content: data.comment, take });
+      }),
+    [handleSubmit, reset, commentPost, setTake, take, postId]
+  );
+
+  return (
+    <>
+      <Box borderColor={borderColor} borderBottomWidth="thin" />
+      <form onSubmit={submit}>
+        <Box p={3}>
+          <Flex>
+            {console.log(me.profileImageUrl)}
+            {me.profileImageUrl && (
+              <Box
+                width={7}
+                height={7}
+                borderRadius={100}
+                overflow="hidden"
+                boxShadow="base"
+                mr={2}
+              >
+                <Image
+                  src={me.profileImageUrl}
+                  width="100"
+                  height="100"
+                  alt="Avatar"
+                />
+              </Box>
+            )}
+            <Box flexGrow={1}>
+              <Controller
+                name="comment"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    width="100%"
+                    name={field.name}
+                    onBlur={field.onBlur}
+                    value={field.value}
+                    aria-label="comment field"
+                    onChange={(value) => field.onChange(value)}
+                    placeholder="Type your comment here..."
+                    required
+                    autoComplete="off"
                   />
-                </Box>
-              </Flex>
+                )}
+              />
             </Box>
-          </form>
-        </>
-      )}
+          </Flex>
+        </Box>
+      </form>
     </>
   );
 };

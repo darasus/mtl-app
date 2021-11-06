@@ -12,15 +12,15 @@ export class ClientCacheKey {
   userActivityBaseKey = ["user_activity"];
   userPostsBaseKey = ["user-posts"];
 
-  createUserKey(userId: number) {
+  createUserKey(userId: string) {
     return [...this.userBaseKey, { userId }];
   }
 
-  createPostCommentsKey(postId: number) {
+  createPostCommentsKey(postId: string) {
     return [...this.commentsBaseKey, { postId }];
   }
 
-  createDoIFollowUserKey(userId: number) {
+  createDoIFollowUserKey(userId: string) {
     return [...this.doIFollowBaseKey, { userId }];
   }
 
@@ -28,11 +28,11 @@ export class ClientCacheKey {
     return [...this.feedBaseKey, { feedType }];
   }
 
-  createFollowersCountKey(userId: number) {
+  createFollowersCountKey(userId: string) {
     return [...this.followersCountBaseKey, { userId }];
   }
 
-  createPostKey(postId: number) {
+  createPostKey(postId: string) {
     return [...this.postBaseKey, { postId }];
   }
 
@@ -40,11 +40,11 @@ export class ClientCacheKey {
     return [...this.screenshotBaseKey, { url }];
   }
 
-  createUserActivityKey(userId: number) {
+  createUserActivityKey(userId: string) {
     return [...this.userActivityBaseKey, { userId }];
   }
 
-  createUserPostsKey(userId: number) {
+  createUserPostsKey(userId: string) {
     return [...this.userPostsBaseKey, { userId }];
   }
 }

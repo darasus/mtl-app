@@ -1,11 +1,11 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostService } from "../../../../lib/prismaServices/PostService";
-import { getUserSession } from "../../../../lib/getUserSession";
 import { processErrorResponse } from "../../../../utils/error";
+import { requireSession, RequireSessionProp } from "@clerk/nextjs/api";
 
-export default async function handle(
-  req: NextApiRequest,
+export default requireSession(async function handle(
+  req: RequireSessionProp<NextApiRequest>,
   res: NextApiResponse
 ) {
   invariant(
@@ -14,16 +14,10 @@ export default async function handle(
   );
 
   try {
-    const user = await getUserSession({ req });
-
-    if (!user?.id) {
-      return res.status(401).end();
-    }
-
     const postService = new PostService();
-    await postService.publishPost(Number(req.query.id));
+    await postService.publishPost(String(req.query.id));
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

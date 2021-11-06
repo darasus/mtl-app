@@ -3,32 +3,27 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { ActivityService } from "../../../lib/prismaServices/ActivityService";
 import { CommentService } from "../../../lib/prismaServices/CommentService";
 import { PostService } from "../../../lib/prismaServices/PostService";
-import { getUserSession } from "../../../lib/getUserSession";
 import { processErrorResponse } from "../../../utils/error";
+import { RequireSessionProp, requireSession } from "@clerk/nextjs/api";
 
-export default async function handle(
-  req: NextApiRequest,
+export default requireSession(async function handle(
+  req: RequireSessionProp<NextApiRequest>,
   res: NextApiResponse
 ) {
   invariant(
     req.method === "DELETE",
     `The HTTP ${req.method} method is not supported at this route.`
   );
-  const commentId = Number(req.query.id);
+  const commentId = String(req.query.id);
+  const userId = String(req.session.userId);
   const commentService = new CommentService();
   const postService = new PostService();
   const activityService = new ActivityService();
 
   try {
-    const user = await getUserSession({ req });
-
-    if (!user?.id) {
-      return res.status(401).end();
-    }
-
     const isMyComment = await commentService.isMyComment({
-      commentId: Number(req.query.id),
-      userId: user.id,
+      commentId,
+      userId,
     });
 
     if (!isMyComment) {
@@ -45,11 +40,11 @@ export default async function handle(
 
     await activityService.removeCommentActivity({
       commentId,
-      ownerId: user.id,
+      ownerId: userId,
     });
-    await commentService.deleteComment(Number(req.query.id), post.id);
+    await commentService.deleteComment(commentId, post.id);
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

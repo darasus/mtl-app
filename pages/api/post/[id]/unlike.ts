@@ -3,13 +3,13 @@ import invariant from "invariant";
 import { PostService } from "../../../../lib/prismaServices/PostService";
 import { LikeService } from "../../../../lib/prismaServices/LikeService";
 import cache from "../../../../lib/cache";
-import { getUserSession } from "../../../../lib/getUserSession";
 import { ActivityService } from "../../../../lib/prismaServices/ActivityService";
 import { redisCacheKey } from "../../../../lib/RedisCacheKey";
 import { processErrorResponse } from "../../../../utils/error";
+import { requireSession, RequireSessionProp } from "@clerk/nextjs/api";
 
-export default async function handle(
-  req: NextApiRequest,
+export default requireSession(async function handle(
+  req: RequireSessionProp<NextApiRequest>,
   res: NextApiResponse
 ) {
   invariant(
@@ -17,15 +17,14 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  const postId = Number(req.query.id);
+  const postId = String(req.query.id);
+  const userId = String(req.session.userId);
 
   try {
-    const user = await getUserSession({ req });
-    if (!user) return null;
     const postService = new PostService();
     const likeService = new LikeService();
     const activityService = new ActivityService();
-    const post = await postService.fetchPost(postId, user.id);
+    const post = await postService.fetchPost(postId, userId);
 
     if (!post) {
       return res.json({ status: "failure" });
@@ -37,13 +36,13 @@ export default async function handle(
 
     await activityService.removeLikeActivity({
       postId,
-      authorId: user.id,
-      ownerId: post?.authorId as number,
+      authorId: userId,
+      ownerId: post?.authorId as string,
     });
-    await likeService.unlikePost(postId, user.id);
+    await likeService.unlikePost(postId, userId);
     await cache.del(redisCacheKey.createPostKey(postId));
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

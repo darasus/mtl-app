@@ -9,13 +9,13 @@ const toastConfig = {
   error: "Library is not deleted.",
 };
 
-export const usePostDeleteMutation = (id: number) => {
+export const usePostDeleteMutation = (postId: string) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
-  return useMutation(() => withToast(fetcher.deletePost(id), toastConfig), {
+  return useMutation(() => withToast(fetcher.deletePost(postId), toastConfig), {
     async onSettled() {
-      await queryClient.removeQueries(clientCacheKey.createPostKey(id));
+      await queryClient.removeQueries(clientCacheKey.createPostKey(postId));
       await queryClient.removeQueries(clientCacheKey.feedBaseKey);
     },
   });

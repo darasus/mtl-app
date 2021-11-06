@@ -26,13 +26,15 @@ export class Fetcher {
   getMe = (): Promise<User> =>
     this.httpConnector.request(`/api/me`).then((res) => res.data);
 
-  getUser = (id: number): Promise<User> =>
-    this.httpConnector.request(`/api/user/${id}`).then((res) => res.data);
+  getUser = (userId: string): Promise<User> =>
+    this.httpConnector.request(`/api/user/${userId}`).then((res) => res.data);
 
-  getUserPosts = (id: number): Promise<Post[]> =>
-    this.httpConnector.request(`/api/user/${id}/posts`).then((res) => res.data);
+  getUserPosts = (userId: string): Promise<Post[]> =>
+    this.httpConnector
+      .request(`/api/user/${userId}/posts`)
+      .then((res) => res.data);
 
-  invalidateUser = (userId: number): Promise<{ status: "success" }> =>
+  invalidateUser = (userId: string): Promise<{ status: "success" }> =>
     this.httpConnector
       .request(`/api/user/${userId}/invalidate`, {
         method: "POST",
@@ -42,14 +44,14 @@ export class Fetcher {
 
   // like
 
-  likePost = (postId: number): ReturnType<LikeService["likePost"]> =>
+  likePost = (postId: string): ReturnType<LikeService["likePost"]> =>
     this.httpConnector
       .request(`/api/post/${postId}/like`, {
         method: "POST",
       })
       .then((res) => res.data);
 
-  unlikePost = (postId: number): ReturnType<LikeService["unlikePost"]> =>
+  unlikePost = (postId: string): ReturnType<LikeService["unlikePost"]> =>
     this.httpConnector
       .request(`/api/post/${postId}/unlike`, {
         method: "POST",
@@ -63,7 +65,7 @@ export class Fetcher {
     take,
     skip,
   }: {
-    postId: number;
+    postId: string;
     take?: number;
     skip?: number;
   }): ReturnType<CommentService["getCommentsByPostId"]> =>
@@ -72,7 +74,7 @@ export class Fetcher {
       .then((res) => res.data);
 
   addComment = (
-    postId: number,
+    postId: string,
     content: string
   ): ReturnType<CommentService["addComment"]> =>
     this.httpConnector
@@ -85,7 +87,7 @@ export class Fetcher {
       .then((res) => res.data);
 
   deleteComment = (
-    commentId: number
+    commentId: string
   ): ReturnType<CommentService["deleteComment"]> =>
     this.httpConnector
       .request(`/api/comment/${commentId}`, {
@@ -95,26 +97,26 @@ export class Fetcher {
 
   // follow
 
-  doIFollowUser = (userId: number): ReturnType<FollowService["doIFollow"]> =>
+  doIFollowUser = (userId: string): ReturnType<FollowService["doIFollow"]> =>
     this.httpConnector
       .request(`/api/user/${userId}/follow`)
       .then((res) => res.data);
 
   getFollowersCount = (
-    userId: number
+    userId: string
   ): ReturnType<FollowService["getNumberOfFollowers"]> =>
     this.httpConnector
       .request(`/api/user/${userId}/follow/count`)
       .then((res) => res.data);
 
-  followUser = (userId: number): ReturnType<FollowService["followUser"]> =>
+  followUser = (userId: string): ReturnType<FollowService["followUser"]> =>
     this.httpConnector
       .request(`/api/user/${userId}/follow`, {
         method: "POST",
       })
       .then((res) => res.data);
 
-  unfollowUser = (userId: number): ReturnType<FollowService["unfollowUser"]> =>
+  unfollowUser = (userId: string): ReturnType<FollowService["unfollowUser"]> =>
     this.httpConnector
       .request(`/api/user/${userId}/unfollow`, {
         method: "POST",
@@ -127,7 +129,7 @@ export class Fetcher {
     cursor,
     feedType,
   }: {
-    cursor?: number;
+    cursor?: string;
     feedType: FeedType;
   }): ReturnType<FeedService["fetchLatestFeed"]> =>
     this.httpConnector
@@ -136,8 +138,8 @@ export class Fetcher {
 
   // post
 
-  getPost = (id: number): Promise<Post> =>
-    this.httpConnector.request(`/api/post/${id}`).then((res) => res.data);
+  getPost = (postId: string): Promise<Post> =>
+    this.httpConnector.request(`/api/post/${postId}`).then((res) => res.data);
 
   getScreenshot = ({
     url,
@@ -160,7 +162,7 @@ export class Fetcher {
     description: string;
     content: string;
     codeLanguage: CodeLanguage;
-    tagId: number;
+    tagId: string;
   }): ReturnType<PostService["createPost"]> =>
     this.httpConnector
       .request(`/api/post/create`, {
@@ -169,7 +171,7 @@ export class Fetcher {
       })
       .then((res) => res.data);
 
-  deletePost = (postId: number): ReturnType<PostService["deletePost"]> =>
+  deletePost = (postId: string): ReturnType<PostService["deletePost"]> =>
     this.httpConnector
       .request(`/api/post/${postId}/delete`, {
         method: "DELETE",
@@ -177,13 +179,13 @@ export class Fetcher {
       .then((res) => res.data);
 
   updatePost = (
-    postId: number,
+    postId: string,
     data: {
       title: string;
       description: string;
       content: string;
       codeLanguage: CodeLanguage;
-      tagId: number;
+      tagId: string;
     }
   ): ReturnType<PostService["updatePost"]> =>
     this.httpConnector
@@ -193,14 +195,14 @@ export class Fetcher {
       })
       .then((res) => res.data);
 
-  publishPost = (postId: number): ReturnType<PostService["publishPost"]> =>
+  publishPost = (postId: string): ReturnType<PostService["publishPost"]> =>
     this.httpConnector
       .request(`/api/post/${postId}/publish`, {
         method: "PUT",
       })
       .then((res) => res.data);
 
-  unpublishPost = (postId: number): ReturnType<PostService["unpublishPost"]> =>
+  unpublishPost = (postId: string): ReturnType<PostService["unpublishPost"]> =>
     this.httpConnector
       .request(`/api/post/${postId}/unpublish`, {
         method: "PUT",
@@ -219,8 +221,8 @@ export class Fetcher {
     userId,
     cursor,
   }: {
-    userId: number;
-    cursor: number;
+    userId: string;
+    cursor: string;
   }): ReturnType<UserService["getUserActivity"]> => {
     return this.httpConnector
       .request(`/api/user/${userId}/activity?${qs.stringify({ cursor })}`)
@@ -228,7 +230,7 @@ export class Fetcher {
   };
 
   markActivityAsRead = (
-    activityId: number
+    activityId: string
   ): ReturnType<ActivityService["markActivityAsRead"]> => {
     return this.httpConnector
       .request(`/api/activity/${activityId}/markAsRead`, { method: "POST" })

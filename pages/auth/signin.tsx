@@ -6,21 +6,12 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
+import { SignUp } from "@clerk/nextjs";
 import { GetServerSideProps } from "next";
-import {
-  ClientSafeProvider,
-  getProviders,
-  signIn,
-  useSession,
-} from "next-auth/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import { Logo } from "../../components/Logo";
-
-interface Props {
-  providers: Record<string, ClientSafeProvider>;
-}
 
 const BrandLogo = ({ name }: { name: string }) => {
   const { colorMode } = useColorMode();
@@ -39,50 +30,25 @@ const BrandLogo = ({ name }: { name: string }) => {
   );
 };
 
-const SignIn: React.FC<Props> = ({ providers }) => {
-  const [me] = useSession();
+const SignIn = () => {
   const router = useRouter();
   const callbackUrl = router.query.callbackUrl as string | undefined;
 
-  React.useEffect(() => {
-    if (me) {
-      router.push(callbackUrl ? callbackUrl : "/");
-    }
-  }, [me, callbackUrl, router]);
+  // React.useEffect(() => {
+  //   if (me) {
+  //     router.push(callbackUrl ? callbackUrl : "/");
+  //   }
+  // }, [me, callbackUrl, router]);
 
-  if (me) return null;
+  // if (me) return null;
 
   return (
     <Center h="100vh">
       <Flex alignItems="center" direction="column">
-        <Box mb={5}>
-          <Logo />
-        </Box>
-        {Object.values(providers).map((provider) => (
-          <div key={provider.name}>
-            <Button
-              variant="outline"
-              onClick={() => signIn(provider.id)}
-              data-testid="github-signin-button"
-            >
-              <Flex alignItems="center">
-                <Text mr={2}>Sign in with</Text>
-                <BrandLogo name={provider.name} />
-              </Flex>
-            </Button>
-          </div>
-        ))}
+        <SignUp />
       </Flex>
     </Center>
   );
 };
 
 export default SignIn;
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const providers = await getProviders();
-
-  return {
-    props: { providers },
-  };
-};

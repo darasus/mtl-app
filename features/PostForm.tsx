@@ -33,7 +33,7 @@ export interface PostForm {
   description: string;
   content: string;
   codeLanguage: CodeLanguage;
-  tagId: number | null;
+  tagId: string | null;
 }
 
 export const postSchema = yup.object().shape({
@@ -190,7 +190,7 @@ export const PostForm: React.FC<Props> = ({
                   const items =
                     tags.data?.map((item) => ({
                       value: item.id,
-                      label: item.name!,
+                      label: item.name as string,
                     })) || [];
                   const selectedItems = items.filter(
                     (item) => item.value === value

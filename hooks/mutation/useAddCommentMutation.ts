@@ -1,9 +1,11 @@
+import { useUser } from "@clerk/nextjs";
+import { v4 } from "uuid";
 import { useMutation, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { CommentService } from "../../lib/prismaServices/CommentService";
+import { Comment } from "../../types/Comment";
 import { withToast } from "../../utils/withToast";
 import { useFetcher } from "../useFetcher";
-import { useMe } from "../useMe";
 
 type Page = ReturnType<CommentService["getCommentsByPostId"]>;
 
@@ -11,7 +13,7 @@ type Comments = {
   pages: Page[];
 };
 
-type Variables = { postId: number; content: string; take: number };
+type Variables = { postId: string; content: string; take: number };
 
 const toastConfig = {
   loading: "Posting comment...",
@@ -21,7 +23,7 @@ const toastConfig = {
 
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
-  const { me } = useMe();
+  const me = useUser();
   const fetcher = useFetcher();
 
   return useMutation(
@@ -40,20 +42,27 @@ export const useAddCommentMutation = () => {
         queryClient.setQueryData(
           clientCacheKey.createPostCommentsKey(postId),
           (old: any) => {
+            const comment: Comment = {
+              author: {
+                id: me.id,
+                fullname: me.fullName as string,
+                image: me.profileImageUrl,
+                username: me.username as string,
+                createdAt: me.createdAt,
+                email: me.primaryEmailAddress?.emailAddress as string,
+                updatedAt: me.updatedAt,
+              },
+              isMyComment: true,
+              authorId: me?.id,
+              content,
+              createdAt: new Date(),
+              id: v4(),
+              postId,
+              updatedAt: new Date(),
+            };
             return {
               ...old,
-              items: [
-                ...old.items,
-                {
-                  author: me,
-                  authorId: me?.id,
-                  content,
-                  createdAt: new Date().toISOString(),
-                  id: Math.random(),
-                  postId,
-                  updatedAt: new Date().toISOString(),
-                },
-              ],
+              items: [...old.items, comment],
             };
           }
         );

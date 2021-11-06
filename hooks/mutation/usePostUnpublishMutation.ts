@@ -9,14 +9,19 @@ const toastConfig = {
   error: "Library is not unpublished.",
 };
 
-export const usePostUnpublishMutation = (id: number) => {
+export const usePostUnpublishMutation = (postId: string) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
-  return useMutation(() => withToast(fetcher.unpublishPost(id), toastConfig), {
-    async onSettled() {
-      await queryClient.invalidateQueries(clientCacheKey.createPostKey(id));
-      await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);
-    },
-  });
+  return useMutation(
+    () => withToast(fetcher.unpublishPost(postId), toastConfig),
+    {
+      async onSettled() {
+        await queryClient.invalidateQueries(
+          clientCacheKey.createPostKey(postId)
+        );
+        await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);
+      },
+    }
+  );
 };

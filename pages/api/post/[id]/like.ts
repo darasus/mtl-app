@@ -3,29 +3,26 @@ import invariant from "invariant";
 import { PostService } from "../../../../lib/prismaServices/PostService";
 import { LikeService } from "../../../../lib/prismaServices/LikeService";
 import cache from "../../../../lib/cache";
-import { getUserSession } from "../../../../lib/getUserSession";
 import { ActivityService } from "../../../../lib/prismaServices/ActivityService";
 import { redisCacheKey } from "../../../../lib/RedisCacheKey";
 import { processErrorResponse } from "../../../../utils/error";
+import { requireSession, RequireSessionProp } from "@clerk/nextjs/api";
 
-export default async function handle(
-  req: NextApiRequest,
+export default requireSession(async function handle(
+  req: RequireSessionProp<NextApiRequest>,
   res: NextApiResponse
 ) {
   invariant(
     req.method === "POST",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  const userId = String(req.session?.userId);
 
   try {
-    const user = await getUserSession({ req });
-
-    if (!user) return null;
-
     const postService = new PostService();
     const likeService = new LikeService();
     const activityService = new ActivityService();
-    const post = await postService.fetchPost(Number(req.query.id), user.id);
+    const post = await postService.fetchPost(String(req.query.id), userId);
 
     if (!post) {
       return res.json({ status: "failure" });
@@ -35,16 +32,16 @@ export default async function handle(
       return res.status(400).json({ message: "Post is already liked by you" });
     }
 
-    const like = await likeService.likePost(Number(req.query.id), user.id);
+    const like = await likeService.likePost(String(req.query.id), userId);
     await cache.del(redisCacheKey.createPostKey(post.id));
     await activityService.addLikeActivity({
-      authorId: user.id,
+      authorId: userId,
       likeId: like.id,
-      ownerId: post.authorId as number,
+      ownerId: post.authorId as string,
       postId: post.id,
     });
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

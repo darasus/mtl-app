@@ -8,8 +8,8 @@ export class CommentService {
     commentId,
     userId,
   }: {
-    commentId: number;
-    userId: number;
+    commentId: string;
+    userId: string;
   }) {
     const comment = await prisma.comment.findFirst({
       where: {
@@ -23,7 +23,7 @@ export class CommentService {
     return comment?.author?.id === userId;
   }
 
-  async deleteComment(commentId: number, postId: number) {
+  async deleteComment(commentId: string, postId: string) {
     await prisma.comment.delete({
       where: {
         id: commentId,
@@ -37,10 +37,12 @@ export class CommentService {
     postId,
     take = 5,
     skip = 0,
+    userId,
   }: {
-    postId: number;
+    postId: string;
     take?: number;
     skip?: number;
+    userId?: string;
   }) {
     const baseQuery = {
       where: {
@@ -53,10 +55,14 @@ export class CommentService {
           ...baseQuery,
           take,
           skip,
-          orderBy: { id: "desc" },
+          orderBy: { createdAt: "desc" },
           select: commentFragment,
         })
-        .then((res) => res.reverse()),
+        .then((res) =>
+          res
+            .reverse()
+            .map((c) => ({ ...c, isMyComment: c.authorId === userId }))
+        ),
       prisma.comment.count({
         ...baseQuery,
       }),
@@ -75,8 +81,8 @@ export class CommentService {
     userId,
   }: {
     content: string;
-    postId: number;
-    userId: number;
+    postId: string;
+    userId: string;
   }) {
     return prisma.comment
       .create({

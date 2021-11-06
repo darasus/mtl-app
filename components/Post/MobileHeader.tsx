@@ -34,7 +34,7 @@ export const MobileHeader: React.FC<Props> = ({ post }) => {
             <Flex mr={2} alignItems="center" minWidth={0}>
               <Text fontSize="sm" color={secondaryTextColor} isTruncated>
                 <RouterLink href={`/u/${post.authorId}`}>
-                  {post.author?.name}
+                  {post.author?.fullname}
                 </RouterLink>
               </Text>
             </Flex>

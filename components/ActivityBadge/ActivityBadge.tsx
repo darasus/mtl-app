@@ -2,19 +2,19 @@ import { Button, IconButton, IconButtonProps } from "@chakra-ui/button";
 import { Menu, MenuButton, MenuList } from "@chakra-ui/menu";
 import { BellIcon } from "@heroicons/react/outline";
 import { useUserActivityQuery } from "../../hooks/query/useUserActivityQuery";
-import { useMe } from "../../hooks/useMe";
 import React from "react";
 import { useChannel, useEvent } from "@harelpls/use-pusher";
 import { Flex, Text } from "@chakra-ui/layout";
 import { Notification } from "./Notification";
 import { useLocalStorage } from "react-use";
 import { useMarkAllActivityAsReadMutation } from "../../hooks/mutation/useMarkAllActivityAsReadMutation";
+import { useUser } from "@clerk/nextjs";
 
 export const ActivityBadge = () => {
-  const { me } = useMe();
+  const me = useUser();
   const mutation = useMarkAllActivityAsReadMutation();
   const { data, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useUserActivityQuery(me?.id as number);
+    useUserActivityQuery(me.id);
   const [showUnread, setShowUnread] = React.useState(false);
   const [lastReadDate, setLastReadDate] =
     useLocalStorage<Date>("last_unread_date");
@@ -107,8 +107,8 @@ export const ActivityBadge = () => {
                 </Text>
               </Flex>
             )}
-            {data?.pages.map((page) =>
-              page.items.map((activity) => (
+            {data?.pages?.map((page) =>
+              page.items?.map((activity) => (
                 <Notification key={activity.id} activity={activity} />
               ))
             )}

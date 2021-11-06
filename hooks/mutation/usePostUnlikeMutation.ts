@@ -13,7 +13,7 @@ export const usePostUnlikeMutation = () => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
-  return useMutation<unknown, unknown, { postId: number }>(
+  return useMutation<unknown, unknown, { postId: string }>(
     ({ postId }) => withToast(fetcher.unlikePost(postId), toastConfig),
     {
       onMutate: async ({ postId }) => {

@@ -1,13 +1,11 @@
 import { Flex, Text, Box } from "@chakra-ui/react";
+import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import React from "react";
-import { useMe } from "../hooks/useMe";
 
 export const UserPreview = React.forwardRef<HTMLDivElement>(
   function UserPreview({ ...props }, ref) {
-    const { me } = useMe();
-
-    if (!me) return null;
+    const user = useUser();
 
     return (
       <div {...props}>
@@ -21,7 +19,7 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
               boxShadow="base"
             >
               <Image
-                src={me?.image as string}
+                src={user.profileImageUrl as string}
                 width="100"
                 height="100"
                 alt="Avatar"
@@ -34,7 +32,7 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
             fontWeight="semibold"
             data-testid="user-preview-name"
           >
-            {me?.name}
+            {user.fullName}
           </Text>
         </Flex>
       </div>

@@ -1,12 +1,12 @@
+import { withSession, WithSessionProp } from "@clerk/nextjs/api";
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ActivityService } from "../../../../../lib/prismaServices/ActivityService";
 import { FollowService } from "../../../../../lib/prismaServices/FollowService";
-import { getUserSession } from "../../../../../lib/getUserSession";
 import { processErrorResponse } from "../../../../../utils/error";
 
-export default async function handle(
-  req: NextApiRequest,
+export default withSession(async function handle(
+  req: WithSessionProp<NextApiRequest>,
   res: NextApiResponse
 ) {
   invariant(typeof req.query.id === "string", "User ID is not provided");
@@ -16,18 +16,17 @@ export default async function handle(
   );
   const followService = new FollowService();
   const activityService = new ActivityService();
+  const me = req.session;
 
   if (req.method === "GET") {
     try {
-      const user = await getUserSession({ req });
-
-      if (!user?.id) {
+      if (!me?.userId) {
         return res.json({ doIFollow: false });
       }
 
       const response = await followService.doIFollow({
-        followingUserId: Number(req.query.id),
-        followerUserId: user.id,
+        followingUserId: req.query.id,
+        followerUserId: me.userId,
       });
 
       return res.json({ doIFollow: response.doIFollow });
@@ -38,20 +37,18 @@ export default async function handle(
 
   if (req.method === "POST") {
     try {
-      const user = await getUserSession({ req });
-
-      if (!user?.id) {
+      if (!me?.userId) {
         return res.status(401).end();
       }
 
       const response = await followService.followUser({
-        followingUserId: Number(req.query.id),
-        followerUserId: user.id,
+        followingUserId: req.query.id,
+        followerUserId: me.userId,
       });
 
       await activityService.addFollowActivity({
-        ownerId: Number(req.query.id),
-        authorId: user.id,
+        ownerId: req.query.id,
+        authorId: me.userId,
         followFollowerId: response.followerId,
         followFollowingId: response.followingId,
       });
@@ -61,4 +58,4 @@ export default async function handle(
       return res.end(processErrorResponse(error));
     }
   }
-}
+});

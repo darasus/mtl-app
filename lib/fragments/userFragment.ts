@@ -1,10 +1,9 @@
 export const userFragment = {
-  userName: true,
+  username: true,
   email: true,
   id: true,
   image: true,
-  name: true,
-  emailVerified: true,
+  fullname: true,
   createdAt: true,
   updatedAt: true,
 };

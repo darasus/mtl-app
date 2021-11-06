@@ -7,7 +7,6 @@ import { PostUserPreview } from "../PostUserPreview";
 import { RouterLink } from "../RouterLinkt";
 import { useColors } from "../../hooks/useColors";
 import { CodeLanguageIcon } from "./CodeLanguageIcon";
-import { useMe } from "../../hooks/useMe";
 import { CodeLanguage } from ".prisma/client";
 
 interface Props {
@@ -22,11 +21,9 @@ export const DesktopHeader: React.FC<Props> = React.memo(
     showMetaInfo = true,
     isPostStatusVisible = false,
   }) {
-    const { me } = useMe();
     const { secondaryTextColor } = useColors();
     const breakpoint = useBreakpoint();
     const isMetaInfoVisible = breakpoint !== "base" && showMetaInfo;
-    const isMyPost = me?.id === post?.authorId;
 
     return (
       <Box p={4}>
@@ -99,7 +96,7 @@ export const DesktopHeader: React.FC<Props> = React.memo(
               </Box>
             </Flex>
           )}
-          {isPostStatusVisible && isMyPost && (
+          {isPostStatusVisible && post.isMyPost && (
             <>
               <Flex flexGrow={1} />
               <Flex>

@@ -23,9 +23,9 @@ export class PostService {
       content: string;
       description: string;
       codeLanguage: CodeLanguage;
-      tagId: number;
+      tagId: string;
     },
-    postId: number
+    postId: string
   ) {
     const oldPost = await prisma.post.findFirst({
       where: {
@@ -88,7 +88,7 @@ export class PostService {
     return post;
   }
 
-  async unpublishPost(postId: number) {
+  async unpublishPost(postId: string) {
     await prisma.post.update({
       where: { id: postId },
       data: {
@@ -99,7 +99,7 @@ export class PostService {
     await cache.del(redisCacheKey.createPostKey(postId));
   }
 
-  async publishPost(postId: number) {
+  async publishPost(postId: string) {
     await prisma.post.update({
       where: { id: postId },
       data: {
@@ -111,7 +111,7 @@ export class PostService {
   }
 
   async createPost(
-    userId: number,
+    userId: string,
     {
       title,
       content,
@@ -124,7 +124,7 @@ export class PostService {
       content: string;
       description: string;
       codeLanguage: CodeLanguage;
-      tagId: number;
+      tagId: string;
       isPublished: boolean;
     }
   ) {
@@ -167,7 +167,7 @@ export class PostService {
       content,
       description,
     }: { title: string; content: string; description: string },
-    userId: number
+    userId: string
   ) {
     await prisma.post.create({
       data: {
@@ -192,7 +192,7 @@ export class PostService {
     });
   }
 
-  async fetchPost(postId: number, userId?: number): Promise<Post | null> {
+  async fetchPost(postId: string, userId?: string): Promise<Post | null> {
     const post = await cache.fetch(
       redisCacheKey.createPostKey(postId),
       () =>
@@ -230,7 +230,7 @@ export class PostService {
     );
   }
 
-  async findPostByCommentId(commentId: number) {
+  async findPostByCommentId(commentId: string) {
     const post = await prisma.post.findFirst({
       where: {
         comments: {
@@ -244,7 +244,7 @@ export class PostService {
     return post;
   }
 
-  async deletePost(postId: number) {
+  async deletePost(postId: string) {
     await prisma.like.deleteMany({
       where: {
         postId,

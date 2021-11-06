@@ -1,8 +1,8 @@
+import { useUser } from "@clerk/nextjs";
 import { useMutation, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { withToast } from "../../utils/withToast";
 import { useFetcher } from "../useFetcher";
-import { useMe } from "../useMe";
 
 const toastConfig = {
   loading: "Marking all notifications as read...",
@@ -13,14 +13,14 @@ const toastConfig = {
 export const useMarkAllActivityAsReadMutation = () => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
-  const { me } = useMe();
+  const me = useUser();
 
   return useMutation(
     () => withToast(fetcher.markAllActivityAsRead(), toastConfig),
     {
       async onSuccess() {
         await queryClient.invalidateQueries(
-          clientCacheKey.createUserActivityKey(me?.id as number)
+          clientCacheKey.createUserActivityKey(me.id)
         );
       },
     }

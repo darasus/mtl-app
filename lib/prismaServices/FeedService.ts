@@ -17,20 +17,25 @@ type InputPost = Prisma.Post & {
 export type FetchFeedResponse = {
   items: Post[];
   count: number;
-  cursor: number;
+  cursor: string | null;
   total: number;
 };
 
 export class FeedService {
-  preparePost = (post: InputPost, userId: number | undefined): Post => {
+  preparePost = (post: InputPost, userId: string | undefined): Post => {
     const isLikedByMe = post.likes.some(
       (like: Like & { author: User | null }) => like.author?.id === userId
     );
 
     return {
       ...R.omit(["likes"], post),
+      comments: post.comments.map((c) => ({
+        ...c,
+        isMyComment: c.authorId === userId,
+      })),
       likesCount: post.likes.length,
       isLikedByMe,
+      isMyPost: post.authorId === userId,
     };
   };
 
@@ -39,16 +44,16 @@ export class FeedService {
     take = 25,
     cursor,
   }: {
-    userId?: number;
+    userId?: string;
     take?: number;
-    cursor?: number;
+    cursor?: string;
   }): Promise<FetchFeedResponse> {
     if (!userId) {
       return {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 
@@ -85,7 +90,7 @@ export class FeedService {
       },
       orderBy: [
         {
-          id: "desc",
+          createdAt: "asc",
         },
       ],
       ...(cursor
@@ -107,7 +112,7 @@ export class FeedService {
         comments: {
           orderBy: [
             {
-              id: "desc",
+              createdAt: "asc",
             },
           ],
           select: commentFragment,
@@ -121,7 +126,7 @@ export class FeedService {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 
@@ -147,9 +152,9 @@ export class FeedService {
     take = 25,
     cursor,
   }: {
-    userId?: number;
+    userId?: string;
     take?: number;
-    cursor?: number;
+    cursor?: string;
   }): Promise<FetchFeedResponse> {
     const total = await prisma.post.count({
       where: {
@@ -163,7 +168,7 @@ export class FeedService {
       },
       orderBy: [
         {
-          id: "desc",
+          createdAt: "asc",
         },
       ],
       ...(cursor
@@ -185,7 +190,7 @@ export class FeedService {
         comments: {
           orderBy: [
             {
-              id: "desc",
+              createdAt: "asc",
             },
           ],
           select: commentFragment,
@@ -194,19 +199,19 @@ export class FeedService {
       },
     });
 
-    if (posts.length === 0) {
+    if (posts?.length === 0) {
       return {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 
     const lastPostInResults = posts[posts.length - 1];
     const newCursor = lastPostInResults.id;
 
-    return {
+    const response = {
       items: posts
         .map((post) => ({
           ...post,
@@ -218,5 +223,7 @@ export class FeedService {
       cursor: newCursor,
       total,
     };
+
+    return response;
   }
 }

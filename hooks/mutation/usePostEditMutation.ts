@@ -9,7 +9,7 @@ interface Variables {
   description: string;
   content: string;
   codeLanguage: CodeLanguage;
-  tagId: number;
+  tagId: string;
 }
 
 const toastConfig = {
@@ -18,16 +18,18 @@ const toastConfig = {
   error: "Post is not updated.",
 };
 
-export const usePostEditMutation = (id: number) => {
+export const usePostEditMutation = (postId: string) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
 
   return useMutation(
     (variables: Variables) =>
-      withToast(fetcher.updatePost(id, variables), toastConfig),
+      withToast(fetcher.updatePost(postId, variables), toastConfig),
     {
       async onSettled() {
-        await queryClient.invalidateQueries(clientCacheKey.createPostKey(id));
+        await queryClient.invalidateQueries(
+          clientCacheKey.createPostKey(postId)
+        );
         await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);
       },
     }

@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
 import { PostService } from "../../../../lib/prismaServices/PostService";
-import { getUserSession } from "../../../../lib/getUserSession";
 import { processErrorResponse } from "../../../../utils/error";
+import { requireSession } from "@clerk/nextjs/api";
 
-export default async function handle(
+export default requireSession(async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -20,12 +20,6 @@ export default async function handle(
   invariant(typeof req.body.tagId === "number", "tagId is required.");
 
   try {
-    const user = await getUserSession({ req });
-
-    if (!user?.id) {
-      return res.status(401).end();
-    }
-
     const postService = new PostService();
     const post = await postService.updatePost(
       {
@@ -33,12 +27,12 @@ export default async function handle(
         content: req.body.content,
         description: req.body.description,
         codeLanguage: req.body.codeLanguage,
-        tagId: Number(req.body.tagId),
+        tagId: String(req.body.tagId),
       },
-      Number(req.query.id)
+      String(req.query.id)
     );
     res.json(post);
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});
