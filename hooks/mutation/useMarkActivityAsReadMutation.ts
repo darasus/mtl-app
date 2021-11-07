@@ -6,12 +6,12 @@ import { useMe } from "../useMe";
 export const useMarkActivityAsReadMutation = (activityId: number) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
-  const { me } = useMe();
+  const { user } = useMe();
 
   return useMutation(() => fetcher.markActivityAsRead(activityId), {
     async onSettled() {
       await queryClient.invalidateQueries(
-        clientCacheKey.createUserActivityKey(me?.id as number)
+        clientCacheKey.createUserActivityKey(user?.id as string)
       );
     },
   });

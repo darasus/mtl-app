@@ -145,7 +145,7 @@ export class ActivityService {
     });
   }
 
-  async markAllActivityAsRead({ userId }: { userId: number }) {
+  async markAllActivityAsRead({ userId }: { userId: string }) {
     const allUnreeadActivities = await prisma.activity.findMany({
       where: {
         ownerId: userId,

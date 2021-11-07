@@ -38,7 +38,7 @@ export class UserService {
     );
   }
 
-  async getUserById(userId: number) {
+  async getUserById(userId: string) {
     return cache.fetch(
       redisCacheKey.createUserKey(userId),
       () =>
@@ -52,7 +52,7 @@ export class UserService {
     );
   }
 
-  async getUserPosts(userId: number, isMe: boolean): Promise<Post[]> {
+  async getUserPosts(userId: string, isMe: boolean): Promise<Post[]> {
     const posts = await prisma.post.findMany({
       where: {
         authorId: userId,
@@ -94,7 +94,7 @@ export class UserService {
     cursor,
     take = 10,
   }: {
-    userId: number;
+    userId: string;
     cursor?: number;
     take?: number;
   }) {

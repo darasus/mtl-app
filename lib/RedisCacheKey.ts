@@ -7,7 +7,7 @@ export class RedisCacheKey {
     return `user:${email}`;
   }
 
-  createUserKey(userId: number): string {
+  createUserKey(userId: string): string {
     return `user:${userId}`;
   }
 
@@ -15,7 +15,7 @@ export class RedisCacheKey {
     return `post:${postId}`;
   }
 
-  createUserFollowerCountKey(userId: number): string {
+  createUserFollowerCountKey(userId: string): string {
     return `user:${userId}:follower_count`;
   }
 

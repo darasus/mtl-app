@@ -4,7 +4,7 @@ import prisma from "../prisma";
 import { redisCacheKey } from "../RedisCacheKey";
 
 export class FollowService {
-  async getNumberOfFollowers(userId: number) {
+  async getNumberOfFollowers(userId: string) {
     const response = await cache.fetch(
       redisCacheKey.createUserFollowerCountKey(userId),
       async () => {

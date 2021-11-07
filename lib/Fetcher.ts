@@ -39,13 +39,15 @@ export class Fetcher {
   getMe = (): Promise<User> =>
     this.httpConnector.request(`/api/me`).then((res) => res.data);
 
-  getUser = (id: number): Promise<User> =>
-    this.httpConnector.request(`/api/user/${id}`).then((res) => res.data);
+  getUser = (userId: string): Promise<User> =>
+    this.httpConnector.request(`/api/user/${userId}`).then((res) => res.data);
 
-  getUserPosts = (id: number): Promise<Post[]> =>
-    this.httpConnector.request(`/api/user/${id}/posts`).then((res) => res.data);
+  getUserPosts = (userId: string): Promise<Post[]> =>
+    this.httpConnector
+      .request(`/api/user/${userId}/posts`)
+      .then((res) => res.data);
 
-  invalidateUser = (userId: number): Promise<{ status: "success" }> =>
+  invalidateUser = (userId: string): Promise<{ status: "success" }> =>
     this.httpConnector
       .request(`/api/user/${userId}/invalidate`, {
         method: "POST",
@@ -108,26 +110,26 @@ export class Fetcher {
 
   // follow
 
-  doIFollowUser = (userId: number): ReturnType<FollowService["doIFollow"]> =>
+  doIFollowUser = (userId: string): ReturnType<FollowService["doIFollow"]> =>
     this.httpConnector
       .request(`/api/user/${userId}/follow`)
       .then((res) => res.data);
 
   getFollowersCount = (
-    userId: number
+    userId: string
   ): ReturnType<FollowService["getNumberOfFollowers"]> =>
     this.httpConnector
       .request(`/api/user/${userId}/follow/count`)
       .then((res) => res.data);
 
-  followUser = (userId: number): ReturnType<FollowService["followUser"]> =>
+  followUser = (userId: string): ReturnType<FollowService["followUser"]> =>
     this.httpConnector
       .request(`/api/user/${userId}/follow`, {
         method: "POST",
       })
       .then((res) => res.data);
 
-  unfollowUser = (userId: number): ReturnType<FollowService["unfollowUser"]> =>
+  unfollowUser = (userId: string): ReturnType<FollowService["unfollowUser"]> =>
     this.httpConnector
       .request(`/api/user/${userId}/unfollow`, {
         method: "POST",
@@ -232,7 +234,7 @@ export class Fetcher {
     userId,
     cursor,
   }: {
-    userId: number;
+    userId: string;
     cursor: number;
   }): ReturnType<UserService["getUserActivity"]> => {
     return this.httpConnector

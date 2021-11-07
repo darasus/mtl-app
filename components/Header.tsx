@@ -12,7 +12,6 @@ import {
   MenuItem,
   MenuList,
   useBreakpoint,
-  Spinner,
   Text,
 } from "@chakra-ui/react";
 import { PlusSmIcon, UserIcon, LogoutIcon } from "@heroicons/react/outline";

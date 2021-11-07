@@ -111,7 +111,7 @@ export class PostService {
   }
 
   async createPost(
-    userId: number,
+    userId: string,
     {
       title,
       content,
@@ -167,7 +167,7 @@ export class PostService {
       content,
       description,
     }: { title: string; content: string; description: string },
-    userId: number
+    userId: string
   ) {
     await prisma.post.create({
       data: {

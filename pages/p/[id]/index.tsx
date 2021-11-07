@@ -17,7 +17,7 @@ import { clientCacheKey } from "../../../lib/ClientCacheKey";
 const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
-  const { me } = useMe();
+  const { user } = useMe();
   const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${
     process.env.NEXTAUTH_URL
   }/p/${router.query.id}/thumbnail?updateDate=${new Date(
@@ -43,7 +43,7 @@ const PostPage: React.FC = () => {
           {post.data && (
             <Post
               postId={post.data.id}
-              isMyPost={post.data.authorId === me?.id}
+              isMyPost={post.data.authorId === user?.id}
               isPostLoading={post.isFetching}
               isPostStatusVisible={true}
             />

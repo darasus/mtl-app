@@ -22,7 +22,7 @@ export type FetchFeedResponse = {
 };
 
 export class FeedService {
-  preparePost = (post: InputPost, userId: number | undefined): Post => {
+  preparePost = (post: InputPost, userId: string | undefined): Post => {
     const isLikedByMe = post.likes.some(
       (like: Like & { author: User | null }) => like.author?.id === userId
     );

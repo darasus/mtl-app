@@ -13,14 +13,14 @@ const toastConfig = {
 export const useMarkAllActivityAsReadMutation = () => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
-  const { me } = useMe();
+  const { user } = useMe();
 
   return useMutation(
     () => withToast(fetcher.markAllActivityAsRead(), toastConfig),
     {
       async onSuccess() {
         await queryClient.invalidateQueries(
-          clientCacheKey.createUserActivityKey(me?.id as number)
+          clientCacheKey.createUserActivityKey(user?.id as string)
         );
       },
     }

@@ -13,7 +13,7 @@ export const useFollowMutation = () => {
   const qc = useQueryClient();
   const fetcher = useFetcher();
 
-  return useMutation<unknown, unknown, { userId: number }>(
+  return useMutation<unknown, unknown, { userId: string }>(
     ({ userId }) => withToast(fetcher.followUser(userId), toastConfig),
     {
       onSuccess(_, { userId }) {

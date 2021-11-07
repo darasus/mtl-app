@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { CommentService } from "../../lib/prismaServices/CommentService";
+import { User } from "../../types/User";
 import { withToast } from "../../utils/withToast";
 import { useFetcher } from "../useFetcher";
 import { useMe } from "../useMe";
@@ -21,7 +22,7 @@ const toastConfig = {
 
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
-  const { me } = useMe();
+  const { user } = useMe();
   const fetcher = useFetcher();
 
   return useMutation(
@@ -40,13 +41,24 @@ export const useAddCommentMutation = () => {
         queryClient.setQueryData(
           clientCacheKey.createPostCommentsKey(postId),
           (old: any) => {
+            const tempUser: User = {
+              id: "123",
+              firstName: user?.user_metadata.first_name,
+              lastName: user?.user_metadata.last_name,
+              createdAt: new Date(),
+              email: user?.email as string,
+              image: "",
+              name: `${user?.user_metadata.first_name} ${user?.user_metadata.last_name}`,
+              updatedAt: new Date(),
+              userName: "",
+            };
             return {
               ...old,
               items: [
                 ...old.items,
                 {
-                  author: me,
-                  authorId: me?.id,
+                  author: tempUser,
+                  authorId: tempUser.id,
                   content,
                   createdAt: new Date().toISOString(),
                   id: Math.random(),
