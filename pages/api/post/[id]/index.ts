@@ -14,7 +14,7 @@ export default async function handle(
   );
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
     const postService = new PostService();
     const post = await postService.fetchPost(Number(req.query.id), user?.id);
 

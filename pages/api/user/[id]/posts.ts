@@ -13,11 +13,11 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
   invariant(typeof req.query.id === "string", "User ID is not provided");
+  const userId = req.query.id;
 
   try {
-    const me = await getUserSession({ req });
+    const me = getUserSession(req);
     const userService = new UserService();
-    const userId = Number(req.query.id);
     const posts = await userService.getUserPosts(userId, me?.id === userId);
     res.json(posts);
   } catch (error) {

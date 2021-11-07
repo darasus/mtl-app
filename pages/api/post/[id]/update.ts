@@ -20,7 +20,7 @@ export default async function handle(
   invariant(typeof req.body.tagId === "number", "tagId is required.");
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
 
     if (!user?.id) {
       return res.status(401).end();

@@ -17,7 +17,7 @@ export default async function handle(
   const activityService = new ActivityService();
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
 
     if (!user?.id) {
       return res.status(401).end();

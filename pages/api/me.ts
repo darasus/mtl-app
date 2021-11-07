@@ -13,7 +13,7 @@ export default async function handle(
   );
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
     res.send(user);
   } catch (error) {
     return res.status(400).end(processErrorResponse(error));

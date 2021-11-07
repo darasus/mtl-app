@@ -25,8 +25,8 @@ export class FollowService {
     followingUserId,
     followerUserId,
   }: {
-    followingUserId: number;
-    followerUserId: number;
+    followingUserId: string;
+    followerUserId: string;
   }) {
     const response = await prisma.follow.create({
       data: {
@@ -59,8 +59,8 @@ export class FollowService {
     followingUserId,
     followerUserId,
   }: {
-    followingUserId: number;
-    followerUserId: number;
+    followingUserId: string;
+    followerUserId: string;
   }) {
     await prisma.follow.delete({
       where: {
@@ -84,8 +84,8 @@ export class FollowService {
     followingUserId,
     followerUserId,
   }: {
-    followingUserId: number;
-    followerUserId: number;
+    followingUserId: string;
+    followerUserId: string;
   }) {
     const response = await cache.fetch(
       redisCacheKey.createDoIFollowKey({

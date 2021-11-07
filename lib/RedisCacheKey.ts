@@ -23,8 +23,8 @@ export class RedisCacheKey {
     followingUserId,
     followerUserId,
   }: {
-    followingUserId: number;
-    followerUserId: number;
+    followingUserId: string;
+    followerUserId: string;
   }): string {
     return `follow:${followingUserId}:${followerUserId}`;
   }

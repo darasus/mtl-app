@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from "axios";
+import { supabase } from "./supabase";
+import * as R from "ramda";
 
 export class ClientHttpConnector {
   request: AxiosInstance;
@@ -21,11 +23,13 @@ export class ClientHttpConnector {
   }
 
   createRequest = () => {
+    const session = supabase.auth.session();
     const client = axios.create({
       baseURL: process.env.NEXTAUTH_URL,
-      headers: {
-        Pragma: "no-cache",
-      },
+      headers: R.reject(R.isNil, {
+        "Content-Type": "application/json",
+        token: session?.access_token,
+      }),
     });
 
     client.interceptors.response.use(

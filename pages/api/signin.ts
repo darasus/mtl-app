@@ -32,16 +32,16 @@ export default async function handle(
       return res.status(response.error.status).json(response.error.message);
     }
     res.json(response);
-    if (response.session) {
-      supabase.auth.api.setAuthCookie(
-        {
-          ...req,
-          headers: req.headers,
-          body: { session: response.session, event: "SIGNED_IN" },
-        },
-        res
-      );
-    }
+    // if (response.session) {
+    //   supabase.auth.api.setAuthCookie(
+    //     {
+    //       ...req,
+    //       headers: req.headers,
+    //       body: { session: response.session, event: "SIGNED_IN" },
+    //     },
+    //     res
+    //   );
+    // }
   } catch (error) {
     return res.status(400).end(processErrorResponse(error));
   }

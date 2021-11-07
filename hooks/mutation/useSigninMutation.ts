@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { useFetcher } from "../useFetcher";
+import { supabase } from "../../lib/supabase";
 
 interface Variables {
   email: string;
@@ -7,8 +7,12 @@ interface Variables {
 }
 
 export const useSigninMutation = () => {
-  const fetcher = useFetcher();
-  return useMutation(({ email, password }: Variables) =>
-    fetcher.signIn({ email, password })
-  );
+  return useMutation(async ({ email, password }: Variables) => {
+    const { data, error } = await supabase.auth.signIn({ email, password });
+    if (error) {
+      throw error.message;
+    }
+
+    return data;
+  });
 };

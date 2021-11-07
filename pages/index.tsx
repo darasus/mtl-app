@@ -22,8 +22,6 @@ const Index: React.FC = () => {
   const feed = useFeedQuery({ feedType });
   const { user, userLoaded } = useMe();
 
-  console.log(user);
-
   return (
     <>
       <Head title="Home" urlPath="" />

@@ -18,7 +18,7 @@ export default async function handle(
   );
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
 
     if (!user) return null;
 
@@ -40,7 +40,7 @@ export default async function handle(
     await activityService.addLikeActivity({
       authorId: user.id,
       likeId: like.id,
-      ownerId: post.authorId as number,
+      ownerId: post.authorId as string,
       postId: post.id,
     });
     res.json({ status: "success" });

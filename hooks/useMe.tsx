@@ -1,17 +1,18 @@
 import React from "react";
 import { supabase } from "../lib/supabase";
 import { Session, User } from "@supabase/gotrue-js";
+import { ApiError } from "@supabase/gotrue-js/dist/main/GoTrueApi";
 
 export const UserContext = React.createContext<{
   session: Session | null;
   user: User | null;
   userLoaded: boolean;
-  signOut: () => Promise<any>;
+  signOut: () => Promise<{ error: ApiError | null }>;
 }>({
   session: null,
   user: null,
   userLoaded: false,
-  signOut: () => Promise.resolve(),
+  signOut: () => Promise.resolve({ error: null }),
 });
 
 export const UserContextProvider: React.FC = ({ children }) => {
@@ -26,7 +27,6 @@ export const UserContextProvider: React.FC = ({ children }) => {
     setUserLoaded(!!session?.user);
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_, session) => {
-        console.log(authListener);
         setSession(session);
         setUser(session?.user ?? null);
         setUserLoaded(!!session?.user);
@@ -38,9 +38,9 @@ export const UserContextProvider: React.FC = ({ children }) => {
     };
   }, []);
 
-  const signOut = () => {
+  const signOut = React.useCallback(() => {
     return supabase.auth.signOut();
-  };
+  }, []);
 
   const value = {
     session,

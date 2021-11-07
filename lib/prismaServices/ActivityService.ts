@@ -113,7 +113,7 @@ export class ActivityService {
     ownerId,
   }: {
     commentId: number;
-    ownerId: number;
+    ownerId: string;
   }) {
     const activity = await prisma.activity.findFirst({
       where: {

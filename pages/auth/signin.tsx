@@ -6,13 +6,13 @@ import {
   Input,
   Grid,
   GridItem,
+  Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Logo } from "../../components/Logo";
 import { useSigninMutation } from "../../hooks/mutation/useSigninMutation";
-import { supabase } from "../../lib/supabase";
 
 interface FormData {
   email: string;
@@ -24,13 +24,13 @@ const SignIn: React.FC = () => {
   const signInMutation = useSigninMutation();
   const form = useForm<FormData>();
 
-  const submit = form.handleSubmit((data) =>
-    signInMutation.mutateAsync(data).then(async (res) => {
-      console.log({ res });
-      await supabase.auth.setSession(res.session.refresh_token);
+  React.useEffect(() => {
+    if (signInMutation.isSuccess) {
       router.push("/");
-    })
-  );
+    }
+  }, [signInMutation.isSuccess, router]);
+
+  const submit = form.handleSubmit((data) => signInMutation.mutateAsync(data));
 
   return (
     <Center h="100vh">
@@ -55,6 +55,11 @@ const SignIn: React.FC = () => {
                   type="password"
                 />
               </GridItem>
+              {signInMutation.error && (
+                <GridItem colSpan={12}>
+                  <Text color="red.500">{signInMutation.error as string}</Text>
+                </GridItem>
+              )}
               <GridItem colSpan={12}>
                 <Button
                   isFullWidth
@@ -65,9 +70,18 @@ const SignIn: React.FC = () => {
                 </Button>
               </GridItem>
               <GridItem colSpan={12}>
-                <Button isFullWidth onClick={() => router.push("/auth/signup")}>
-                  Sign up
-                </Button>
+                <Flex justifyContent="center">
+                  <Text color="gray.500" mr={1} fontSize="sm">
+                    or
+                  </Text>
+                  <Button
+                    variant="link"
+                    onClick={() => router.push("/auth/signup")}
+                    size="sm"
+                  >
+                    Sign up
+                  </Button>
+                </Flex>
               </GridItem>
             </Grid>
           </form>

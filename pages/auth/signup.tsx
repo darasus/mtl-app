@@ -8,6 +8,7 @@ import {
   GridItem,
   Text,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Logo } from "../../components/Logo";
@@ -21,6 +22,7 @@ interface FormData {
 }
 
 const SignIn: React.FC = () => {
+  const router = useRouter();
   const [signedUp, setSignedUp] = React.useState<boolean>(false);
   const signUpMutation = useSignupMutation();
   const form = useForm<FormData>();
@@ -73,6 +75,20 @@ const SignIn: React.FC = () => {
                   >
                     Sign up
                   </Button>
+                </GridItem>
+                <GridItem colSpan={12}>
+                  <Flex justifyContent="center">
+                    <Text color="gray.500" mr={1} fontSize="sm">
+                      or
+                    </Text>
+                    <Button
+                      variant="link"
+                      onClick={() => router.push("/auth/signin")}
+                      size="sm"
+                    >
+                      Sign in
+                    </Button>
+                  </Flex>
                 </GridItem>
               </Grid>
             </form>

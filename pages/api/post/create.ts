@@ -23,7 +23,7 @@ export default async function handle(
   );
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
 
     if (!user?.id) {
       return res.status(401).end();
