@@ -32,7 +32,7 @@ export default async function handle(
 
       return res.json({ doIFollow: response.doIFollow });
     } catch (error) {
-      return res.end(processErrorResponse(error));
+      return res.status(400).end(processErrorResponse(error));
     }
   }
 
@@ -58,7 +58,7 @@ export default async function handle(
 
       return res.json(response);
     } catch (error) {
-      return res.end(processErrorResponse(error));
+      return res.status(400).end(processErrorResponse(error));
     }
   }
 }

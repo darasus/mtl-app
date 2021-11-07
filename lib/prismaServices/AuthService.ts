@@ -30,4 +30,9 @@ export class AuthService {
 
     return response;
   }
+
+  async signIn({ email, password }: { email: string; password: string }) {
+    const response = await supabase.auth.signIn({ email, password });
+    return response;
+  }
 }

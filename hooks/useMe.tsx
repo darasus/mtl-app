@@ -26,6 +26,7 @@ export const UserContextProvider: React.FC = ({ children }) => {
     setUserLoaded(!!session?.user);
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_, session) => {
+        console.log(authListener);
         setSession(session);
         setUser(session?.user ?? null);
         setUserLoaded(!!session?.user);

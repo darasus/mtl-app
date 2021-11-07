@@ -192,7 +192,7 @@ export class PostService {
     });
   }
 
-  async fetchPost(postId: number, userId?: number): Promise<Post | null> {
+  async fetchPost(postId: number, userId?: string): Promise<Post | null> {
     const post = await cache.fetch(
       redisCacheKey.createPostKey(postId),
       () =>

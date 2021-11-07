@@ -9,7 +9,7 @@ export type InputPost = Prisma.Post & {
   tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
 };
 
-export const preparePost = (post: InputPost, userId?: number): Post => {
+export const preparePost = (post: InputPost, userId?: string): Post => {
   const isLikedByMe = userId
     ? post.likes.some(
         (like: Like & { author: User | null }) => like.author?.id === userId

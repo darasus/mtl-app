@@ -18,6 +18,6 @@ export default async function handle(
     await cache.perge();
     res.status(200).json({ status: "success" });
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

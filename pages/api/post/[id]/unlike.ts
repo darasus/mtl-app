@@ -44,6 +44,6 @@ export default async function handle(
     await cache.del(redisCacheKey.createPostKey(postId));
     res.json({ status: "success" });
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

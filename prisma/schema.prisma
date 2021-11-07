@@ -29,7 +29,7 @@ model User {
   firstName        String?
   lastName         String?
   name             String?
-  email            String
+  email            String     @unique
   userName         String?    @unique @default(uuid())
   image            String?
   createdAt        DateTime   @default(now()) @map(name: "created_at")

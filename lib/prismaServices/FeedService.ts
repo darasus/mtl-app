@@ -39,7 +39,7 @@ export class FeedService {
     take = 25,
     cursor,
   }: {
-    userId?: number;
+    userId?: string;
     take?: number;
     cursor?: number;
   }): Promise<FetchFeedResponse> {
@@ -147,7 +147,7 @@ export class FeedService {
     take = 25,
     cursor,
   }: {
-    userId?: number;
+    userId?: string;
     take?: number;
     cursor?: number;
   }): Promise<FetchFeedResponse> {

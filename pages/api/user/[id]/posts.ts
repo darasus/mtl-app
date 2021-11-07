@@ -21,6 +21,6 @@ export default async function handle(
     const posts = await userService.getUserPosts(userId, me?.id === userId);
     res.json(posts);
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

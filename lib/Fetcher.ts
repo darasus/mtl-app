@@ -24,6 +24,11 @@ export class Fetcher {
 
   // auth
 
+  signIn = (data: { email: string; password: string }) =>
+    this.httpConnector.request
+      .post(`/api/signin`, data)
+      .then((res) => res.data);
+
   signUp = (data: {
     firstName: string;
     lastName: string;

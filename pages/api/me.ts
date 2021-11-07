@@ -16,6 +16,6 @@ export default async function handle(
     const user = await getUserSession({ req });
     res.send(user);
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

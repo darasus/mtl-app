@@ -39,6 +39,6 @@ export default async function handle(
     );
     res.json(post);
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

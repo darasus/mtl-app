@@ -4,6 +4,7 @@ import { FeedService } from "../../lib/prismaServices/FeedService";
 import { getUserSession } from "../../lib/getUserSession";
 import { FeedType } from "../../types/FeedType";
 import { processErrorResponse } from "../../utils/error";
+import { supabase } from "../../lib/supabase";
 
 export default async function handle(
   req: NextApiRequest,
@@ -17,6 +18,10 @@ export default async function handle(
     typeof req.query.feedType === "string",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+
+  const session = await supabase.auth.api.getUserByCookie(req);
+
+  console.log({ session });
 
   const feedType = req.query.feedType as FeedType;
 
@@ -45,6 +50,6 @@ export default async function handle(
       return res.send(feed);
     }
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }
