@@ -12,7 +12,7 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
     return (
       <div {...props}>
         <Flex ref={ref} alignItems="center">
-          {/* <Box mr={2}>
+          <Box mr={2}>
             <Box
               width={7}
               height={7}
@@ -21,14 +21,14 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
               boxShadow="base"
             >
               <Image
-                src={me?.image as string}
+                src={user?.user_metadata.image as string}
                 width="100"
                 height="100"
                 alt="Avatar"
                 quality={100}
               />
             </Box>
-          </Box> */}
+          </Box>
           <Text
             fontSize="sm"
             fontWeight="semibold"

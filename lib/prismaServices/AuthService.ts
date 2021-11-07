@@ -10,7 +10,10 @@ export class AuthService {
       data?: object;
     }
   ) {
-    const response = await supabase.auth.signUp(props, options);
+    const response = await supabase.auth.signUp(props, {
+      ...options,
+      data: { image: "/user-image.png", ...options.data },
+    });
     const { user } = response;
 
     if (!user) return null;
@@ -21,7 +24,7 @@ export class AuthService {
         name: `${user.user_metadata.first_name} ${user.user_metadata.last_name}`,
         firstName: user.user_metadata.first_name,
         lastName: user.user_metadata.last_name,
-        image: undefined,
+        image: user.user_metadata.image,
         createdAt: user.created_at,
         updatedAt: user.created_at,
         email: user.email as string,

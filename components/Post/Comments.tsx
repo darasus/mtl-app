@@ -120,23 +120,21 @@ export const Comments: React.FC<Props> = ({ postId }) => {
           <form onSubmit={submit}>
             <Box p={3}>
               <Flex>
-                {/* {user?.image && (
-                  <Box
-                    width={7}
-                    height={7}
-                    borderRadius={100}
-                    overflow="hidden"
-                    boxShadow="base"
-                    mr={2}
-                  >
-                    <Image
-                      src={user?.image}
-                      width="100"
-                      height="100"
-                      alt="Avatar"
-                    />
-                  </Box>
-                )} */}
+                <Box
+                  width={7}
+                  height={7}
+                  borderRadius={100}
+                  overflow="hidden"
+                  boxShadow="base"
+                  mr={2}
+                >
+                  <Image
+                    src={user?.user_metadata.image}
+                    width="100"
+                    height="100"
+                    alt="Avatar"
+                  />
+                </Box>
                 <Box flexGrow={1}>
                   <Controller
                     name="comment"

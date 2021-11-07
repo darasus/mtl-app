@@ -23,6 +23,7 @@ export const Header: React.FC = () => {
   const router = useRouter();
   const { user, userLoaded, signOut } = useMe();
   const breakpoint = useBreakpoint();
+  console.log(user);
 
   return (
     <Box py="6" cursor="pointer">

@@ -40,6 +40,7 @@ export const useAddCommentMutation = () => {
 
         queryClient.setQueryData(
           clientCacheKey.createPostCommentsKey(postId),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (old: any) => {
             const tempUser: User = {
               id: "123",
@@ -47,7 +48,7 @@ export const useAddCommentMutation = () => {
               lastName: user?.user_metadata.last_name,
               createdAt: new Date(),
               email: user?.email as string,
-              image: "",
+              image: "/user-image.png",
               name: `${user?.user_metadata.first_name} ${user?.user_metadata.last_name}`,
               updatedAt: new Date(),
               userName: "",
@@ -72,6 +73,7 @@ export const useAddCommentMutation = () => {
 
         return { prev };
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (_, { postId }, context: any) => {
         if (context?.prev) {
           queryClient.setQueryData<Comments>(

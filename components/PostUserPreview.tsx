@@ -20,12 +20,12 @@ export const PostUserPreview: React.FC<Props> = ({ user }) => {
         mr={1}
       >
         <RouterLink href={`/u/${user?.id}`}>
-          {/* <Image
+          <Image
             src={user?.image as string}
             width="100"
             height="100"
             alt="Avatar"
-          /> */}
+          />
         </RouterLink>
       </Box>
       <RouterLink href={`/u/${user?.id}`}>
