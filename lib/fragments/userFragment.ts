@@ -4,7 +4,8 @@ export const userFragment = {
   id: true,
   image: true,
   name: true,
-  emailVerified: true,
+  firstName: true,
+  lastName: true,
   createdAt: true,
   updatedAt: true,
 };

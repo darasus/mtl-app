@@ -9,7 +9,7 @@ export class CommentService {
     userId,
   }: {
     commentId: number;
-    userId: number;
+    userId: string;
   }) {
     const comment = await prisma.comment.findFirst({
       where: {
@@ -76,7 +76,7 @@ export class CommentService {
   }: {
     content: string;
     postId: number;
-    userId: number;
+    userId: string;
   }) {
     return prisma.comment
       .create({

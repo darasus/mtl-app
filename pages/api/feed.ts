@@ -21,30 +21,24 @@ export default async function handle(
   const feedType = req.query.feedType as FeedType;
 
   try {
-    const user = await getUserSession({ req });
-
+    const user = getUserSession(req);
     const feedService = new FeedService();
+    const props = {
+      userId: user?.id,
+      take: Number(req.query.take) || undefined,
+      cursor: Number(req.query.cursor) || undefined,
+    };
 
     if (feedType === FeedType.Following) {
-      const feed = await feedService.fetchFollowingFeed({
-        userId: user?.id,
-        take: Number(req.query.take) || undefined,
-        cursor: Number(req.query.cursor) || undefined,
-      });
-
+      const feed = await feedService.fetchFollowingFeed(props);
       return res.send(feed);
     }
 
     if (feedType === FeedType.Latest) {
-      const feed = await feedService.fetchLatestFeed({
-        userId: user?.id,
-        take: Number(req.query.take) || undefined,
-        cursor: Number(req.query.cursor) || undefined,
-      });
-
+      const feed = await feedService.fetchLatestFeed(props);
       return res.send(feed);
     }
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

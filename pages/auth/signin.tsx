@@ -3,54 +3,34 @@ import {
   Flex,
   Center,
   Box,
+  Input,
+  Grid,
+  GridItem,
   Text,
-  useColorMode,
 } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
-import {
-  ClientSafeProvider,
-  getProviders,
-  signIn,
-  useSession,
-} from "next-auth/client";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import { useForm } from "react-hook-form";
 import { Logo } from "../../components/Logo";
+import { useSigninMutation } from "../../hooks/mutation/useSigninMutation";
 
-interface Props {
-  providers: Record<string, ClientSafeProvider>;
+interface FormData {
+  email: string;
+  password: string;
 }
 
-const BrandLogo = ({ name }: { name: string }) => {
-  const { colorMode } = useColorMode();
-
-  return (
-    <Image
-      src={
-        colorMode === "dark"
-          ? `/${name}-logo-light.svg`
-          : `/${name}-logo-dark.svg`
-      }
-      height={23}
-      width={23}
-      alt={name}
-    />
-  );
-};
-
-const SignIn: React.FC<Props> = ({ providers }) => {
-  const [me] = useSession();
+const SignIn: React.FC = () => {
   const router = useRouter();
-  const callbackUrl = router.query.callbackUrl as string | undefined;
+  const signInMutation = useSigninMutation();
+  const form = useForm<FormData>();
 
   React.useEffect(() => {
-    if (me) {
-      router.push(callbackUrl ? callbackUrl : "/");
+    if (signInMutation.isSuccess) {
+      router.push("/");
     }
-  }, [me, callbackUrl, router]);
+  }, [signInMutation.isSuccess, router]);
 
-  if (me) return null;
+  const submit = form.handleSubmit((data) => signInMutation.mutateAsync(data));
 
   return (
     <Center h="100vh">
@@ -58,31 +38,57 @@ const SignIn: React.FC<Props> = ({ providers }) => {
         <Box mb={5}>
           <Logo />
         </Box>
-        {Object.values(providers).map((provider) => (
-          <div key={provider.name}>
-            <Button
-              variant="outline"
-              onClick={() => signIn(provider.id)}
-              data-testid="github-signin-button"
-            >
-              <Flex alignItems="center">
-                <Text mr={2}>Sign in with</Text>
-                <BrandLogo name={provider.name} />
-              </Flex>
-            </Button>
-          </div>
-        ))}
+        <Box width="300px">
+          <form onSubmit={submit}>
+            <Grid templateColumns="repeat(12, 1fr)" gap={4}>
+              <GridItem colSpan={12}>
+                <Input
+                  {...form.register("email")}
+                  placeholder="Email"
+                  type="email"
+                />
+              </GridItem>
+              <GridItem colSpan={12}>
+                <Input
+                  {...form.register("password")}
+                  placeholder="Password"
+                  type="password"
+                />
+              </GridItem>
+              {signInMutation.error && (
+                <GridItem colSpan={12}>
+                  <Text color="red.500">{signInMutation.error as string}</Text>
+                </GridItem>
+              )}
+              <GridItem colSpan={12}>
+                <Button
+                  isFullWidth
+                  type="submit"
+                  isLoading={signInMutation.isLoading}
+                >
+                  Sign in
+                </Button>
+              </GridItem>
+              <GridItem colSpan={12}>
+                <Flex justifyContent="center">
+                  <Text color="gray.500" mr={1} fontSize="sm">
+                    or
+                  </Text>
+                  <Button
+                    variant="link"
+                    onClick={() => router.push("/auth/signup")}
+                    size="sm"
+                  >
+                    Sign up
+                  </Button>
+                </Flex>
+              </GridItem>
+            </Grid>
+          </form>
+        </Box>
       </Flex>
     </Center>
   );
 };
 
 export default SignIn;
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const providers = await getProviders();
-
-  return {
-    props: { providers },
-  };
-};

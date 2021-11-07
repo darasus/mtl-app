@@ -111,7 +111,7 @@ export class PostService {
   }
 
   async createPost(
-    userId: number,
+    userId: string,
     {
       title,
       content,
@@ -167,7 +167,7 @@ export class PostService {
       content,
       description,
     }: { title: string; content: string; description: string },
-    userId: number
+    userId: string
   ) {
     await prisma.post.create({
       data: {
@@ -192,7 +192,7 @@ export class PostService {
     });
   }
 
-  async fetchPost(postId: number, userId?: number): Promise<Post | null> {
+  async fetchPost(postId: number, userId?: string): Promise<Post | null> {
     const post = await cache.fetch(
       redisCacheKey.createPostKey(postId),
       () =>

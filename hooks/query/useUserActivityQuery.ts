@@ -3,7 +3,7 @@ import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { days } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 
-export const useUserActivityQuery = (userId: number) => {
+export const useUserActivityQuery = (userId: string) => {
   const fetcher = useFetcher();
 
   return useInfiniteQuery(

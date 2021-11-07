@@ -22,11 +22,11 @@ export const DesktopHeader: React.FC<Props> = React.memo(
     showMetaInfo = true,
     isPostStatusVisible = false,
   }) {
-    const { me } = useMe();
+    const { user } = useMe();
     const { secondaryTextColor } = useColors();
     const breakpoint = useBreakpoint();
     const isMetaInfoVisible = breakpoint !== "base" && showMetaInfo;
-    const isMyPost = me?.id === post?.authorId;
+    const isMyPost = user?.id === post?.authorId;
 
     return (
       <Box p={4}>

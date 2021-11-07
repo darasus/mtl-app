@@ -20,7 +20,7 @@ export default async function handle(
   const commentService = new CommentService();
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
 
     if (!user?.id) {
       return res.status(401).end();
@@ -36,10 +36,10 @@ export default async function handle(
       postId,
       authorId: user.id,
       commentId: comment.id,
-      ownerId: post?.authorId as number,
+      ownerId: post?.authorId as string,
     });
     res.json({ status: "success" });
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

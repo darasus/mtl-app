@@ -20,7 +20,7 @@ export default async function handle(
   const activityService = new ActivityService();
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
 
     if (!user?.id) {
       return res.status(401).end();
@@ -50,6 +50,6 @@ export default async function handle(
     await commentService.deleteComment(Number(req.query.id), post.id);
     res.json({ status: "success" });
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

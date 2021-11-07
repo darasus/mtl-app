@@ -14,7 +14,7 @@ export default async function handle(
   );
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
 
     if (!user?.id) {
       return res.status(401).end();
@@ -31,6 +31,6 @@ export default async function handle(
     );
     res.json({ status: "success" });
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

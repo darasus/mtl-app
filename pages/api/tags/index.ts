@@ -17,6 +17,6 @@ export default async function handle(
     const tags = await tagService.getAllTags();
     res.send(tags);
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

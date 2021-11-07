@@ -19,23 +19,23 @@ export default async function handle(
   const followService = new FollowService();
 
   try {
-    const user = await getUserSession({ req });
+    const user = getUserSession(req);
 
     if (!user?.id) {
       return res.status(401).end();
     }
 
     await activityService.removeFollowActivity({
-      followFollowingId: Number(req.query.id),
+      followFollowingId: req.query.id,
       followFollowerId: user.id,
     });
 
     await followService.unfollowUser({
-      followingUserId: Number(req.query.id),
+      followingUserId: req.query.id,
       followerUserId: user.id,
     });
     return res.status(200).end();
   } catch (error) {
-    return res.end(processErrorResponse(error));
+    return res.status(400).end(processErrorResponse(error));
   }
 }

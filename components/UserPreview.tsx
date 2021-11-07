@@ -5,9 +5,9 @@ import { useMe } from "../hooks/useMe";
 
 export const UserPreview = React.forwardRef<HTMLDivElement>(
   function UserPreview({ ...props }, ref) {
-    const { me } = useMe();
+    const { user } = useMe();
 
-    if (!me) return null;
+    if (!user) return null;
 
     return (
       <div {...props}>
@@ -21,7 +21,7 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
               boxShadow="base"
             >
               <Image
-                src={me?.image as string}
+                src={user?.user_metadata.image as string}
                 width="100"
                 height="100"
                 alt="Avatar"
@@ -34,7 +34,7 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
             fontWeight="semibold"
             data-testid="user-preview-name"
           >
-            {me?.name}
+            {`${user.user_metadata.first_name} ${user.user_metadata.last_name}`}
           </Text>
         </Flex>
       </div>

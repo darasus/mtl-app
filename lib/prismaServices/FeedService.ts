@@ -22,7 +22,7 @@ export type FetchFeedResponse = {
 };
 
 export class FeedService {
-  preparePost = (post: InputPost, userId: number | undefined): Post => {
+  preparePost = (post: InputPost, userId: string | undefined): Post => {
     const isLikedByMe = post.likes.some(
       (like: Like & { author: User | null }) => like.author?.id === userId
     );
@@ -39,7 +39,7 @@ export class FeedService {
     take = 25,
     cursor,
   }: {
-    userId?: number;
+    userId?: string;
     take?: number;
     cursor?: number;
   }): Promise<FetchFeedResponse> {
@@ -147,7 +147,7 @@ export class FeedService {
     take = 25,
     cursor,
   }: {
-    userId?: number;
+    userId?: string;
     take?: number;
     cursor?: number;
   }): Promise<FetchFeedResponse> {

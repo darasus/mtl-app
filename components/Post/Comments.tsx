@@ -16,11 +16,11 @@ interface Props {
 export const Comments: React.FC<Props> = ({ postId }) => {
   const [take, setTake] = React.useState(5);
   const prevTake = usePrevious(take);
+  const { user } = useMe();
   const comments = useCommentsQuery({
     postId,
     take,
   });
-  const { me } = useMe();
   const { borderColor, secondaryTextColor } = useColors();
   const { mutateAsync: commentPost } = useAddCommentMutation();
   const { control, handleSubmit, reset } = useForm({
@@ -99,7 +99,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
                       comment.author.name
                     } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                   </Box>
-                  {me?.id === comment.author.id && (
+                  {user?.id === comment.author.id && (
                     <DeleteCommentButton
                       commentId={comment.id}
                       postId={postId}
@@ -114,29 +114,27 @@ export const Comments: React.FC<Props> = ({ postId }) => {
           );
         })}
       </Box>
-      {me && (
+      {user && (
         <>
           <Box borderColor={borderColor} borderBottomWidth="thin" />
           <form onSubmit={submit}>
             <Box p={3}>
               <Flex>
-                {me?.image && (
-                  <Box
-                    width={7}
-                    height={7}
-                    borderRadius={100}
-                    overflow="hidden"
-                    boxShadow="base"
-                    mr={2}
-                  >
-                    <Image
-                      src={me?.image}
-                      width="100"
-                      height="100"
-                      alt="Avatar"
-                    />
-                  </Box>
-                )}
+                <Box
+                  width={7}
+                  height={7}
+                  borderRadius={100}
+                  overflow="hidden"
+                  boxShadow="base"
+                  mr={2}
+                >
+                  <Image
+                    src={user?.user_metadata.image}
+                    width="100"
+                    height="100"
+                    alt="Avatar"
+                  />
+                </Box>
                 <Box flexGrow={1}>
                   <Controller
                     name="comment"
