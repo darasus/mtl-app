@@ -46,14 +46,6 @@ export class Fetcher {
       .request(`/api/user/${userId}/posts`)
       .then((res) => res.data);
 
-  invalidateUser = (userId: string): Promise<{ status: "success" }> =>
-    this.httpConnector
-      .request(`/api/user/${userId}/invalidate`, {
-        method: "POST",
-        data: {},
-      })
-      .then((res) => res.data);
-
   // like
 
   likePost = (postId: number): ReturnType<LikeService["likePost"]> =>
