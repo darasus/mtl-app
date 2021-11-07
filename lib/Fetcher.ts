@@ -13,6 +13,7 @@ import { ClientHttpConnector } from "./ClientHttpConnector";
 import { FeedType } from "../types/FeedType";
 import { UserService } from "./prismaServices/UserService";
 import { ActivityService } from "./prismaServices/ActivityService";
+import { UserCredentials } from "@supabase/gotrue-js";
 
 export class Fetcher {
   httpConnector: ServerHttpConnector | ClientHttpConnector;
@@ -20,6 +21,18 @@ export class Fetcher {
   constructor(httpConnector: ServerHttpConnector | ClientHttpConnector) {
     this.httpConnector = httpConnector;
   }
+
+  // auth
+
+  signUp = (data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }): Promise<User> =>
+    this.httpConnector.request
+      .post(`/api/signup`, data)
+      .then((res) => res.data);
 
   // user
 

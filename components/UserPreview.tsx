@@ -5,14 +5,14 @@ import { useMe } from "../hooks/useMe";
 
 export const UserPreview = React.forwardRef<HTMLDivElement>(
   function UserPreview({ ...props }, ref) {
-    const { me } = useMe();
+    const { user } = useMe();
 
-    if (!me) return null;
+    if (!user) return null;
 
     return (
       <div {...props}>
         <Flex ref={ref} alignItems="center">
-          <Box mr={2}>
+          {/* <Box mr={2}>
             <Box
               width={7}
               height={7}
@@ -28,13 +28,13 @@ export const UserPreview = React.forwardRef<HTMLDivElement>(
                 quality={100}
               />
             </Box>
-          </Box>
+          </Box> */}
           <Text
             fontSize="sm"
             fontWeight="semibold"
             data-testid="user-preview-name"
           >
-            {me?.name}
+            {`${user.user_metadata.first_name} ${user.user_metadata.last_name}`}
           </Text>
         </Flex>
       </div>

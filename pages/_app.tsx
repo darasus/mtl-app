@@ -15,6 +15,7 @@ import { theme } from "../theme";
 import { Toaster, toast } from "react-hot-toast";
 import * as Fathom from "fathom-client";
 import { useRouter } from "next/router";
+import { UserContextProvider } from "../hooks/useMe";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
@@ -54,42 +55,44 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClientRef.current}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
-          <Toaster
-            toastOptions={{
-              style: {
-                borderRadius: "100px",
-                borderColor:
-                  colorModeManager.get() === "dark"
-                    ? "rgba(0,0,0,0.2)"
-                    : "rgba(255,255,255,0.2)",
-                borderWidth: "1px",
-                ...(colorModeManager.get() === "dark"
-                  ? { background: "white", color: "#black" }
-                  : { background: "black", color: "#fff" }),
-              },
-            }}
-          />
-          <Head>
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1, maximum-scale=1"
+    <UserContextProvider>
+      <QueryClientProvider client={queryClientRef.current}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+            <Toaster
+              toastOptions={{
+                style: {
+                  borderRadius: "100px",
+                  borderColor:
+                    colorModeManager.get() === "dark"
+                      ? "rgba(0,0,0,0.2)"
+                      : "rgba(255,255,255,0.2)",
+                  borderWidth: "1px",
+                  ...(colorModeManager.get() === "dark"
+                    ? { background: "white", color: "#black" }
+                    : { background: "black", color: "#fff" }),
+                },
+              }}
             />
-          </Head>
-          <Provider session={pageProps.session}>
-            <PusherProvider
-              clientKey={process.env.NEXT_PUBLIC_PUSHER_APP_KEY}
-              cluster="eu"
-            >
-              <Component {...pageProps} />
-            </PusherProvider>
-          </Provider>
-        </ChakraProvider>
-      </Hydrate>
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+            <Head>
+              <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1, maximum-scale=1"
+              />
+            </Head>
+            <Provider session={pageProps.session}>
+              <PusherProvider
+                clientKey={process.env.NEXT_PUBLIC_PUSHER_APP_KEY}
+                cluster="eu"
+              >
+                <Component {...pageProps} />
+              </PusherProvider>
+            </Provider>
+          </ChakraProvider>
+        </Hydrate>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </UserContextProvider>
   );
 };
 

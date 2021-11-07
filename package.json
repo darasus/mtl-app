@@ -20,6 +20,7 @@
     "@monaco-editor/react": "^4.1.0",
     "@prisma/client": "^3.2.1",
     "@stackblitz/sdk": "^1.5.2",
+    "@supabase/supabase-js": "^1.25.2",
     "axios": "^0.21.1",
     "axios-logger": "^2.5.0",
     "babel-plugin-superjson-next": "^0.3.0",
