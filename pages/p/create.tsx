@@ -22,7 +22,7 @@ const CreatePostPage: React.FC = () => {
 
   const handlePublish = form.handleSubmit(
     async ({ tagId, codeLanguage, content, description, title }) => {
-      invariant(typeof tagId === "number", "tagId is required");
+      invariant(typeof tagId === "string", "tagId is required");
       const post = await createPostMutation.mutateAsync({
         tagId,
         codeLanguage,
@@ -37,7 +37,7 @@ const CreatePostPage: React.FC = () => {
 
   const handleSave = form.handleSubmit(
     async ({ tagId, codeLanguage, content, description, title }) => {
-      invariant(typeof tagId === "number", "tagId is required");
+      invariant(typeof tagId === "string", "tagId is required");
       const post = await createPostMutation.mutateAsync({
         tagId,
         codeLanguage,

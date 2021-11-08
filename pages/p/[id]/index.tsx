@@ -16,7 +16,7 @@ import { clientCacheKey } from "../../../lib/ClientCacheKey";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
-  const post = usePostQuery(Number(router.query.id));
+  const post = usePostQuery(router.query.id as string);
   const { me } = useMe();
   const imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/screenshot?url=${
     process.env.NEXT_PUBLIC_BASE_URL
@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const httpConnector = new ServerHttpConnector(ctx);
   const fetcher = new Fetcher(httpConnector);
-  const postId = Number(ctx.query.id);
+  const postId = ctx.query.id as string;
 
   try {
     const post = await fetcher.getPost(postId);

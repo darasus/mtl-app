@@ -14,7 +14,7 @@ export const usePostLikeMutation = () => {
   const fetcher = useFetcher();
 
   return useMutation(
-    ({ postId }: { postId: number }) =>
+    ({ postId }: { postId: string }) =>
       withToast(fetcher.likePost(postId), toastConfig),
     {
       onMutate: async ({ postId }) => {

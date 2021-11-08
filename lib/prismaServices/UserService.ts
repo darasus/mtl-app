@@ -95,7 +95,7 @@ export class UserService {
     take = 10,
   }: {
     userId: string;
-    cursor?: number;
+    cursor?: string;
     take?: number;
   }) {
     const activityCount = await prisma.activity.count({

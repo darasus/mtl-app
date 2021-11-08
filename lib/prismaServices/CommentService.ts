@@ -8,7 +8,7 @@ export class CommentService {
     commentId,
     userId,
   }: {
-    commentId: number;
+    commentId: string;
     userId: string;
   }) {
     const comment = await prisma.comment.findFirst({
@@ -23,7 +23,7 @@ export class CommentService {
     return comment?.author?.id === userId;
   }
 
-  async deleteComment(commentId: number, postId: number) {
+  async deleteComment(commentId: string, postId: string) {
     await prisma.comment.delete({
       where: {
         id: commentId,
@@ -38,7 +38,7 @@ export class CommentService {
     take = 5,
     skip = 0,
   }: {
-    postId: number;
+    postId: string;
     take?: number;
     skip?: number;
   }) {
@@ -75,7 +75,7 @@ export class CommentService {
     userId,
   }: {
     content: string;
-    postId: number;
+    postId: string;
     userId: string;
   }) {
     return prisma.comment

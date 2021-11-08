@@ -12,11 +12,12 @@ export default async function handle(
     req.method === "GET",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  invariant(typeof req.query.id === "string", "ID is missing");
 
   try {
     const user = await getUserSession({ req });
     const postService = new PostService();
-    const post = await postService.fetchPost(Number(req.query.id), user?.id);
+    const post = await postService.fetchPost(req.query.id, user?.id);
 
     if (!post) {
       return res.status(404).end();

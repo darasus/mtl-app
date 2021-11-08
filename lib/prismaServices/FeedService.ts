@@ -17,7 +17,7 @@ type InputPost = Prisma.Post & {
 export type FetchFeedResponse = {
   items: Post[];
   count: number;
-  cursor: number;
+  cursor: string | null;
   total: number;
 };
 
@@ -42,14 +42,14 @@ export class FeedService {
   }: {
     userId?: string;
     take?: number;
-    cursor?: number;
+    cursor?: string;
   }): Promise<FetchFeedResponse> {
     if (!userId) {
       return {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 
@@ -122,7 +122,7 @@ export class FeedService {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 
@@ -150,7 +150,7 @@ export class FeedService {
   }: {
     userId?: string;
     take?: number;
-    cursor?: number;
+    cursor?: string;
   }): Promise<FetchFeedResponse> {
     const total = await prisma.post.count({
       where: {
@@ -200,7 +200,7 @@ export class FeedService {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 

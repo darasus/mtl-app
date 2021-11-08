@@ -12,9 +12,9 @@ export class ActivityService {
     postId,
   }: {
     authorId: string;
-    likeId: number;
+    likeId: string;
     ownerId: string;
-    postId: number;
+    postId: string;
   }) {
     if (authorId === ownerId) return null;
 
@@ -42,7 +42,7 @@ export class ActivityService {
     authorId,
     ownerId,
   }: {
-    postId: number;
+    postId: string;
     authorId: string;
     ownerId: string;
   }) {
@@ -83,9 +83,9 @@ export class ActivityService {
     postId,
   }: {
     authorId: string;
-    commentId: number;
+    commentId: string;
     ownerId: string;
-    postId: number;
+    postId: string;
   }) {
     if (authorId === ownerId) return null;
 
@@ -112,7 +112,7 @@ export class ActivityService {
     commentId,
     ownerId,
   }: {
-    commentId: number;
+    commentId: string;
     ownerId: string;
   }) {
     const activity = await prisma.activity.findFirst({
@@ -134,7 +134,7 @@ export class ActivityService {
     });
   }
 
-  async markActivityAsRead({ activityId }: { activityId: number }) {
+  async markActivityAsRead({ activityId }: { activityId: string }) {
     return prisma.activity.update({
       where: {
         id: activityId,

@@ -11,10 +11,11 @@ export default async function handle(
     req.method === "DELETE",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  invariant(typeof req.query.id === "string", "ID is missing");
 
   try {
     const postService = new PostService();
-    await postService.deletePost(Number(req.query.id));
+    await postService.deletePost(req.query.id);
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));

@@ -11,7 +11,7 @@ export class RedisCacheKey {
     return `user:${userId}`;
   }
 
-  createPostKey(postId: number): string {
+  createPostKey(postId: string): string {
     return `post:${postId}`;
   }
 

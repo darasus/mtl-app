@@ -18,7 +18,7 @@ export default async function handle(
     const response = await userService.getUserActivity({
       userId: req.query.id,
       take: Number(req.query.take) || undefined,
-      cursor: Number(req.query.cursor) || undefined,
+      cursor: (req.query.cursor as string) || undefined,
     });
     res.json(response);
   } catch (error) {

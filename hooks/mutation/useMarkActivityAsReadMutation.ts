@@ -3,7 +3,7 @@ import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { useFetcher } from "../useFetcher";
 import { useMe } from "../useMe";
 
-export const useMarkActivityAsReadMutation = (activityId: number) => {
+export const useMarkActivityAsReadMutation = (activityId: string) => {
   const queryClient = useQueryClient();
   const fetcher = useFetcher();
   const { me } = useMe();

@@ -17,7 +17,7 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  const postId = Number(req.query.id);
+  const postId = req.query.id as string;
 
   try {
     const user = await getUserSession({ req });

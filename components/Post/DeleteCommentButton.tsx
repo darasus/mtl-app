@@ -5,8 +5,8 @@ import { useColors } from "../../hooks/useColors";
 import { useDeleteCommentMutation } from "../../hooks/mutation/useDeleteCommentMutation";
 
 interface Props {
-  commentId: number;
-  postId: number;
+  commentId: string;
+  postId: string;
 }
 
 export const DeleteCommentButton: React.FC<Props> = ({ commentId, postId }) => {

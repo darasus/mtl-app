@@ -24,7 +24,7 @@ export default async function handle(
     }
 
     const activity = await activityService.markActivityAsRead({
-      activityId: Number(req.query.id),
+      activityId: req.query.id,
     });
     return res.json(activity);
   } catch (error) {

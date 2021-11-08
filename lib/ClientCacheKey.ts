@@ -16,7 +16,7 @@ export class ClientCacheKey {
     return [...this.userBaseKey, { userId }];
   }
 
-  createPostCommentsKey(postId: number) {
+  createPostCommentsKey(postId: string) {
     return [...this.commentsBaseKey, { postId }];
   }
 
@@ -32,7 +32,7 @@ export class ClientCacheKey {
     return [...this.followersCountBaseKey, { userId }];
   }
 
-  createPostKey(postId: number) {
+  createPostKey(postId: string) {
     return [...this.postBaseKey, { postId }];
   }
 

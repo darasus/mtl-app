@@ -10,7 +10,7 @@ import { usePrevious } from "../../hooks/usePrevious";
 import { useMe } from "../../hooks/useMe";
 
 interface Props {
-  postId: number;
+  postId: string;
 }
 
 export const Comments: React.FC<Props> = ({ postId }) => {

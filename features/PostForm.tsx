@@ -33,7 +33,7 @@ export interface PostForm {
   description: string;
   content: string;
   codeLanguage: CodeLanguage;
-  tagId: number | null;
+  tagId: string | null;
 }
 
 export const postSchema = yup.object().shape({

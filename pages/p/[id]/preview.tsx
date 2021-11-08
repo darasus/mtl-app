@@ -9,7 +9,7 @@ import { useMe } from "../../../hooks/useMe";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
-  const post = usePostQuery(Number(router.query.id));
+  const post = usePostQuery(router.query.id as string);
   const { me } = useMe();
 
   if (!post.data) return null;
