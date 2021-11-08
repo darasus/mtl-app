@@ -16,7 +16,7 @@ export default async function handle(
   try {
     const userService = new UserService();
     const response = await userService.getUserActivity({
-      userId: Number(req.query.id),
+      userId: req.query.id,
       take: Number(req.query.take) || undefined,
       cursor: Number(req.query.cursor) || undefined,
     });

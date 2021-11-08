@@ -36,7 +36,7 @@ export default async function handle(
       postId,
       authorId: user.id,
       commentId: comment.id,
-      ownerId: post?.authorId as number,
+      ownerId: post?.authorId as string,
     });
     res.json({ status: "success" });
   } catch (error) {

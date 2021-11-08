@@ -14,7 +14,7 @@ export const ActivityBadge = () => {
   const { me } = useMe();
   const mutation = useMarkAllActivityAsReadMutation();
   const { data, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useUserActivityQuery(me?.id as number);
+    useUserActivityQuery(me?.id as string);
   const [showUnread, setShowUnread] = React.useState(false);
   const [lastReadDate, setLastReadDate] =
     useLocalStorage<Date>("last_unread_date");
@@ -107,8 +107,8 @@ export const ActivityBadge = () => {
                 </Text>
               </Flex>
             )}
-            {data?.pages.map((page) =>
-              page.items.map((activity) => (
+            {data?.pages?.map((page) =>
+              page.items?.map((activity) => (
                 <Notification key={activity.id} activity={activity} />
               ))
             )}

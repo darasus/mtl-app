@@ -15,9 +15,7 @@ export default async function handle(
 
   try {
     const followService = new FollowService();
-    const count = await followService.getNumberOfFollowers(
-      Number(req.query.id)
-    );
+    const count = await followService.getNumberOfFollowers(req.query.id);
     res.json(count);
   } catch (error) {
     return res.end(processErrorResponse(error));

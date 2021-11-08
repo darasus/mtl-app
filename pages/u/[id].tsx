@@ -34,7 +34,7 @@ import { clientCacheKey } from "../../lib/ClientCacheKey";
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
   const router = useRouter();
-  const userId = Number(router.query.id);
+  const userId = router.query.id as string;
   const user = useUserQuery(userId);
   const { me } = useMe();
   const posts = useUserPostsQuery(userId);
@@ -46,13 +46,13 @@ const UserPage: React.FC = () => {
 
   const handleFollow = () => {
     followMutation.mutateAsync({
-      userId: user.data?.id as number,
+      userId: user.data?.id as string,
     });
   };
 
   const handleUnfollow = () => {
     unfollowMutation.mutateAsync({
-      userId: user.data?.id as number,
+      userId: user.data?.id as string,
     });
   };
 
@@ -174,7 +174,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const httpConnector = new ServerHttpConnector(ctx);
   const fetcher = new Fetcher(httpConnector);
-  const userId = Number(ctx.query.id);
+  const userId = ctx.query.id as string;
 
   await Promise.all([
     queryClient.prefetchQuery(clientCacheKey.createUserKey(userId), () =>

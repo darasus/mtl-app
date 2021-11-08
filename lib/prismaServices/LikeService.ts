@@ -1,7 +1,7 @@
 import prisma from "../prisma";
 
 export class LikeService {
-  async likePost(postId: number, userId: number) {
+  async likePost(postId: number, userId: string) {
     return prisma.like.create({
       data: {
         post: { connect: { id: postId } },
@@ -10,7 +10,7 @@ export class LikeService {
     });
   }
 
-  async unlikePost(postId: number, userId: number) {
+  async unlikePost(postId: number, userId: string) {
     const like = await prisma.like.findFirst({
       where: {
         postId,

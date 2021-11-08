@@ -18,7 +18,7 @@ export const Head: React.FC<Props> = ({
   twitterImage = introImageUrl,
   children,
 }) => {
-  const url = `${process.env.NEXTAUTH_URL}/${urlPath}`;
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/${urlPath}`;
   const titleText = `${title} | My Tiny Library`;
 
   return (

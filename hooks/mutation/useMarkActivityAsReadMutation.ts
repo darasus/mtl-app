@@ -11,7 +11,7 @@ export const useMarkActivityAsReadMutation = (activityId: number) => {
   return useMutation(() => fetcher.markActivityAsRead(activityId), {
     async onSettled() {
       await queryClient.invalidateQueries(
-        clientCacheKey.createUserActivityKey(me?.id as number)
+        clientCacheKey.createUserActivityKey(me?.id as string)
       );
     },
   });
