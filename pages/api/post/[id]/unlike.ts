@@ -38,7 +38,7 @@ export default async function handle(
     await activityService.removeLikeActivity({
       postId,
       authorId: user.id,
-      ownerId: post?.authorId as number,
+      ownerId: post?.authorId as string,
     });
     await likeService.unlikePost(postId, user.id);
     await cache.del(redisCacheKey.createPostKey(postId));

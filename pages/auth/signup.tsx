@@ -7,11 +7,11 @@ interface Props {
   csrfToken: string | undefined;
 }
 
-const SignIn: React.FC<Props> = ({ csrfToken }) => {
-  return <AuthForm csrfToken={csrfToken} type="signin" />;
+const SignUp: React.FC<Props> = ({ csrfToken }) => {
+  return <AuthForm csrfToken={csrfToken} type="signup" />;
 };
 
-export default SignIn;
+export default SignUp;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const csrfToken = await getCsrfToken(ctx);

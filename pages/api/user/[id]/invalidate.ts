@@ -15,9 +15,11 @@ export default async function handle(
   );
   invariant(typeof req.query.id === "string", "User ID is not provided");
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const token = await getToken({
     req,
-    secret: process.env.SECRET,
+    secret: process.env.SECRET as string,
   });
 
   try {

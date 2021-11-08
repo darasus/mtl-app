@@ -45,7 +45,7 @@ export class ServerHttpConnector {
 
   createRequest = (props?: { config?: AxiosRequestConfig }) => {
     const client = axios.create({
-      baseURL: process.env.NEXTAUTH_URL,
+      baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}`,
       ...props?.config,
     });
 

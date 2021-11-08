@@ -3,16 +3,17 @@ import { Post } from "../../types/Post";
 import * as R from "ramda";
 
 export type InputPost = Prisma.Post & {
-  likes: (Prisma.Like & { author: Prisma.User | null })[];
+  likes: (Prisma.Like & { author: Omit<Prisma.User, "password"> | null })[];
   comments: Prisma.Comment[];
   commentsCount: number;
   tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
 };
 
-export const preparePost = (post: InputPost, userId?: number): Post => {
+export const preparePost = (post: InputPost, userId?: string): Post => {
   const isLikedByMe = userId
     ? post.likes.some(
-        (like: Like & { author: User | null }) => like.author?.id === userId
+        (like: Like & { author: Omit<User, "password"> | null }) =>
+          like.author?.id === userId
       )
     : false;
 

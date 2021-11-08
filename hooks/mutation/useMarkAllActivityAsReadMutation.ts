@@ -20,7 +20,7 @@ export const useMarkAllActivityAsReadMutation = () => {
     {
       async onSuccess() {
         await queryClient.invalidateQueries(
-          clientCacheKey.createUserActivityKey(me?.id as number)
+          clientCacheKey.createUserActivityKey(me?.id as string)
         );
       },
     }

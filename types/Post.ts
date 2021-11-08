@@ -5,6 +5,8 @@ export type Post = Prisma.Post & {
   commentsCount: number;
   likesCount: number;
   isLikedByMe: boolean;
-  comments: (Prisma.Comment & { author?: Prisma.User | null })[];
+  comments: (Prisma.Comment & {
+    author?: Omit<Prisma.User, "password"> | null;
+  })[];
   tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
 };

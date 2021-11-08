@@ -18,8 +18,8 @@ const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(Number(router.query.id));
   const { me } = useMe();
-  const imageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${
-    process.env.NEXTAUTH_URL
+  const imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/screenshot?url=${
+    process.env.NEXT_PUBLIC_BASE_URL
   }/p/${router.query.id}/thumbnail?updateDate=${new Date(
     post.data?.updatedAt as Date
   ).getTime()}`;

@@ -26,7 +26,7 @@ export default async function handle(
       }
 
       const response = await followService.doIFollow({
-        followingUserId: Number(req.query.id),
+        followingUserId: req.query.id,
         followerUserId: user.id,
       });
 
@@ -45,12 +45,12 @@ export default async function handle(
       }
 
       const response = await followService.followUser({
-        followingUserId: Number(req.query.id),
+        followingUserId: req.query.id,
         followerUserId: user.id,
       });
 
       await activityService.addFollowActivity({
-        ownerId: Number(req.query.id),
+        ownerId: req.query.id,
         authorId: user.id,
         followFollowerId: response.followerId,
         followFollowingId: response.followingId,

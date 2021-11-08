@@ -1,1 +1,1 @@
-export const introImageUrl = `${process.env.NEXTAUTH_URL}/api/screenshot?url=${process.env.NEXTAUTH_URL}/home-preview-image`;
+export const introImageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/screenshot?url=${process.env.NEXT_PUBLIC_BASE_URL}/home-preview-image`;

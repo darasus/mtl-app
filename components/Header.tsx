@@ -24,7 +24,7 @@ import { ActivityBadge } from "../components/ActivityBadge/ActivityBadge";
 export const Header: React.FC = () => {
   const router = useRouter();
   const { me, isLoading } = useMe();
-  const logout = useLogoutMutation(me?.id as number);
+  const logout = useLogoutMutation(me?.id as string);
   const breakpoint = useBreakpoint();
 
   return (
