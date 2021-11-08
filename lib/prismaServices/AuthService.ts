@@ -31,17 +31,24 @@ export class AuthService {
       },
     });
 
-    this.transporter?.sendMail(
-      {
-        from: "no-reply@mytinylibrary.com",
-        to: email,
-        subject: "Password reset requested",
-        html: `<p>Your new password is: ${newPassword}</p>`,
-      },
-      function (err) {
-        if (err) console.log(err);
-      }
-    );
+    await new Promise((resolve, reject) => {
+      this.transporter?.sendMail(
+        {
+          from: "no-reply@mytinylibrary.com",
+          to: email,
+          subject: "Password reset requested",
+          html: `<p>Your new password is: ${newPassword}</p>`,
+        },
+        function (err, info) {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            resolve(info);
+          }
+        }
+      );
+    });
   }
 }
 

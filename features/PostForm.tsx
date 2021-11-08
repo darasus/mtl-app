@@ -50,8 +50,8 @@ export const postSchema = yup.object().shape({
     .typeError("Please select tag")
     .required("Please select tag"),
   tagId: yup
-    .number()
-    .test("has-tag", "Please select tag", (value) => !!value && value > 0)
+    .string()
+    .test("has-tag", "Please select tag", (value) => typeof value === "string")
     .typeError("Please select tag")
     .required("Please select tag"),
 });
