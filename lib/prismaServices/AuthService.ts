@@ -1,18 +1,17 @@
 import bcrypt from "bcrypt";
 import { PrismaClient } from ".prisma/client";
-import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import mailgun from "mailgun-js";
 
 export class AuthService {
   prisma: PrismaClient | null;
-  transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo> | null;
+  transporter: mailgun.Mailgun | null;
 
   constructor({
     prisma,
     transporter,
   }: {
     prisma: PrismaClient;
-    transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;
+    transporter: mailgun.Mailgun;
   }) {
     this.prisma = prisma;
     this.transporter = transporter;
@@ -31,23 +30,11 @@ export class AuthService {
       },
     });
 
-    await new Promise((resolve, reject) => {
-      this.transporter?.sendMail(
-        {
-          from: "no-reply@mytinylibrary.com",
-          to: email,
-          subject: "Password reset requested",
-          html: `<p>Your new password is: ${newPassword}</p>`,
-        },
-        function (err, info) {
-          if (err) {
-            console.log(err);
-            reject(err);
-          } else {
-            resolve(info);
-          }
-        }
-      );
+    await this.transporter?.messages().send({
+      from: "no-reply@mytinylibrary.com",
+      to: email,
+      subject: "Password reset requested",
+      html: `<p>Your new password is: ${newPassword}</p>`,
     });
   }
 }

@@ -1,9 +1,6 @@
-import nodemailer from "nodemailer";
+import mailgun from "mailgun-js";
 
-export const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "ilya.daraseliya@gmail.com",
-    pass: "Marmel89@",
-  },
+export const transporter = mailgun({
+  apiKey: process.env.MAILGUN_API_KEY as string,
+  domain: process.env.MAILGUN_DOMAIN as string,
 });

@@ -26,7 +26,7 @@ interface Props {
   type: "signin" | "signup";
 }
 
-const BrandLogo = ({ name }: { name: "github" }) => {
+const BrandLogo = ({ name }: { name: "GitHub" }) => {
   const { colorMode } = useColorMode();
 
   return (
@@ -174,7 +174,7 @@ export const AuthForm: React.FC<Props> = ({ csrfToken, type }) => {
               >
                 <Flex alignItems="center">
                   <Text mr={2}>GitHub</Text>
-                  <BrandLogo name={"github"} />
+                  <BrandLogo name={"GitHub"} />
                 </Flex>
               </Button>
             </GridItem>
