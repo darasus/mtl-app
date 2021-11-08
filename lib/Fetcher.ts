@@ -21,6 +21,13 @@ export class Fetcher {
     this.httpConnector = httpConnector;
   }
 
+  // auth
+
+  resetPassword = (email: string) =>
+    this.httpConnector.request
+      .post(`/api/reset-password`, { email })
+      .then((res) => res.data);
+
   // user
 
   getMe = (): Promise<User> =>

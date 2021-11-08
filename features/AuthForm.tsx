@@ -132,6 +132,15 @@ export const AuthForm: React.FC<Props> = ({ csrfToken, type }) => {
                 <Box mb={4} />
                 <FormLabel>Password</FormLabel>
                 <Input type="password" id="password" name="password" />
+                <Button
+                  variant="link"
+                  onClick={() => router.push("/auth/password-reset")}
+                  size="xs"
+                  textDecoration="underline"
+                  color="gray.700"
+                >
+                  Forgot password?
+                </Button>
                 <Box mb={4} />
                 <Button type="submit" isFullWidth>
                   {buttonText[type]}
