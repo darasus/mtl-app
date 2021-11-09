@@ -36,7 +36,7 @@ const EditPostPage: React.FC = () => {
 
   const handleUpdate = handleSubmit(
     async ({ tagId, codeLanguage, content, description, title }) => {
-      invariant(typeof tagId === "number", "tagId is required");
+      invariant(!!tagId && typeof tagId === "string", "tagId is required");
       await postEditMutation.mutateAsync({
         tagId,
         codeLanguage,
