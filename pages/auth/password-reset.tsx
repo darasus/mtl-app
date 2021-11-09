@@ -1,19 +1,27 @@
 import { Button } from "@chakra-ui/button";
 import { FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
-import { Box, Center, Flex, Text } from "@chakra-ui/layout";
-import { BanIcon } from "@heroicons/react/outline";
+import { Box, Center, Flex } from "@chakra-ui/layout";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { FormItem } from "../../features/PostForm";
 import { usePasswordResetMutation } from "../../hooks/mutation/usePasswordResetMutation";
+import { yup } from "../../lib/yup";
+
+export const scheme = yup.object().shape({
+  email: yup.string().required("Please fill in your email"),
+});
 
 const PasswordResetPage = () => {
   const router = useRouter();
   const passwordResetMutation = usePasswordResetMutation();
-  const form = useForm();
+  const form = useForm({
+    resolver: yupResolver(scheme),
+  });
 
-  const handleClick = form.handleSubmit((data) => {
+  const submit = form.handleSubmit((data) => {
     passwordResetMutation.mutateAsync({ email: data.email });
   });
 
@@ -24,19 +32,26 @@ const PasswordResetPage = () => {
   }, [passwordResetMutation.isSuccess, router]);
 
   return (
-    <Center h="100vh">
-      <Flex flexDirection="column" justifyContent="center" maxW="300px">
-        <FormLabel>Email address</FormLabel>
-        <Input {...form.register("email")} />
-        <Box mb={4} />
-        <Button
-          onClick={handleClick}
-          isLoading={passwordResetMutation.isLoading}
+    <form onSubmit={submit}>
+      <Center h="100vh">
+        <Flex
+          flexDirection="column"
+          justifyContent="center"
+          width="100%"
+          maxW="300px"
         >
-          Reset password
-        </Button>
-      </Flex>
-    </Center>
+          <FormItem
+            title="Email address"
+            errorMessage={form.formState.errors.email?.message}
+          >
+            <Input {...form.register("email")} />
+          </FormItem>
+          <Button type="submit" isLoading={passwordResetMutation.isLoading}>
+            Reset password
+          </Button>
+        </Flex>
+      </Center>
+    </form>
   );
 };
 
