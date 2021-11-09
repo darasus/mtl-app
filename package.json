@@ -30,6 +30,7 @@
     "copy-to-clipboard": "^3.3.1",
     "downshift": "^6.1.7",
     "fathom-client": "^3.2.0",
+    "formidable": "^2.0.1",
     "framer-motion": "^4",
     "invariant": "^2.2.4",
     "ioredis": "^4.28.0",
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/formidable": "^2.0.0",
     "@types/invariant": "^2.2.34",
     "@types/ioredis": "^4.27.7",
     "@types/mailgun-js": "^0.22.12",

@@ -7,7 +7,7 @@ const baseUrl =
 
 module.exports = withPlugins([], {
   images: {
-    domains: ["avatars.githubusercontent.com"],
+    domains: ["avatars.githubusercontent.com", "imagedelivery.net"],
   },
   reactStrictMode: true,
   swcMinify: true,

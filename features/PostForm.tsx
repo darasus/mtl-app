@@ -56,7 +56,7 @@ export const postSchema = yup.object().shape({
     .required("Please select tag"),
 });
 
-const FormItem: React.FC<{ title: string; errorMessage?: string }> = ({
+export const FormItem: React.FC<{ title: string; errorMessage?: string }> = ({
   title,
   errorMessage,
   children,
@@ -190,7 +190,7 @@ export const PostForm: React.FC<Props> = ({
                   const items =
                     tags.data?.map((item) => ({
                       value: item.id,
-                      label: item.name!,
+                      label: item.name as string,
                     })) || [];
                   const selectedItems = items.filter(
                     (item) => item.value === value

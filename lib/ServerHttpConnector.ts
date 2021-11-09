@@ -33,7 +33,7 @@ export class ServerHttpConnector {
   get(url: string) {
     return this.request("GET", { url });
   }
-  post(url: string, body: Record<string, unknown>) {
+  post(url: string, body: Record<string, any>) {
     return this.request("POST", { url, data: body });
   }
   put(url: string, body: Record<string, unknown>) {

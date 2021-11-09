@@ -13,6 +13,7 @@ import { ClientHttpConnector } from "./ClientHttpConnector";
 import { FeedType } from "../types/FeedType";
 import { UserService } from "./prismaServices/UserService";
 import { ActivityService } from "./prismaServices/ActivityService";
+import ServerFormData from "form-data";
 
 export class Fetcher {
   httpConnector: ServerHttpConnector | ClientHttpConnector;
@@ -48,6 +49,17 @@ export class Fetcher {
         data: {},
       })
       .then((res) => res.data);
+
+  updateUserSettings = ({
+    userId,
+    ...data
+  }: {
+    userId: string;
+    userName?: string;
+    name?: string;
+    password?: string;
+    image?: string;
+  }) => this.httpConnector.post(`/api/user/${userId}/update-settings`, data);
 
   // like
 
@@ -251,4 +263,30 @@ export class Fetcher {
       .request(`/api/activity/markAllAsRead`, { method: "POST" })
       .then((res) => res.data);
   };
+
+  // image upload
+
+  uploadImage = (data: FormData): Promise<{ imageUrl: string | null }> =>
+    this.httpConnector
+      .request(`/api/upload-image`, { method: "POST", data })
+      .then((res) => res.data);
+
+  uploadImageToCloudFlare = (
+    data: ServerFormData,
+    headers: Record<string, string>
+  ): Promise<{ imageUrl: string | null }> =>
+    this.httpConnector
+      .request(
+        `client/v4/accounts/520ed574991657981b4927dda46f2477/images/v1`,
+        {
+          method: "POST",
+          baseURL: "https://api.cloudflare.com",
+          data,
+          headers: {
+            ...headers,
+            Authorization: `Bearer vXd5f9tLFMrLYduwqFg0_owwaVGcfdcL8iZErPBY`,
+          },
+        }
+      )
+      .then((res) => ({ imageUrl: res.data?.result?.variants?.[0] || null }));
 }

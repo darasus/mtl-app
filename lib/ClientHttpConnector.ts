@@ -8,16 +8,16 @@ export class ClientHttpConnector {
   }
 
   get(url: string) {
-    return this.request("GET", { url });
+    return this.request(url, { method: "GET" });
   }
   post(url: string, body: Record<string, unknown>) {
-    return this.request("POST", { url, data: body });
+    return this.request(url, { method: "POST", data: body });
   }
   put(url: string, body: Record<string, unknown>) {
-    return this.request("PUT", { url, data: body });
+    return this.request(url, { method: "PUT", data: body });
   }
   delete(url: string) {
-    return this.request("DELETE", { url });
+    return this.request(url, { method: "DELETE" });
   }
 
   createRequest = () => {

@@ -156,4 +156,34 @@ export class UserService {
       cursor: newCursor,
     };
   }
+
+  async updateUserSettings({
+    userId,
+    name,
+    userName,
+    password,
+    image,
+  }: {
+    userId: string;
+    userName?: string;
+    name?: string;
+    password?: string;
+    image?: string;
+  }) {
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...(userName ? { userName } : {}),
+        ...(name ? { name } : {}),
+        ...(password ? { password } : {}),
+        ...(image ? { image } : {}),
+      },
+    });
+    await cache.del(redisCacheKey.createUserKey(userId));
+    await cache.del(redisCacheKey.createUserByEmailKey(user.email as string));
+    await cache.del(redisCacheKey.createUserSessionKey(user.email as string));
+    return user;
+  }
 }
