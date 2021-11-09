@@ -204,7 +204,7 @@ export class Fetcher {
       description: string;
       content: string;
       codeLanguage: CodeLanguage;
-      tagId: number;
+      tagId: string;
     }
   ): ReturnType<PostService["updatePost"]> =>
     this.httpConnector

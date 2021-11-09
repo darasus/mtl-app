@@ -9,7 +9,7 @@ interface Variables {
   description: string;
   content: string;
   codeLanguage: CodeLanguage;
-  tagId: number;
+  tagId: string;
 }
 
 const toastConfig = {
