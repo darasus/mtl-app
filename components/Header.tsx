@@ -15,7 +15,12 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import { PlusSmIcon, UserIcon, LogoutIcon } from "@heroicons/react/outline";
+import {
+  PlusSmIcon,
+  UserIcon,
+  LogoutIcon,
+  CogIcon,
+} from "@heroicons/react/outline";
 import { Logo } from "./Logo";
 import { useLogoutMutation } from "../hooks/mutation/useLogoutMutation";
 import { useMe } from "../hooks/useMe";
@@ -67,6 +72,12 @@ export const Header: React.FC = () => {
                     onClick={() => router.push(`/u/${me?.id}`)}
                   >
                     Profile
+                  </MenuItem>
+                  <MenuItem
+                    icon={<CogIcon width="20" height="20" />}
+                    onClick={() => router.push(`/settings`)}
+                  >
+                    Settings
                   </MenuItem>
                   <MenuItem
                     icon={<PlusSmIcon width="20" height="20" />}
