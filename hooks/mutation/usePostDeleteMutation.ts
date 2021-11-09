@@ -16,7 +16,7 @@ export const usePostDeleteMutation = (postId: string) => {
   return useMutation(() => withToast(fetcher.deletePost(postId), toastConfig), {
     async onSettled() {
       await queryClient.removeQueries(clientCacheKey.createPostKey(postId));
-      await queryClient.removeQueries(clientCacheKey.feedBaseKey);
+      await queryClient.invalidateQueries(clientCacheKey.feedBaseKey);
     },
   });
 };
