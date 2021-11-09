@@ -1,88 +1,22 @@
-import {
-  Button,
-  Flex,
-  Center,
-  Box,
-  Text,
-  useColorMode,
-} from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
-import {
-  ClientSafeProvider,
-  getProviders,
-  signIn,
-  useSession,
-} from "next-auth/client";
-import Image from "next/image";
-import { useRouter } from "next/router";
+import { getCsrfToken } from "next-auth/client";
 import React from "react";
-import { Logo } from "../../components/Logo";
+import { AuthForm } from "../../features/AuthForm";
 
 interface Props {
-  providers: Record<string, ClientSafeProvider>;
+  csrfToken: string | undefined;
 }
 
-const BrandLogo = ({ name }: { name: string }) => {
-  const { colorMode } = useColorMode();
-
-  return (
-    <Image
-      src={
-        colorMode === "dark"
-          ? `/${name}-logo-light.svg`
-          : `/${name}-logo-dark.svg`
-      }
-      height={23}
-      width={23}
-      alt={name}
-    />
-  );
-};
-
-const SignIn: React.FC<Props> = ({ providers }) => {
-  const [me] = useSession();
-  const router = useRouter();
-  const callbackUrl = router.query.callbackUrl as string | undefined;
-
-  React.useEffect(() => {
-    if (me) {
-      router.push(callbackUrl ? callbackUrl : "/");
-    }
-  }, [me, callbackUrl, router]);
-
-  if (me) return null;
-
-  return (
-    <Center h="100vh">
-      <Flex alignItems="center" direction="column">
-        <Box mb={5}>
-          <Logo />
-        </Box>
-        {Object.values(providers).map((provider) => (
-          <div key={provider.name}>
-            <Button
-              variant="outline"
-              onClick={() => signIn(provider.id)}
-              data-testid="github-signin-button"
-            >
-              <Flex alignItems="center">
-                <Text mr={2}>Sign in with</Text>
-                <BrandLogo name={provider.name} />
-              </Flex>
-            </Button>
-          </div>
-        ))}
-      </Flex>
-    </Center>
-  );
+const SignIn: React.FC<Props> = ({ csrfToken }) => {
+  return <AuthForm csrfToken={csrfToken} type="signin" />;
 };
 
 export default SignIn;
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const providers = await getProviders();
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const csrfToken = await getCsrfToken(ctx);
 
   return {
-    props: { providers },
+    props: { csrfToken },
   };
 };

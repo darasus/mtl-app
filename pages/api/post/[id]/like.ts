@@ -16,6 +16,7 @@ export default async function handle(
     req.method === "POST",
     `The HTTP ${req.method} method is not supported at this route.`
   );
+  invariant(typeof req.query.id === "string", "ID is missing");
 
   try {
     const user = await getUserSession({ req });
@@ -25,7 +26,7 @@ export default async function handle(
     const postService = new PostService();
     const likeService = new LikeService();
     const activityService = new ActivityService();
-    const post = await postService.fetchPost(Number(req.query.id), user.id);
+    const post = await postService.fetchPost(req.query.id, user.id);
 
     if (!post) {
       return res.json({ status: "failure" });
@@ -35,12 +36,12 @@ export default async function handle(
       return res.status(400).json({ message: "Post is already liked by you" });
     }
 
-    const like = await likeService.likePost(Number(req.query.id), user.id);
+    const like = await likeService.likePost(req.query.id, user.id);
     await cache.del(redisCacheKey.createPostKey(post.id));
     await activityService.addLikeActivity({
       authorId: user.id,
       likeId: like.id,
-      ownerId: post.authorId as number,
+      ownerId: post.authorId as string,
       postId: post.id,
     });
     res.json({ status: "success" });

@@ -7,7 +7,7 @@ export const useCommentsQuery = ({
   postId,
   take,
 }: {
-  postId: number;
+  postId: string;
   take: number;
 }) => {
   const fetcher = useFetcher();

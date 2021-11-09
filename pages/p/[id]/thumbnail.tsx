@@ -12,7 +12,7 @@ import { CodeLanguage } from ".prisma/client";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
-  const { data: post } = usePostQuery(Number(router.query.id));
+  const { data: post } = usePostQuery(router.query.id as string);
   const { borderColor } = useColors();
 
   if (!post) return null;

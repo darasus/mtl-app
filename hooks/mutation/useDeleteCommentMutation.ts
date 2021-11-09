@@ -14,7 +14,7 @@ export const useDeleteCommentMutation = () => {
   const fetcher = useFetcher();
 
   return useMutation(
-    ({ commentId }: { commentId: number; postId: number }) =>
+    ({ commentId }: { commentId: string; postId: string }) =>
       withToast(fetcher.deleteComment(commentId), toastConfig),
     {
       onMutate: async ({ postId, commentId }) => {

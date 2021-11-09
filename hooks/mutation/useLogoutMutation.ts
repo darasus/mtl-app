@@ -4,7 +4,7 @@ import { useMutation } from "react-query";
 import { withToast } from "../../utils/withToast";
 import { useFetcher } from "../useFetcher";
 
-export const useLogoutMutation = (userId: number) => {
+export const useLogoutMutation = (userId: string) => {
   const router = useRouter();
   const fetcher = useFetcher();
 
@@ -15,7 +15,7 @@ export const useLogoutMutation = (userId: number) => {
         loading: "Logging out...",
         error: "Error logging out",
       });
-      return signOut();
+      await signOut();
     },
     {
       onSuccess() {

@@ -14,7 +14,9 @@ export default async function handle(
     req.method === "POST",
     `The HTTP ${req.method} method is not supported at this route.`
   );
-  const postId = Number(req.query.id);
+  invariant(typeof req.query.id === "string", "ID is missing");
+
+  const postId = req.query.id;
   const postService = new PostService();
   const activityService = new ActivityService();
   const commentService = new CommentService();
@@ -36,7 +38,7 @@ export default async function handle(
       postId,
       authorId: user.id,
       commentId: comment.id,
-      ownerId: post?.authorId as number,
+      ownerId: post?.authorId as string,
     });
     res.json({ status: "success" });
   } catch (error) {

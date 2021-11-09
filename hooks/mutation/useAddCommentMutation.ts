@@ -11,7 +11,7 @@ type Comments = {
   pages: Page[];
 };
 
-type Variables = { postId: number; content: string; take: number };
+type Variables = { postId: string; content: string; take: number };
 
 const toastConfig = {
   loading: "Posting comment...",

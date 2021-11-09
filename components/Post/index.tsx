@@ -15,7 +15,7 @@ import { CopyButton } from "./CopyButton";
 import { OpenInRemoteCodeEditorButton } from "./OpenInRemoteCodeEditorButton";
 
 interface Props {
-  postId: number;
+  postId: string;
   isMyPost: boolean;
   showActionMenu?: boolean;
   showMetaInfo?: boolean;

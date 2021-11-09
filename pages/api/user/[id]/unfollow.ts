@@ -26,12 +26,12 @@ export default async function handle(
     }
 
     await activityService.removeFollowActivity({
-      followFollowingId: Number(req.query.id),
+      followFollowingId: req.query.id,
       followFollowerId: user.id,
     });
 
     await followService.unfollowUser({
-      followingUserId: Number(req.query.id),
+      followingUserId: req.query.id,
       followerUserId: user.id,
     });
     return res.status(200).end();

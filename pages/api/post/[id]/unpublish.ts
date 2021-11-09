@@ -21,7 +21,7 @@ export default async function handle(
     }
 
     const postService = new PostService();
-    await postService.unpublishPost(Number(req.query.id));
+    await postService.unpublishPost(req.query.id as string);
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));

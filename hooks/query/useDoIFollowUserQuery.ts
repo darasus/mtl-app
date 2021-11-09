@@ -3,7 +3,7 @@ import { clientCacheKey } from "../../lib/ClientCacheKey";
 import { days } from "../../utils/duration";
 import { useFetcher } from "../useFetcher";
 
-export const useDoIFollowUserQuery = (userId: number) => {
+export const useDoIFollowUserQuery = (userId: string) => {
   const fetcher = useFetcher();
 
   return useQuery(

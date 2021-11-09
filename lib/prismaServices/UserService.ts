@@ -38,7 +38,7 @@ export class UserService {
     );
   }
 
-  async getUserById(userId: number) {
+  async getUserById(userId: string) {
     return cache.fetch(
       redisCacheKey.createUserKey(userId),
       () =>
@@ -52,7 +52,7 @@ export class UserService {
     );
   }
 
-  async getUserPosts(userId: number, isMe: boolean): Promise<Post[]> {
+  async getUserPosts(userId: string, isMe: boolean): Promise<Post[]> {
     const posts = await prisma.post.findMany({
       where: {
         authorId: userId,
@@ -94,8 +94,8 @@ export class UserService {
     cursor,
     take = 10,
   }: {
-    userId: number;
-    cursor?: number;
+    userId: string;
+    cursor?: string;
     take?: number;
   }) {
     const activityCount = await prisma.activity.count({
@@ -155,5 +155,35 @@ export class UserService {
       total: activityCount,
       cursor: newCursor,
     };
+  }
+
+  async updateUserSettings({
+    userId,
+    name,
+    userName,
+    password,
+    image,
+  }: {
+    userId: string;
+    userName?: string;
+    name?: string;
+    password?: string;
+    image?: string;
+  }) {
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...(userName ? { userName } : {}),
+        ...(name ? { name } : {}),
+        ...(password ? { password } : {}),
+        ...(image ? { image } : {}),
+      },
+    });
+    await cache.del(redisCacheKey.createUserKey(userId));
+    await cache.del(redisCacheKey.createUserByEmailKey(user.email as string));
+    await cache.del(redisCacheKey.createUserSessionKey(user.email as string));
+    return user;
   }
 }

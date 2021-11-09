@@ -14,7 +14,9 @@ export default async function handle(
     req.method === "DELETE",
     `The HTTP ${req.method} method is not supported at this route.`
   );
-  const commentId = Number(req.query.id);
+  invariant(typeof req.query.id === "string", "ID is missing");
+
+  const commentId = req.query.id;
   const commentService = new CommentService();
   const postService = new PostService();
   const activityService = new ActivityService();
@@ -27,7 +29,7 @@ export default async function handle(
     }
 
     const isMyComment = await commentService.isMyComment({
-      commentId: Number(req.query.id),
+      commentId,
       userId: user.id,
     });
 
@@ -47,7 +49,7 @@ export default async function handle(
       commentId,
       ownerId: user.id,
     });
-    await commentService.deleteComment(Number(req.query.id), post.id);
+    await commentService.deleteComment(commentId, post.id);
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));

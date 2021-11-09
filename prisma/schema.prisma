@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Post {
-  id           Int           @id @default(autoincrement())
+  id           String        @id @default(cuid())
   title        String
   content      String?
   description  String?
   published    Boolean       @default(false)
   author       User?         @relation(fields: [authorId], references: [id])
-  authorId     Int?
+  authorId     String?
   likes        Like[]
   comments     Comment[]
   codeLanguage CodeLanguage?
@@ -25,12 +25,15 @@ model Post {
 }
 
 model User {
-  id               Int        @id @default(autoincrement())
+  id               String     @id @default(cuid())
   name             String?
-  userName         String?    @unique @default(uuid())
-  email            String     @unique
-  emailVerified    DateTime?  @map(name: "email_verified")
+  email            String?    @unique
+  emailVerified    DateTime?
   image            String?
+  account          Account[]
+  sessions         Session[]
+  password         String?
+  userName         String?    @unique @default(cuid())
   createdAt        DateTime   @default(now()) @map(name: "created_at")
   updatedAt        DateTime   @updatedAt @map(name: "updated_at")
   posts            Post[]
@@ -47,7 +50,8 @@ model User {
 model Account {
   id                 Int       @id @default(autoincrement())
   compoundId         String    @unique @map(name: "compound_id")
-  userId             Int       @map(name: "user_id")
+  userId             String    @map(name: "user_id")
+  user               User      @relation(fields: [userId], references: [id])
   providerType       String    @map(name: "provider_type")
   providerId         String    @map(name: "provider_id")
   providerAccountId  String    @map(name: "provider_account_id")
@@ -57,7 +61,6 @@ model Account {
   createdAt          DateTime  @default(now()) @map(name: "created_at")
   updatedAt          DateTime  @default(now()) @map(name: "updated_at")
 
-
   @@index([providerAccountId], name: "providerAccountId")
   @@index([providerId], name: "providerId")
   @@index([userId], name: "userId")
@@ -66,7 +69,8 @@ model Account {
 
 model Session {
   id           Int      @id @default(autoincrement())
-  userId       Int      @map(name: "user_id")
+  userId       String   @map(name: "user_id")
+  user         User     @relation(fields: [userId], references: [id])
   expires      DateTime
   sessionToken String   @unique @map(name: "session_token")
   accessToken  String   @unique @map(name: "access_token")
@@ -88,61 +92,61 @@ model VerificationRequest {
 }
 
 model Comment {
-  id        Int        @id @default(autoincrement())
+  id        String     @id @default(cuid())
   post      Post       @relation(fields: [postId], references: [id])
-  postId    Int
+  postId    String
   content   String
   createdAt DateTime   @default(now()) @map(name: "created_at")
   updatedAt DateTime   @default(now()) @map(name: "updated_at")
   author    User?      @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  authorId  String?
   Activity  Activity[]
 }
 
 model Like {
-  id        Int        @id @default(autoincrement())
+  id        String     @id @default(cuid())
   post      Post       @relation(fields: [postId], references: [id])
-  postId    Int
+  postId    String
   createdAt DateTime   @default(now()) @map(name: "created_at")
   updatedAt DateTime   @default(now()) @map(name: "updated_at")
   author    User?      @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  authorId  String?
   activity  Activity[]
 }
 
 model Follow {
   follower    User       @relation("follower", fields: [followerId], references: [id])
-  followerId  Int
+  followerId  String
   following   User       @relation("following", fields: [followingId], references: [id])
-  followingId Int
+  followingId String
   activity    Activity[]
 
   @@id([followerId, followingId])
 }
 
 model Activity {
-  id                Int      @id @default(autoincrement())
+  id                String   @id @default(cuid())
   unread            Boolean  @default(true)
   post              Post?    @relation(fields: [postId], references: [id])
-  postId            Int?
+  postId            String?
   like              Like?    @relation(fields: [likeId], references: [id])
-  likeId            Int?
+  likeId            String?
   follow            Follow?  @relation(fields: [followFollowerId, followFollowingId], references: [followerId, followingId])
-  followId          Int?
+  followId          String?
   comment           Comment? @relation(fields: [commentId], references: [id])
-  commentId         Int?
+  commentId         String?
   createdAt         DateTime @default(now()) @map(name: "created_at")
   updatedAt         DateTime @default(now()) @map(name: "updated_at")
   author            User     @relation(name: "author", fields: [authorId], references: [id])
-  authorId          Int
+  authorId          String
   owner             User     @relation(name: "owner", fields: [ownerId], references: [id])
-  ownerId           Int
-  followFollowerId  Int?
-  followFollowingId Int?
+  ownerId           String
+  followFollowerId  String?
+  followFollowingId String?
 }
 
 model Tag {
-  id        Int           @id @default(autoincrement())
+  id        String        @id @default(cuid())
   name      String
   createdAt DateTime      @default(now()) @map(name: "created_at")
   updatedAt DateTime      @default(now()) @map(name: "updated_at")
@@ -150,10 +154,10 @@ model Tag {
 }
 
 model TagsOnPosts {
-  post   Post @relation(fields: [postId], references: [id])
-  postId Int
-  tag    Tag  @relation(fields: [tagId], references: [id])
-  tagId  Int
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  tagId  String
 
   @@id([postId, tagId])
 }

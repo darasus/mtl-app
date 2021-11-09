@@ -11,10 +11,10 @@ export class ActivityService {
     ownerId,
     postId,
   }: {
-    authorId: number;
-    likeId: number;
-    ownerId: number;
-    postId: number;
+    authorId: string;
+    likeId: string;
+    ownerId: string;
+    postId: string;
   }) {
     if (authorId === ownerId) return null;
 
@@ -42,9 +42,9 @@ export class ActivityService {
     authorId,
     ownerId,
   }: {
-    postId: number;
-    authorId: number;
-    ownerId: number;
+    postId: string;
+    authorId: string;
+    ownerId: string;
   }) {
     const like = await prisma.like.findFirst({
       where: {
@@ -82,10 +82,10 @@ export class ActivityService {
     ownerId,
     postId,
   }: {
-    authorId: number;
-    commentId: number;
-    ownerId: number;
-    postId: number;
+    authorId: string;
+    commentId: string;
+    ownerId: string;
+    postId: string;
   }) {
     if (authorId === ownerId) return null;
 
@@ -112,8 +112,8 @@ export class ActivityService {
     commentId,
     ownerId,
   }: {
-    commentId: number;
-    ownerId: number;
+    commentId: string;
+    ownerId: string;
   }) {
     const activity = await prisma.activity.findFirst({
       where: {
@@ -134,7 +134,7 @@ export class ActivityService {
     });
   }
 
-  async markActivityAsRead({ activityId }: { activityId: number }) {
+  async markActivityAsRead({ activityId }: { activityId: string }) {
     return prisma.activity.update({
       where: {
         id: activityId,
@@ -145,7 +145,7 @@ export class ActivityService {
     });
   }
 
-  async markAllActivityAsRead({ userId }: { userId: number }) {
+  async markAllActivityAsRead({ userId }: { userId: string }) {
     const allUnreeadActivities = await prisma.activity.findMany({
       where: {
         ownerId: userId,
@@ -171,10 +171,10 @@ export class ActivityService {
     authorId,
     ownerId,
   }: {
-    followFollowerId: number;
-    followFollowingId: number;
-    authorId: number;
-    ownerId: number;
+    followFollowerId: string;
+    followFollowingId: string;
+    authorId: string;
+    ownerId: string;
   }) {
     if (authorId === ownerId) return null;
 
@@ -198,8 +198,8 @@ export class ActivityService {
     followFollowerId,
     followFollowingId,
   }: {
-    followFollowerId: number;
-    followFollowingId: number;
+    followFollowerId: string;
+    followFollowingId: string;
   }) {
     const activity = await prisma.activity.findFirst({
       where: {

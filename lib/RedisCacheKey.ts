@@ -7,15 +7,15 @@ export class RedisCacheKey {
     return `user:${email}`;
   }
 
-  createUserKey(userId: number): string {
+  createUserKey(userId: string): string {
     return `user:${userId}`;
   }
 
-  createPostKey(postId: number): string {
+  createPostKey(postId: string): string {
     return `post:${postId}`;
   }
 
-  createUserFollowerCountKey(userId: number): string {
+  createUserFollowerCountKey(userId: string): string {
     return `user:${userId}:follower_count`;
   }
 
@@ -23,8 +23,8 @@ export class RedisCacheKey {
     followingUserId,
     followerUserId,
   }: {
-    followingUserId: number;
-    followerUserId: number;
+    followingUserId: string;
+    followerUserId: string;
   }): string {
     return `follow:${followingUserId}:${followerUserId}`;
   }

@@ -15,7 +15,7 @@ export default async function handle(
 
   try {
     const userService = new UserService();
-    const user = await userService.getUserById(Number(req.query.id));
+    const user = await userService.getUserById(req.query.id);
     res.json(user);
   } catch (error) {
     return res.end(processErrorResponse(error));

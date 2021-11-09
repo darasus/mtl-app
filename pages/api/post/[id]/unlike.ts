@@ -17,7 +17,7 @@ export default async function handle(
     `The HTTP ${req.method} method is not supported at this route.`
   );
 
-  const postId = Number(req.query.id);
+  const postId = req.query.id as string;
 
   try {
     const user = await getUserSession({ req });
@@ -38,7 +38,7 @@ export default async function handle(
     await activityService.removeLikeActivity({
       postId,
       authorId: user.id,
-      ownerId: post?.authorId as number,
+      ownerId: post?.authorId as string,
     });
     await likeService.unlikePost(postId, user.id);
     await cache.del(redisCacheKey.createPostKey(postId));

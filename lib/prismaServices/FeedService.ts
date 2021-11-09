@@ -8,7 +8,7 @@ import { commentFragment } from "../fragments/commentFragment";
 import { tagsFragment } from "../fragments/tagsFragment";
 
 type InputPost = Prisma.Post & {
-  likes: (Prisma.Like & { author: Prisma.User | null })[];
+  likes: (Prisma.Like & { author: Omit<Prisma.User, "password"> | null })[];
   comments: Prisma.Comment[];
   commentsCount: number;
   tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
@@ -17,14 +17,15 @@ type InputPost = Prisma.Post & {
 export type FetchFeedResponse = {
   items: Post[];
   count: number;
-  cursor: number;
+  cursor: string | null;
   total: number;
 };
 
 export class FeedService {
-  preparePost = (post: InputPost, userId: number | undefined): Post => {
+  preparePost = (post: InputPost, userId: string | undefined): Post => {
     const isLikedByMe = post.likes.some(
-      (like: Like & { author: User | null }) => like.author?.id === userId
+      (like: Like & { author: Omit<User, "password"> | null }) =>
+        like.author?.id === userId
     );
 
     return {
@@ -39,16 +40,16 @@ export class FeedService {
     take = 25,
     cursor,
   }: {
-    userId?: number;
+    userId?: string;
     take?: number;
-    cursor?: number;
+    cursor?: string;
   }): Promise<FetchFeedResponse> {
     if (!userId) {
       return {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 
@@ -121,7 +122,7 @@ export class FeedService {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 
@@ -147,9 +148,9 @@ export class FeedService {
     take = 25,
     cursor,
   }: {
-    userId?: number;
+    userId?: string;
     take?: number;
-    cursor?: number;
+    cursor?: string;
   }): Promise<FetchFeedResponse> {
     const total = await prisma.post.count({
       where: {
@@ -199,7 +200,7 @@ export class FeedService {
         items: [],
         count: 0,
         total: 0,
-        cursor: 0,
+        cursor: null,
       };
     }
 

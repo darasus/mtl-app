@@ -11,12 +11,12 @@ export default async function handle(
     req.method === "GET",
     `The HTTP ${req.method} method is not supported at this route.`
   );
-  invariant(typeof Number(req.query.id) === "number", "Comment id is missing");
+  invariant(typeof req.query.id === "string", "ID is missing");
 
   try {
     const postService = new CommentService();
     const comments = await postService.getCommentsByPostId({
-      postId: Number(req.query.id),
+      postId: req.query.id,
       take: Number(req.query.take) || undefined,
       skip: Number(req.query.cursor) || undefined,
     });
