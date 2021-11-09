@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { transporter } from "../../lib/transporter";
 import prisma from "../../lib/prisma";
 import { AuthService } from "../../lib/prismaServices/AuthService";
+import { processErrorResponse } from "../../utils/error";
 
 export default async function handle(
   req: NextApiRequest,
@@ -14,9 +15,13 @@ export default async function handle(
   );
   invariant(typeof req.body.email === "string", "email is missing");
 
-  const authService = new AuthService({ prisma, transporter });
+  try {
+    const authService = new AuthService({ prisma, transporter });
 
-  await authService.resetPassword(req.body.email);
+    await authService.resetPassword(req.body.email);
 
-  res.status(200).json({ status: "ok" });
+    res.status(200).json({ status: "ok" });
+  } catch (error) {
+    res.status(400).end(processErrorResponse(error));
+  }
 }

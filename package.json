@@ -18,7 +18,7 @@
     "@heroicons/react": "^1.0.3",
     "@hookform/resolvers": "^2.7.0",
     "@monaco-editor/react": "^4.1.0",
-    "@prisma/client": "^3.2.1",
+    "@prisma/client": "^3.4.1",
     "@stackblitz/sdk": "^1.5.2",
     "axios": "^0.21.1",
     "axios-logger": "^2.5.0",
@@ -72,7 +72,7 @@
     "next-compose-plugins": "^2.2.1",
     "next-transpile-modules": "^4.1.0",
     "postcss": "^8.3.0",
-    "prisma": "^3.2.1",
+    "prisma": "^3.4.1",
     "typescript": "^4.3.5"
   }
 }

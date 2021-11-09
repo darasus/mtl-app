@@ -15,7 +15,7 @@ export const useLogoutMutation = (userId: string) => {
         loading: "Logging out...",
         error: "Error logging out",
       });
-      return signOut();
+      await signOut();
     },
     {
       onSuccess() {

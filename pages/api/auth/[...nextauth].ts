@@ -56,7 +56,7 @@ const authHandler: NextApiHandler = (req, res) =>
                 email: credentials?.email,
                 password: await bcrypt.hash(credentials?.password, 10),
                 name: `${credentials.firstName} ${credentials.lastName}`,
-                image: "/user-image.png",
+                image: "https://mytinylibrary.com/user-image.png",
               },
             });
           }

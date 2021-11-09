@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button";
-import { Input } from "@chakra-ui/input";
+import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex, Grid, GridItem, Text } from "@chakra-ui/layout";
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -10,9 +10,9 @@ import { useUploadImageMutation } from "../hooks/mutation/useUploadImageMutation
 import { useMe } from "../hooks/useMe";
 import { Layout } from "../layouts/Layout";
 import Image from "next/image";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItem } from "../features/PostForm";
+import { yup } from "../lib/yup";
 
 type SettingsForm = {
   name: string;
@@ -27,11 +27,22 @@ export const userSettingsValidationSchema = yup.object().shape({
   name: yup.string().required("Please fill in your name"),
   userName: yup.string().required("Please fill in your username"),
   email: yup.string().required("Please fill in your email"),
+  newPassword: yup.string(),
+  repeatNewPassword: yup
+    .string()
+    .oneOf([yup.ref("newPassword"), null], "Passwords don't match")
+    .when("newPassword", {
+      is: (val: any) => !!val && typeof val === "string",
+      then: yup.string().required("Please fill in password"),
+    }),
 });
 
 const SettingsPage = () => {
+  const [show, setShow] = React.useState(false);
+  const handleClick = () => setShow(!show);
   const { me } = useMe();
   const form = useForm<SettingsForm>({
+    mode: "all",
     resolver: yupResolver(userSettingsValidationSchema),
   });
   const {
@@ -83,6 +94,11 @@ const SettingsPage = () => {
       userName: data.userName,
       name: data.name,
       image,
+      ...(data.newPassword && data.repeatNewPassword
+        ? {
+            password: data.newPassword,
+          }
+        : {}),
     });
 
     window.location.reload();
@@ -128,7 +144,18 @@ const SettingsPage = () => {
                 title="New password"
                 errorMessage={errors.newPassword?.message}
               >
-                <Input {...form.register("newPassword")} />
+                <InputGroup size="md">
+                  <Input
+                    pr="4.5rem"
+                    type={show ? "text" : "password"}
+                    {...form.register("newPassword")}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleClick}>
+                      {show ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
               </FormItem>
             </GridItem>
             <GridItem colSpan={6}>
@@ -136,7 +163,18 @@ const SettingsPage = () => {
                 title="Repeat new password"
                 errorMessage={errors.repeatNewPassword?.message}
               >
-                <Input {...form.register("repeatNewPassword")} />
+                <InputGroup size="md">
+                  <Input
+                    pr="4.5rem"
+                    type={show ? "text" : "password"}
+                    {...form.register("repeatNewPassword")}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleClick}>
+                      {show ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
               </FormItem>
             </GridItem>
             <GridItem colSpan={12}>
@@ -164,7 +202,12 @@ const SettingsPage = () => {
               </Flex>
             </GridItem>
             <GridItem colSpan={12} mt={2}>
-              <Button type="submit">Save</Button>
+              <Button
+                type="submit"
+                isLoading={updateUserSettingsMutation.isLoading}
+              >
+                Save
+              </Button>
             </GridItem>
           </Grid>
         </form>
