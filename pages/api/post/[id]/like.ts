@@ -7,8 +7,9 @@ import { getUserSession } from "../../../../lib/getUserSession";
 import { ActivityService } from "../../../../lib/prismaServices/ActivityService";
 import { redisCacheKey } from "../../../../lib/RedisCacheKey";
 import { processErrorResponse } from "../../../../utils/error";
+import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 
-export default async function handle(
+export default withApiAuthRequired(async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -19,14 +20,12 @@ export default async function handle(
   invariant(typeof req.query.id === "string", "ID is missing");
 
   try {
-    const user = await getUserSession({ req });
-
-    if (!user) return null;
+    const session = await getUserSession({ req, res });
 
     const postService = new PostService();
     const likeService = new LikeService();
     const activityService = new ActivityService();
-    const post = await postService.fetchPost(req.query.id, user.id);
+    const post = await postService.fetchPost(req.query.id, session.user.id);
 
     if (!post) {
       return res.json({ status: "failure" });
@@ -36,10 +35,10 @@ export default async function handle(
       return res.status(400).json({ message: "Post is already liked by you" });
     }
 
-    const like = await likeService.likePost(req.query.id, user.id);
+    const like = await likeService.likePost(req.query.id, session.user.id);
     await cache.del(redisCacheKey.createPostKey(post.id));
     await activityService.addLikeActivity({
-      authorId: user.id,
+      authorId: session.user.id,
       likeId: like.id,
       ownerId: post.authorId as string,
       postId: post.id,
@@ -48,4 +47,4 @@ export default async function handle(
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

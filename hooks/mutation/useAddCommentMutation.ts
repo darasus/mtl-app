@@ -21,7 +21,7 @@ const toastConfig = {
 
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
-  const { me } = useMe();
+  const me = useMe();
   const fetcher = useFetcher();
 
   return useMutation(
@@ -39,6 +39,7 @@ export const useAddCommentMutation = () => {
 
         queryClient.setQueryData(
           clientCacheKey.createPostCommentsKey(postId),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (old: any) => {
             return {
               ...old,
@@ -46,7 +47,7 @@ export const useAddCommentMutation = () => {
                 ...old.items,
                 {
                   author: me,
-                  authorId: me?.id,
+                  authorId: me?.user?.id,
                   content,
                   createdAt: new Date().toISOString(),
                   id: Math.random(),
@@ -60,6 +61,7 @@ export const useAddCommentMutation = () => {
 
         return { prev };
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (_, { postId }, context: any) => {
         if (context?.prev) {
           queryClient.setQueryData<Comments>(

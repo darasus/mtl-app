@@ -19,15 +19,15 @@ export default async function handle(
 
   if (req.method === "GET") {
     try {
-      const user = await getUserSession({ req });
+      const session = await getUserSession({ req, res });
 
-      if (!user?.id) {
+      if (!session.user?.id) {
         return res.json({ doIFollow: false });
       }
 
       const response = await followService.doIFollow({
         followingUserId: req.query.id,
-        followerUserId: user.id,
+        followerUserId: session.user.id,
       });
 
       return res.json({ doIFollow: response.doIFollow });
@@ -38,20 +38,20 @@ export default async function handle(
 
   if (req.method === "POST") {
     try {
-      const user = await getUserSession({ req });
+      const session = await getUserSession({ req, res });
 
-      if (!user?.id) {
+      if (!session.user?.id) {
         return res.status(401).end();
       }
 
       const response = await followService.followUser({
         followingUserId: req.query.id,
-        followerUserId: user.id,
+        followerUserId: session.user.id,
       });
 
       await activityService.addFollowActivity({
         ownerId: req.query.id,
-        authorId: user.id,
+        authorId: session.user.id,
         followFollowerId: response.followerId,
         followFollowingId: response.followingId,
       });

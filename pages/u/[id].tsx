@@ -29,20 +29,19 @@ import { Fetcher } from "../../lib/Fetcher";
 import { ServerHttpConnector } from "../../lib/ServerHttpConnector";
 import { Heading } from "../../components/Heading";
 import { useMe } from "../../hooks/useMe";
-import { clientCacheKey } from "../../lib/ClientCacheKey";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
   const router = useRouter();
   const userId = router.query.id as string;
   const user = useUserQuery(userId);
-  const { me } = useMe();
+  const me = useMe();
   const posts = useUserPostsQuery(userId);
   const followMutation = useFollowMutation();
   const unfollowMutation = useUnfollowMutation();
   const followersCount = useFollowersCountQuery(userId);
   const doIFollowUser = useDoIFollowUserQuery(userId);
-  const isMyPage = me?.id === userId;
+  const isMyPage = me?.user?.id === userId;
 
   const handleFollow = () => {
     followMutation.mutateAsync({
@@ -146,7 +145,7 @@ const UserPage: React.FC = () => {
                 <Box key={post.id} mb={6}>
                   <Post
                     postId={post.id}
-                    isMyPost={post.authorId === me?.id}
+                    isMyPost={post.authorId === me?.user?.id}
                     isPostStatusVisible
                   />
                 </Box>
@@ -176,16 +175,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const fetcher = new Fetcher(httpConnector);
   const userId = ctx.query.id as string;
 
-  await Promise.all([
-    queryClient.prefetchQuery(clientCacheKey.createUserKey(userId), () =>
-      fetcher.getUser(userId)
-    ),
-  ]);
-
-  ctx.res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=604800"
-  );
+  // await Promise.all([
+  //   queryClient.prefetchQuery(clientCacheKey.createUserKey(userId), () =>
+  //     fetcher.getUser(userId)
+  //   ),
+  // ]);
 
   return {
     props: {

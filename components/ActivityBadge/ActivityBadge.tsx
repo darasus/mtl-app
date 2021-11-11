@@ -11,14 +11,14 @@ import { useLocalStorage } from "react-use";
 import { useMarkAllActivityAsReadMutation } from "../../hooks/mutation/useMarkAllActivityAsReadMutation";
 
 export const ActivityBadge = () => {
-  const { me } = useMe();
+  const me = useMe();
   const mutation = useMarkAllActivityAsReadMutation();
   const { data, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useUserActivityQuery(me?.id as string);
+    useUserActivityQuery(me?.user.id as string);
   const [showUnread, setShowUnread] = React.useState(false);
   const [lastReadDate, setLastReadDate] =
     useLocalStorage<Date>("last_unread_date");
-  const channel = useChannel(`activity-user-${me?.id}`);
+  const channel = useChannel(`activity-user-${me?.user.id}`);
 
   const handleMarkAllAsRead = React.useCallback(() => {
     mutation.mutate();

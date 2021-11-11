@@ -23,14 +23,14 @@ export default async function handle(
   );
 
   try {
-    const user = await getUserSession({ req });
+    const session = await getUserSession({ req, res });
 
-    if (!user?.id) {
+    if (!session) {
       return res.status(401).end();
     }
 
     const postService = new PostService();
-    const post = await postService.createPost(user.id, req.body);
+    const post = await postService.createPost(session.user.id, req.body);
     res.json(post);
   } catch (error) {
     return res.end(processErrorResponse(error));

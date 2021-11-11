@@ -4,25 +4,28 @@ import { useMe } from "../useMe";
 
 export const useUpdateUserSettingsMutation = () => {
   const fetcher = useFetcher();
-  const { me } = useMe();
+  const me = useMe();
   return useMutation(
     ({
-      userName,
+      nickname,
       name,
       image,
       password,
+      email,
     }: {
-      userName?: string;
+      nickname?: string;
       name?: string;
       image?: string;
       password?: string;
+      email?: string;
     }) =>
       fetcher.updateUserSettings({
-        userId: me?.id as string,
-        userName,
+        userId: me?.user?.id as string,
+        nickname,
         name,
         image,
         password,
+        email,
       })
   );
 };

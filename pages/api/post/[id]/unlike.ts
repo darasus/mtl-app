@@ -7,8 +7,9 @@ import { getUserSession } from "../../../../lib/getUserSession";
 import { ActivityService } from "../../../../lib/prismaServices/ActivityService";
 import { redisCacheKey } from "../../../../lib/RedisCacheKey";
 import { processErrorResponse } from "../../../../utils/error";
+import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 
-export default async function handle(
+export default withApiAuthRequired(async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -20,12 +21,11 @@ export default async function handle(
   const postId = req.query.id as string;
 
   try {
-    const user = await getUserSession({ req });
-    if (!user) return null;
+    const session = await getUserSession({ req, res });
     const postService = new PostService();
     const likeService = new LikeService();
     const activityService = new ActivityService();
-    const post = await postService.fetchPost(postId, user.id);
+    const post = await postService.fetchPost(postId, session.user.id);
 
     if (!post) {
       return res.json({ status: "failure" });
@@ -37,13 +37,13 @@ export default async function handle(
 
     await activityService.removeLikeActivity({
       postId,
-      authorId: user.id,
+      authorId: session.user.id,
       ownerId: post?.authorId as string,
     });
-    await likeService.unlikePost(postId, user.id);
+    await likeService.unlikePost(postId, session.user.id);
     await cache.del(redisCacheKey.createPostKey(postId));
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

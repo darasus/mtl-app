@@ -22,15 +22,15 @@ export default async function handle(
   const activityService = new ActivityService();
 
   try {
-    const user = await getUserSession({ req });
+    const session = await getUserSession({ req, res });
 
-    if (!user?.id) {
+    if (!session) {
       return res.status(401).end();
     }
 
     const isMyComment = await commentService.isMyComment({
       commentId,
-      userId: user.id,
+      userId: session.user.id,
     });
 
     if (!isMyComment) {
@@ -47,7 +47,7 @@ export default async function handle(
 
     await activityService.removeCommentActivity({
       commentId,
-      ownerId: user.id,
+      ownerId: session.user.id,
     });
     await commentService.deleteComment(commentId, post.id);
     res.json({ status: "success" });

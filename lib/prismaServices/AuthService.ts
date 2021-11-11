@@ -21,8 +21,6 @@ export class AuthService {
     const newPassword = generatePassword();
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-    console.log({ email });
-
     await this.prisma?.user.update({
       where: {
         email,

@@ -22,21 +22,21 @@ export default async function handle(
   const commentService = new CommentService();
 
   try {
-    const user = await getUserSession({ req });
+    const sessions = await getUserSession({ req, res });
 
-    if (!user?.id) {
+    if (!sessions) {
       return res.status(401).end();
     }
 
     const comment = await commentService.addComment({
       content: String(req.body.content),
       postId,
-      userId: user.id,
+      userId: sessions.user.id,
     });
     const post = await postService.fetchPost(postId);
     await activityService.addCommentActivity({
       postId,
-      authorId: user.id,
+      authorId: sessions.user.id,
       commentId: comment.id,
       ownerId: post?.authorId as string,
     });

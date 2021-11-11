@@ -13,10 +13,12 @@ import Image from "next/image";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItem } from "../features/PostForm";
 import { yup } from "../lib/yup";
+import { useRefetchUserProfile } from "../hooks/query/useRefetchUserProfile";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 
 type SettingsForm = {
   name: string;
-  userName: string;
+  nickname: string;
   email: string;
   newPassword?: string;
   repeatNewPassword?: string;
@@ -25,22 +27,23 @@ type SettingsForm = {
 
 export const userSettingsValidationSchema = yup.object().shape({
   name: yup.string().required("Please fill in your name"),
-  userName: yup.string().required("Please fill in your username"),
+  nickname: yup.string().required("Please fill in your nickname"),
   email: yup.string().required("Please fill in your email"),
   newPassword: yup.string(),
   repeatNewPassword: yup
     .string()
     .oneOf([yup.ref("newPassword"), null], "Passwords don't match")
     .when("newPassword", {
-      is: (val: any) => !!val && typeof val === "string",
+      is: (val: string) => !!val && typeof val === "string",
       then: yup.string().required("Please fill in password"),
     }),
 });
 
 const SettingsPage = () => {
+  const refetchUserProfileMutation = useRefetchUserProfile();
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
-  const { me } = useMe();
+  const me = useMe();
   const form = useForm<SettingsForm>({
     mode: "all",
     resolver: yupResolver(userSettingsValidationSchema),
@@ -62,22 +65,21 @@ const SettingsPage = () => {
     if (file?.[0]) {
       const url = new URL(URL.createObjectURL(file[0]));
       setCreateObjectURL(url);
-    } else if (me?.image) {
-      setCreateObjectURL(new URL(me.image));
+    } else if (me?.user?.picture) {
+      setCreateObjectURL(new URL(me?.user?.picture));
     }
-  }, [me?.image, file]);
+  }, [me?.user?.picture, file]);
 
   React.useEffect(() => {
     reset({
-      name: me?.name || "",
-      userName: me?.userName || "",
-      email: me?.email || "",
+      name: me?.user?.name || "",
+      nickname: me?.user?.nickname || "",
+      email: me?.user?.email || "",
     });
   }, [reset, me]);
 
   const submit = form.handleSubmit(async (data) => {
     let image: string | undefined = undefined;
-    console.log(dirtyFields);
     if (dirtyFields.file && data.file?.[0]) {
       const formData = new FormData();
       formData.append("file", data.file?.[0]);
@@ -91,7 +93,7 @@ const SettingsPage = () => {
     }
 
     await updateUserSettingsMutation.mutateAsync({
-      userName: data.userName,
+      nickname: data.nickname,
       name: data.name,
       image,
       ...(data.newPassword && data.repeatNewPassword
@@ -100,8 +102,7 @@ const SettingsPage = () => {
           }
         : {}),
     });
-
-    window.location.reload();
+    await refetchUserProfileMutation.refetch();
   });
 
   return (
@@ -123,10 +124,10 @@ const SettingsPage = () => {
             </GridItem>
             <GridItem colSpan={6}>
               <FormItem
-                title="Username"
-                errorMessage={errors.userName?.message}
+                title="Nickname"
+                errorMessage={errors.nickname?.message}
               >
-                <Input {...form.register("userName")} />
+                <Input {...form.register("nickname")} />
               </FormItem>
             </GridItem>
             <GridItem colSpan={6}>
@@ -217,3 +218,5 @@ const SettingsPage = () => {
 };
 
 export default SettingsPage;
+
+export const getServerSideProps = withPageAuthRequired();

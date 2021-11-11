@@ -5,7 +5,7 @@ import React from "react";
 import { RouterLink } from "./RouterLinkt";
 
 interface Props {
-  user: Prisma.User;
+  user: Omit<Prisma.User, "password">;
 }
 
 export const PostUserPreview: React.FC<Props> = ({ user }) => {

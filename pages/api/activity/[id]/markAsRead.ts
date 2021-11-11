@@ -1,10 +1,10 @@
+import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ActivityService } from "../../../../lib/prismaServices/ActivityService";
-import { getUserSession } from "../../../../lib/getUserSession";
 import { processErrorResponse } from "../../../../utils/error";
 
-export default async function handle(
+export default withApiAuthRequired(async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -17,12 +17,6 @@ export default async function handle(
   const activityService = new ActivityService();
 
   try {
-    const user = await getUserSession({ req });
-
-    if (!user?.id) {
-      return res.status(401).end();
-    }
-
     const activity = await activityService.markActivityAsRead({
       activityId: req.query.id,
     });
@@ -30,4 +24,4 @@ export default async function handle(
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

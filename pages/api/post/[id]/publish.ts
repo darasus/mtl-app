@@ -1,10 +1,10 @@
 import invariant from "invariant";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostService } from "../../../../lib/prismaServices/PostService";
-import { getUserSession } from "../../../../lib/getUserSession";
 import { processErrorResponse } from "../../../../utils/error";
+import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 
-export default async function handle(
+export default withApiAuthRequired(async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -15,16 +15,10 @@ export default async function handle(
   invariant(typeof req.query.id === "string", "ID is missing");
 
   try {
-    const user = await getUserSession({ req });
-
-    if (!user?.id) {
-      return res.status(401).end();
-    }
-
     const postService = new PostService();
     await postService.publishPost(req.query.id);
     res.json({ status: "success" });
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

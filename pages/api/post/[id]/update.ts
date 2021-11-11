@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import invariant from "invariant";
 import { PostService } from "../../../../lib/prismaServices/PostService";
-import { getUserSession } from "../../../../lib/getUserSession";
 import { processErrorResponse } from "../../../../utils/error";
+import { withApiAuthRequired } from "@auth0/nextjs-auth0";
 
-export default async function handle(
+export default withApiAuthRequired(async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -21,12 +21,6 @@ export default async function handle(
   invariant(typeof req.body.tagId === "string", "tagId is required.");
 
   try {
-    const user = await getUserSession({ req });
-
-    if (!user?.id) {
-      return res.status(401).end();
-    }
-
     const postService = new PostService();
     const post = await postService.updatePost(
       {
@@ -42,4 +36,4 @@ export default async function handle(
   } catch (error) {
     return res.end(processErrorResponse(error));
   }
-}
+});

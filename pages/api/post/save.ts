@@ -14,9 +14,9 @@ export default async function handle(
   );
 
   try {
-    const user = await getUserSession({ req });
+    const session = await getUserSession({ req, res });
 
-    if (!user?.id) {
+    if (!session) {
       return res.status(401).end();
     }
 
@@ -27,7 +27,7 @@ export default async function handle(
         content: req.body.content,
         description: req.body.description,
       },
-      user.id
+      session.user.id
     );
     res.json({ status: "success" });
   } catch (error) {

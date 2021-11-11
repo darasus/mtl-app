@@ -22,14 +22,12 @@ import {
   CogIcon,
 } from "@heroicons/react/outline";
 import { Logo } from "./Logo";
-import { useLogoutMutation } from "../hooks/mutation/useLogoutMutation";
 import { useMe } from "../hooks/useMe";
 import { ActivityBadge } from "../components/ActivityBadge/ActivityBadge";
 
 export const Header: React.FC = () => {
   const router = useRouter();
-  const { me, isLoading } = useMe();
-  const logout = useLogoutMutation(me?.id as string);
+  const me = useMe();
   const breakpoint = useBreakpoint();
 
   return (
@@ -47,8 +45,8 @@ export const Header: React.FC = () => {
             </Text>
           </Box>
         </Flex>
-        {isLoading && <Spinner />}
-        {me ? (
+        {me?.isLoading && <Spinner />}
+        {me?.user ? (
           <>
             {breakpoint !== "base" && (
               <Box mr={4}>
@@ -69,7 +67,7 @@ export const Header: React.FC = () => {
                 <MenuList>
                   <MenuItem
                     icon={<UserIcon width="20" height="20" />}
-                    onClick={() => router.push(`/u/${me?.id}`)}
+                    onClick={() => router.push(`/u/${me?.user?.id}`)}
                   >
                     Profile
                   </MenuItem>
@@ -88,7 +86,7 @@ export const Header: React.FC = () => {
                   <MenuItem
                     color="red.500"
                     icon={<LogoutIcon width="20" height="20" />}
-                    onClick={() => logout.mutate()}
+                    onClick={() => router.push("/api/auth/logout")}
                   >
                     Logout
                   </MenuItem>
@@ -100,7 +98,7 @@ export const Header: React.FC = () => {
           </>
         ) : (
           router.pathname !== "/" &&
-          !isLoading && (
+          !me?.isLoading && (
             <Flex>
               <Button
                 variant="outline"

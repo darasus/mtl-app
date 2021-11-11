@@ -1,7 +1,7 @@
 import Prisma from ".prisma/client";
 
 export type Post = Prisma.Post & {
-  author?: Prisma.User | null;
+  author: Omit<Prisma.User, "password"> | null;
   commentsCount: number;
   likesCount: number;
   isLikedByMe: boolean;
