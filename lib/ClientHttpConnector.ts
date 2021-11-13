@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { baseUrl } from "../constants/baseUrl";
 
 export class ClientHttpConnector {
   request: AxiosInstance;
@@ -22,7 +23,7 @@ export class ClientHttpConnector {
 
   createRequest = () => {
     const client = axios.create({
-      baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+      baseURL: `${baseUrl}`,
       headers: {
         Pragma: "no-cache",
       },

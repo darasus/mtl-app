@@ -1,1 +1,3 @@
-export const introImageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/screenshot?url=${process.env.NEXT_PUBLIC_BASE_URL}/home-preview-image`;
+import { baseUrl } from "./baseUrl";
+
+export const introImageUrl = `${baseUrl}/api/screenshot?url=${baseUrl}/home-preview-image`;
