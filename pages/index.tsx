@@ -20,14 +20,15 @@ import { useMe } from "../hooks/useMe";
 const Index: React.FC = () => {
   const [feedType, setFeedType] = React.useState(FeedType.Latest);
   const feed = useFeedQuery({ feedType });
-  const { me, isLoading } = useMe();
+  const me = useMe();
+  const isMeLoading = me?.isLoading;
 
   return (
     <>
       <Head title="Home" urlPath="" />
       <Layout>
         <main>
-          {!me && !isLoading && (
+          {!me && !isMeLoading && (
             <Center height="50vh">
               <Intro withSignIn />
             </Center>
@@ -56,11 +57,14 @@ const Index: React.FC = () => {
               <Spinner />
             </Flex>
           )}
-          {feed.data?.pages.map((page) => {
-            return page.items.map((post) => {
+          {feed.data?.pages?.map((page) => {
+            return page.items?.map((post) => {
               return (
                 <Box key={post.id} mb={6}>
-                  <Post postId={post.id} isMyPost={post.authorId === me?.id} />
+                  <Post
+                    postId={post.id}
+                    isMyPost={post.authorId === me?.user?.id}
+                  />
                 </Box>
               );
             });

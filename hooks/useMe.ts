@@ -1,12 +1,37 @@
-import { useSession } from "next-auth/client";
-import { MeSession } from "../types/MeSession";
+import { UserProfile, useUser } from "@auth0/nextjs-auth0";
+import React from "react";
 
-export const useMe = (): {
-  me: MeSession | null;
+interface UseMe {
+  error?: Error;
   isLoading: boolean;
-} => {
-  const [I, isLoading] = useSession();
-  const me = I as MeSession | null;
+  checkSession: () => Promise<void>;
+  user:
+    | (UserProfile & {
+        id?: string;
+      })
+    | null;
+}
 
-  return { me, isLoading };
+export const useMe = () => {
+  const session = useUser();
+
+  const user = React.useMemo(
+    () =>
+      session?.user
+        ? { ...(session?.user || {}), id: session?.user?.sub?.split("|")[1] }
+        : null,
+    [session]
+  );
+
+  const me: UseMe = React.useMemo(
+    () => ({
+      ...session,
+      user,
+    }),
+    [session, user]
+  );
+
+  if (!user) return null;
+
+  return me;
 };

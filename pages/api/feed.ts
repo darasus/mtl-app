@@ -21,13 +21,13 @@ export default async function handle(
   const feedType = req.query.feedType as FeedType;
 
   try {
-    const user = await getUserSession({ req });
+    const session = await getUserSession({ req, res });
 
     const feedService = new FeedService();
 
     if (feedType === FeedType.Following) {
       const feed = await feedService.fetchFollowingFeed({
-        userId: user?.id,
+        userId: session.user.id,
         take: Number(req.query.take) || undefined,
         cursor: (req.query.cursor as string) || undefined,
       });
@@ -37,7 +37,7 @@ export default async function handle(
 
     if (feedType === FeedType.Latest) {
       const feed = await feedService.fetchLatestFeed({
-        userId: user?.id,
+        userId: session.user.id,
         take: Number(req.query.take) || undefined,
         cursor: (req.query.cursor as string) || undefined,
       });

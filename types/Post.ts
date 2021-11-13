@@ -1,12 +1,14 @@
 import Prisma from ".prisma/client";
 
 export type Post = Prisma.Post & {
-  author?: Prisma.User | null;
+  author: Omit<Prisma.User, "password"> | null;
   commentsCount: number;
   likesCount: number;
   isLikedByMe: boolean;
-  comments: (Prisma.Comment & {
-    author?: Omit<Prisma.User, "password"> | null;
-  })[];
+  comments: Comment[];
   tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
+};
+
+export type Comment = Prisma.Comment & {
+  author?: Omit<Prisma.User, "password"> | null;
 };

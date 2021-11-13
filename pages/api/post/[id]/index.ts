@@ -15,9 +15,9 @@ export default async function handle(
   invariant(typeof req.query.id === "string", "ID is missing");
 
   try {
-    const user = await getUserSession({ req });
+    const session = await getUserSession({ req, res });
     const postService = new PostService();
-    const post = await postService.fetchPost(req.query.id, user?.id);
+    const post = await postService.fetchPost(req.query.id, session.user.id);
 
     if (!post) {
       return res.status(404).end();

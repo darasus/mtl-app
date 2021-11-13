@@ -10,7 +10,7 @@ import { useMe } from "../../../hooks/useMe";
 const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(router.query.id as string);
-  const { me } = useMe();
+  const me = useMe();
 
   if (!post.data) return null;
 
@@ -19,7 +19,7 @@ const PostPage: React.FC = () => {
       <main>
         <Post
           postId={post.data.id}
-          isMyPost={post.data.authorId === me?.id}
+          isMyPost={post.data.authorId === me?.user.id}
           showActionMenu={false}
           showMetaInfo={false}
         />

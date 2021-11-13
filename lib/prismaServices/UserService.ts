@@ -1,7 +1,6 @@
 import prisma from "../prisma";
 import cache from "../cache";
 import { Post } from "../../types/Post";
-import { authorFragment } from "../fragments/authorFragment";
 import { commentFragment } from "../fragments/commentFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { tagsFragment } from "../fragments/tagsFragment";
@@ -9,19 +8,7 @@ import { preparePost } from "../utils/preparePost";
 import { redisCacheKey } from "../RedisCacheKey";
 import { days } from "../../utils/duration";
 import { activityFragment } from "../fragments/activityFragment";
-
-const selectQueryFragment = {
-  select: {
-    userName: true,
-    email: true,
-    id: true,
-    image: true,
-    name: true,
-    emailVerified: true,
-    createdAt: true,
-    updatedAt: true,
-  },
-};
+import { userFragment } from "../fragments/userFragment";
 
 export class UserService {
   async getUserByEmail(email: string) {
@@ -32,7 +19,7 @@ export class UserService {
           where: {
             email,
           },
-          ...selectQueryFragment,
+          select: userFragment,
         }),
       days(365)
     );
@@ -46,7 +33,7 @@ export class UserService {
           where: {
             id: userId,
           },
-          ...selectQueryFragment,
+          select: userFragment,
         }),
       days(365)
     );
@@ -65,7 +52,7 @@ export class UserService {
       ],
       include: {
         author: {
-          select: authorFragment,
+          select: userFragment,
         },
         likes: {
           select: likeFragment,
@@ -160,25 +147,28 @@ export class UserService {
   async updateUserSettings({
     userId,
     name,
-    userName,
+    nickname,
     password,
     image,
+    email,
   }: {
     userId: string;
-    userName?: string;
+    nickname: string;
     name?: string;
     password?: string;
     image?: string;
+    email?: string;
   }) {
     const user = await prisma.user.update({
       where: {
         id: userId,
       },
       data: {
-        ...(userName ? { userName } : {}),
+        ...(nickname ? { nickname } : {}),
         ...(name ? { name } : {}),
         ...(password ? { password } : {}),
         ...(image ? { image } : {}),
+        ...(email ? { email } : {}),
       },
     });
     await cache.del(redisCacheKey.createUserKey(userId));

@@ -15,10 +15,13 @@ export default async function handle(
   invariant(typeof req.query.id === "string", "User ID is not provided");
 
   try {
-    const me = await getUserSession({ req });
+    const session = await getUserSession({ req, res });
     const userService = new UserService();
     const userId = req.query.id;
-    const posts = await userService.getUserPosts(userId, me?.id === userId);
+    const posts = await userService.getUserPosts(
+      userId,
+      session.user.id === userId
+    );
     res.json(posts);
   } catch (error) {
     return res.end(processErrorResponse(error));

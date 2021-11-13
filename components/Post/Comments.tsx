@@ -20,7 +20,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
     postId,
     take,
   });
-  const { me } = useMe();
+  const me = useMe();
   const { borderColor, secondaryTextColor } = useColors();
   const { mutateAsync: commentPost } = useAddCommentMutation();
   const { control, handleSubmit, reset } = useForm({
@@ -99,7 +99,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
                       comment.author.name
                     } - ${new Date(comment.createdAt).toDateString()}`}</Text>
                   </Box>
-                  {me?.id === comment.author.id && (
+                  {me?.user?.id === comment.author.id && (
                     <DeleteCommentButton
                       commentId={comment.id}
                       postId={postId}
@@ -120,7 +120,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
           <form onSubmit={submit}>
             <Box p={3}>
               <Flex>
-                {me?.image && (
+                {me?.user?.picture && (
                   <Box
                     width={7}
                     height={7}
@@ -130,7 +130,7 @@ export const Comments: React.FC<Props> = ({ postId }) => {
                     mr={2}
                   >
                     <Image
-                      src={me?.image}
+                      src={me?.user.picture as string}
                       width="100"
                       height="100"
                       alt="Avatar"

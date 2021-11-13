@@ -2,16 +2,17 @@ import prisma from "../prisma";
 import { Post } from "../../types/Post";
 import * as R from "ramda";
 import Prisma, { Like, User } from ".prisma/client";
-import { authorFragment } from "../fragments/authorFragment";
 import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
 import { tagsFragment } from "../fragments/tagsFragment";
+import { userFragment } from "../fragments/userFragment";
 
 type InputPost = Prisma.Post & {
   likes: (Prisma.Like & { author: Omit<Prisma.User, "password"> | null })[];
   comments: Prisma.Comment[];
   commentsCount: number;
   tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
+  author: Omit<Prisma.User, "password"> | null;
 };
 
 export type FetchFeedResponse = {
@@ -100,7 +101,7 @@ export class FeedService {
       skip: cursor ? 1 : 0,
       include: {
         author: {
-          select: authorFragment,
+          select: userFragment,
         },
         likes: {
           select: likeFragment,
@@ -178,7 +179,7 @@ export class FeedService {
       skip: cursor ? 1 : 0,
       include: {
         author: {
-          select: authorFragment,
+          select: userFragment,
         },
         likes: {
           select: likeFragment,

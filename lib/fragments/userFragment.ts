@@ -1,5 +1,5 @@
 export const userFragment = {
-  userName: true,
+  nickname: true,
   email: true,
   id: true,
   image: true,

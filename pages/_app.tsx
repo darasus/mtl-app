@@ -5,7 +5,6 @@ import React from "react";
 import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Provider } from "next-auth/client";
 import {
   ChakraProvider,
   cookieStorageManager,
@@ -15,6 +14,7 @@ import { theme } from "../theme";
 import { Toaster, toast } from "react-hot-toast";
 import * as Fathom from "fathom-client";
 import { useRouter } from "next/router";
+import { UserProvider } from "@auth0/nextjs-auth0";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
@@ -78,14 +78,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
               content="width=device-width, initial-scale=1, maximum-scale=1"
             />
           </Head>
-          <Provider session={pageProps.session}>
+          <UserProvider {...pageProps}>
             <PusherProvider
               clientKey={process.env.NEXT_PUBLIC_PUSHER_APP_KEY}
               cluster="eu"
             >
               <Component {...pageProps} />
             </PusherProvider>
-          </Provider>
+          </UserProvider>
         </ChakraProvider>
       </Hydrate>
       <ReactQueryDevtools />

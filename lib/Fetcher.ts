@@ -24,15 +24,13 @@ export class Fetcher {
 
   // auth
 
-  resetPassword = (email: string) =>
-    this.httpConnector.request
-      .post(`/api/reset-password`, { email })
-      .then((res) => res.data);
+  refetchAuthUserProfile = (): Promise<void> =>
+    this.httpConnector.request.get("/api/auth/refetch");
 
   // user
 
   getMe = (): Promise<User> =>
-    this.httpConnector.request(`/api/me`).then((res) => res.data);
+    this.httpConnector.request("/api/me").then((res) => res.data);
 
   getUser = (userId: string): Promise<User> =>
     this.httpConnector.request(`/api/user/${userId}`).then((res) => res.data);
@@ -55,11 +53,13 @@ export class Fetcher {
     ...data
   }: {
     userId: string;
-    userName?: string;
+    nickname?: string;
     name?: string;
     password?: string;
     image?: string;
-  }) => this.httpConnector.post(`/api/user/${userId}/update-settings`, data);
+    email?: string;
+  }) =>
+    this.httpConnector.post(`/api/user/${userId}/update-settings`, { ...data });
 
   // like
 
