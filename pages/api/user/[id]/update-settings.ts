@@ -54,7 +54,7 @@ export default withApiAuthRequired(async function handle(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          image: req.body.image,
+          picture: req.body.image,
           name: req.body.name,
           nickname: req.body.nickname,
           password: req.body.password,

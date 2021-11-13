@@ -6,15 +6,13 @@ import { useForm, useWatch } from "react-hook-form";
 import { Head } from "../components/Head";
 import { Heading } from "../components/Heading";
 import { useUpdateUserSettingsMutation } from "../hooks/mutation/useUpdateUserSettingsMutation";
-import { useUploadImageMutation } from "../hooks/mutation/useUploadImageMutation";
 import { useMe } from "../hooks/useMe";
 import { Layout } from "../layouts/Layout";
-import Image from "next/image";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormItem } from "../features/PostForm";
 import { yup } from "../lib/yup";
-import { useRefetchUserProfile } from "../hooks/query/useRefetchUserProfile";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { Image } from "@chakra-ui/react";
 
 type SettingsForm = {
   name: string;
@@ -40,7 +38,7 @@ export const userSettingsValidationSchema = yup.object().shape({
 });
 
 const SettingsPage = () => {
-  const refetchUserProfileMutation = useRefetchUserProfile();
+  const updateUserSettingsMutation = useUpdateUserSettingsMutation();
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
   const me = useMe();
@@ -53,8 +51,6 @@ const SettingsPage = () => {
     control,
     formState: { dirtyFields, errors },
   } = form;
-  const uploadImageMutation = useUploadImageMutation();
-  const updateUserSettingsMutation = useUpdateUserSettingsMutation();
   const [createObjectURL, setCreateObjectURL] = React.useState<URL | null>(
     null
   );
@@ -79,31 +75,19 @@ const SettingsPage = () => {
   }, [reset, me]);
 
   const submit = form.handleSubmit(async (data) => {
-    let image: string | undefined = undefined;
-    if (dirtyFields.file && data.file?.[0]) {
-      const formData = new FormData();
-      formData.append("file", data.file?.[0]);
-      const imageResponse = await uploadImageMutation.mutateAsync({
-        data: formData,
-      });
-
-      if (typeof imageResponse.imageUrl === "string") {
-        image = imageResponse.imageUrl;
-      }
-    }
-
-    await updateUserSettingsMutation.mutateAsync({
+    const password =
+      data.newPassword && data.repeatNewPassword ? data.newPassword : undefined;
+    updateUserSettingsMutation.mutate({
       nickname: data.nickname,
       name: data.name,
-      image,
-      ...(data.newPassword && data.repeatNewPassword
-        ? {
-            password: data.newPassword,
-          }
-        : {}),
+      file: dirtyFields.file && data.file?.[0] ? data.file?.[0] : undefined,
+      password,
     });
-    await refetchUserProfileMutation.refetch();
   });
+
+  const handleFileUploadClick = React.useCallback(() => {
+    document.querySelector<HTMLInputElement>('[name="file"]')?.click();
+  }, []);
 
   return (
     <>
@@ -184,14 +168,15 @@ const SettingsPage = () => {
               </Text>
             </GridItem>
             <GridItem colSpan={6}>
-              <Flex>
-                <Box>
-                  <FormItem title="Upload new profile picture">
-                    <Input {...form.register("file")} type="file" />
-                  </FormItem>
-                </Box>
+              <Flex alignItems="center">
+                <Input
+                  {...form.register("file")}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                />
                 {createObjectURL?.href && (
-                  <Box borderRadius="full" overflow="hidden" ml={4}>
+                  <Box borderRadius="full" overflow="hidden" mr={4}>
                     <Image
                       src={createObjectURL?.href}
                       alt="Profile picture"
@@ -200,12 +185,16 @@ const SettingsPage = () => {
                     />
                   </Box>
                 )}
+                <Button onClick={handleFileUploadClick} size="sm">
+                  Select file
+                </Button>
               </Flex>
             </GridItem>
             <GridItem colSpan={12} mt={2}>
               <Button
                 type="submit"
                 isLoading={updateUserSettingsMutation.isLoading}
+                disabled={!form.formState.isDirty}
               >
                 Save
               </Button>
