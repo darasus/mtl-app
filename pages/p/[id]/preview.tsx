@@ -6,6 +6,7 @@ import { PreviewLayout } from "../../../layouts/PreviewLayout";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { Logo } from "../../../components/Logo";
 import { useMe } from "../../../hooks/useMe";
+import { GetServerSideProps } from "next";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -39,3 +40,11 @@ const PostPage: React.FC = () => {
 };
 
 export default PostPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  return {
+    props: {
+      cookies: req.headers.cookie ?? "",
+    },
+  };
+};

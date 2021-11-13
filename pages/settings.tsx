@@ -13,6 +13,7 @@ import { FormItem } from "../features/PostForm";
 import { yup } from "../lib/yup";
 import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { Image } from "@chakra-ui/react";
+import { GetServerSideProps } from "next";
 
 type SettingsForm = {
   name: string;
@@ -206,6 +207,12 @@ const SettingsPage = () => {
   );
 };
 
-export default SettingsPage;
+export default withPageAuthRequired(SettingsPage);
 
-export const getServerSideProps = withPageAuthRequired();
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  return {
+    props: {
+      cookies: req.headers.cookie ?? "",
+    },
+  };
+};

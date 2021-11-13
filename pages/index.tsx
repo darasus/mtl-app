@@ -91,10 +91,10 @@ const Index: React.FC = () => {
 
 export default Index;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   return {
     props: {
-      cookies: ctx.req.headers.cookie ?? "",
+      cookies: req.headers.cookie ?? "",
     },
   };
 };

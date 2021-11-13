@@ -9,6 +9,7 @@ import { useColors } from "../../../hooks/useColors";
 import { CodeLanguageIcon } from "../../../components/Post/CodeLanguageIcon";
 import Image from "next/image";
 import { CodeLanguage } from ".prisma/client";
+import { GetServerSideProps } from "next";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -100,3 +101,11 @@ const PostPage: React.FC = () => {
 };
 
 export default PostPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  return {
+    props: {
+      cookies: req.headers.cookie ?? "",
+    },
+  };
+};
