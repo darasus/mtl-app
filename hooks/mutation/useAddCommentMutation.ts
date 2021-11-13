@@ -1,15 +1,10 @@
 import { useMutation, useQueryClient } from "react-query";
 import { clientCacheKey } from "../../lib/ClientCacheKey";
-import { CommentService } from "../../lib/prismaServices/CommentService";
+import { NonCursorApiPages } from "../../types/ApiPage";
+import { Comment } from "../../types/Post";
 import { withToast } from "../../utils/withToast";
 import { useFetcher } from "../useFetcher";
 import { useMe } from "../useMe";
-
-type Page = ReturnType<CommentService["getCommentsByPostId"]>;
-
-type Comments = {
-  pages: Page[];
-};
 
 type Variables = { postId: string; content: string; take: number };
 
@@ -19,12 +14,22 @@ const toastConfig = {
   error: "Comment is not posted.",
 };
 
+type Data = NonCursorApiPages<Comment> | undefined;
+
 export const useAddCommentMutation = () => {
   const queryClient = useQueryClient();
   const me = useMe();
   const fetcher = useFetcher();
 
-  return useMutation(
+  return useMutation<
+    Comment,
+    unknown,
+    Variables,
+    {
+      prev: Data;
+    }
+  >(
+    "jello",
     ({ postId, content }: Variables) =>
       withToast(fetcher.addComment(postId, content), toastConfig),
     {
@@ -33,26 +38,36 @@ export const useAddCommentMutation = () => {
           clientCacheKey.createPostCommentsKey(postId)
         );
 
-        const prev = queryClient.getQueryData<Comments>(
+        const prev = queryClient.getQueryData<Data>(
           clientCacheKey.createPostCommentsKey(postId)
         );
 
-        queryClient.setQueryData(
+        queryClient.setQueryData<Data>(
           clientCacheKey.createPostCommentsKey(postId),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (old: any) => {
+          (old) => {
             return {
+              total: 0,
+              count: 0,
               ...old,
               items: [
-                ...old.items,
+                ...(old?.items || []),
                 {
-                  author: me,
-                  authorId: me?.user?.id,
+                  author: {
+                    id: me?.user?.id as string,
+                    email: me?.user?.email as string,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    nickname: me?.user?.nickname as string,
+                    image: me?.user?.picture as string,
+                    emailVerified: false,
+                    name: me?.user?.name as string,
+                  },
+                  authorId: me?.user?.id as string,
                   content,
-                  createdAt: new Date().toISOString(),
-                  id: Math.random(),
+                  createdAt: new Date(),
+                  id: Math.random().toString(),
                   postId,
-                  updatedAt: new Date().toISOString(),
+                  updatedAt: new Date(),
                 },
               ],
             };
@@ -61,10 +76,9 @@ export const useAddCommentMutation = () => {
 
         return { prev };
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onError: (_, { postId }, context: any) => {
+      onError: (_, { postId }, context) => {
         if (context?.prev) {
-          queryClient.setQueryData<Comments>(
+          queryClient.setQueryData(
             clientCacheKey.createPostCommentsKey(postId),
             context.prev
           );
