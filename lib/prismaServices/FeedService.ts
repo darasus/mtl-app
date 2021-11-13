@@ -1,19 +1,10 @@
 import prisma from "../prisma";
 import { Post } from "../../types/Post";
-import * as R from "ramda";
-import Prisma, { Like, User } from ".prisma/client";
 import { likeFragment } from "../fragments/likeFragment";
 import { commentFragment } from "../fragments/commentFragment";
 import { tagsFragment } from "../fragments/tagsFragment";
 import { userFragment } from "../fragments/userFragment";
-
-type InputPost = Prisma.Post & {
-  likes: (Prisma.Like & { author: Omit<Prisma.User, "password"> | null })[];
-  comments: Prisma.Comment[];
-  commentsCount: number;
-  tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
-  author: Omit<Prisma.User, "password"> | null;
-};
+import { preparePost } from "../utils/preparePost";
 
 export type FetchFeedResponse = {
   items: Post[];
@@ -23,19 +14,6 @@ export type FetchFeedResponse = {
 };
 
 export class FeedService {
-  preparePost = (post: InputPost, userId: string | undefined): Post => {
-    const isLikedByMe = post.likes.some(
-      (like: Like & { author: Omit<User, "password"> | null }) =>
-        like.author?.id === userId
-    );
-
-    return {
-      ...R.omit(["likes"], post),
-      likesCount: post.likes.length,
-      isLikedByMe,
-    };
-  };
-
   async fetchFollowingFeed({
     userId,
     take = 25,
@@ -137,7 +115,7 @@ export class FeedService {
           commentsCount: post.comments.length,
           comments: post.comments.reverse().splice(-5),
         }))
-        .map((post) => this.preparePost(post, userId)),
+        .map((post) => preparePost(post, userId)),
       count: posts.length,
       cursor: newCursor,
       total,
@@ -215,7 +193,7 @@ export class FeedService {
           commentsCount: post.comments.length,
           comments: post.comments.reverse().splice(-5),
         }))
-        .map((post) => this.preparePost(post, userId)),
+        .map((post) => preparePost(post, userId)),
       count: posts.length,
       cursor: newCursor,
       total,

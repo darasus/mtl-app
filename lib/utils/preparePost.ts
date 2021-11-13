@@ -7,6 +7,7 @@ export type InputPost = Prisma.Post & {
   comments: Prisma.Comment[];
   commentsCount: number;
   tags: (Prisma.TagsOnPosts & { tag: Prisma.Tag })[];
+  author: Omit<Prisma.User, "password"> | null;
 };
 
 export const preparePost = (post: InputPost, userId?: string): Post => {

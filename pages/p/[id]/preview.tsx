@@ -19,7 +19,7 @@ const PostPage: React.FC = () => {
       <main>
         <Post
           postId={post.data.id}
-          isMyPost={post.data.authorId === me?.user.id}
+          isMyPost={post.data.authorId === me?.user?.id}
           showActionMenu={false}
           showMetaInfo={false}
         />

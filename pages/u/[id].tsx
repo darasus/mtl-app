@@ -11,8 +11,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import { QueryClient } from "react-query";
-import { dehydrate } from "react-query/hydration";
 import { useUserQuery } from "../../hooks/query/useUserQuery";
 import { useRouter } from "next/router";
 import { useUserPostsQuery } from "../../hooks/query/useUserPostsQuery";
@@ -24,9 +22,6 @@ import { UserGroupIcon } from "@heroicons/react/outline";
 import { Layout } from "../../layouts/Layout";
 import { useColors } from "../../hooks/useColors";
 import { Head } from "../../components/Head";
-import { createIsFirstServerCall } from "../../utils/createIsFirstServerCall";
-import { Fetcher } from "../../lib/Fetcher";
-import { ServerHttpConnector } from "../../lib/ServerHttpConnector";
 import { Heading } from "../../components/Heading";
 import { useMe } from "../../hooks/useMe";
 
@@ -161,30 +156,9 @@ const UserPage: React.FC = () => {
 export default UserPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const queryClient = new QueryClient();
-
-  if (!createIsFirstServerCall(ctx)) {
-    return {
-      props: {
-        cookies: ctx.req.headers.cookie ?? "",
-      },
-    };
-  }
-
-  const httpConnector = new ServerHttpConnector(ctx);
-  const fetcher = new Fetcher(httpConnector);
-  const userId = ctx.query.id as string;
-
-  // await Promise.all([
-  //   queryClient.prefetchQuery(clientCacheKey.createUserKey(userId), () =>
-  //     fetcher.getUser(userId)
-  //   ),
-  // ]);
-
   return {
     props: {
       cookies: ctx.req.headers.cookie ?? "",
-      dehydratedState: dehydrate(queryClient),
     },
   };
 };
