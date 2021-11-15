@@ -24,6 +24,7 @@ import { useColors } from "../../hooks/useColors";
 import { Head } from "../../components/Head";
 import { Heading } from "../../components/Heading";
 import { useMe } from "../../hooks/useMe";
+import { getSession } from "@auth0/nextjs-auth0";
 
 const UserPage: React.FC = () => {
   const { secondaryTextColor } = useColors();
@@ -155,10 +156,13 @@ const UserPage: React.FC = () => {
 
 export default UserPage;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession(req, res);
+
   return {
     props: {
-      cookies: ctx.req.headers.cookie ?? "",
+      cookies: req.headers.cookie ?? "",
+      user: session?.user,
     },
   };
 };

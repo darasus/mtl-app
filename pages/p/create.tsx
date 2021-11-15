@@ -9,6 +9,7 @@ import { PostForm, postSchema } from "../../features/PostForm";
 import invariant from "invariant";
 import { CodeLanguage } from ".prisma/client";
 import { Head } from "../../components/Head";
+import { getSession } from "@auth0/nextjs-auth0";
 
 const CreatePostPage: React.FC = () => {
   const router = useRouter();
@@ -69,10 +70,12 @@ const CreatePostPage: React.FC = () => {
 
 export default CreatePostPage;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession(req, res);
   return {
     props: {
-      cookies: ctx.req.headers.cookie ?? "",
+      cookies: req.headers.cookie ?? "",
+      user: session?.user,
     },
   };
 };

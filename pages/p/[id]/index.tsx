@@ -13,6 +13,7 @@ import { Fetcher } from "../../../lib/Fetcher";
 import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
 import { useMe } from "../../../hooks/useMe";
 import { clientCacheKey } from "../../../lib/ClientCacheKey";
+import { getSession } from "@auth0/nextjs-auth0";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
@@ -58,6 +59,7 @@ export default PostPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
+  const session = await getSession(ctx.req, ctx.res);
 
   if (!createIsFirstServerCall(ctx)) {
     return {
@@ -101,6 +103,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       cookies: ctx.req.headers.cookie ?? "",
       dehydratedState: dehydrate(queryClient),
+      user: session?.user,
     },
   };
 };

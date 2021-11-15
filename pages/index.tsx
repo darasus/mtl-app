@@ -16,6 +16,7 @@ import { Intro } from "../components/Intro";
 import { FeedType } from "../types/FeedType";
 import { Heading } from "../components/Heading";
 import { useMe } from "../hooks/useMe";
+import { getSession } from "@auth0/nextjs-auth0";
 
 const Index: React.FC = () => {
   const [feedType, setFeedType] = React.useState(FeedType.Latest);
@@ -91,10 +92,12 @@ const Index: React.FC = () => {
 
 export default Index;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession(req, res);
   return {
     props: {
       cookies: req.headers.cookie ?? "",
+      user: session?.user,
     },
   };
 };
