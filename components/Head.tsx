@@ -1,5 +1,4 @@
 import NextHead from "next/head";
-import { baseUrl } from "../constants/baseUrl";
 import { introImageUrl } from "../constants/introImageUrl";
 import { slogan } from "../constants/slogan";
 
@@ -19,7 +18,7 @@ export const Head: React.FC<Props> = ({
   twitterImage = introImageUrl,
   children,
 }) => {
-  const url = `${baseUrl}/${urlPath}`;
+  const url = `${process.env.NEXT_PUBLIC_VERCEL_URL}/${urlPath}`;
   const titleText = `${title} | My Tiny Library`;
 
   return (

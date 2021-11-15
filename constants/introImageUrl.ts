@@ -1,3 +1,1 @@
-import { baseUrl } from "./baseUrl";
-
-export const introImageUrl = `${baseUrl}/api/screenshot?url=${baseUrl}/home-preview-image`;
+export const introImageUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/screenshot?url=${process.env.NEXT_PUBLIC_VERCEL_URL}/home-preview-image`;

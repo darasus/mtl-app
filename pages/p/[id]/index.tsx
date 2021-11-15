@@ -13,15 +13,16 @@ import { Fetcher } from "../../../lib/Fetcher";
 import { ServerHttpConnector } from "../../../lib/ServerHttpConnector";
 import { useMe } from "../../../hooks/useMe";
 import { clientCacheKey } from "../../../lib/ClientCacheKey";
-import { baseUrl } from "../../../constants/baseUrl";
 
 const PostPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(router.query.id as string);
   const me = useMe();
-  const imageUrl = `${baseUrl}/api/screenshot?url=${baseUrl}/p/${
-    router.query.id
-  }/thumbnail?updateDate=${new Date(post.data?.updatedAt as Date).getTime()}`;
+  const imageUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/screenshot?url=${
+    process.env.NEXT_PUBLIC_VERCEL_URL
+  }/p/${router.query.id}/thumbnail?updateDate=${new Date(
+    post.data?.updatedAt as Date
+  ).getTime()}`;
 
   return (
     <>
