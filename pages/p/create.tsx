@@ -75,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   return {
     props: {
       cookies: req.headers.cookie ?? "",
-      user: session?.user,
+      user: session?.user || null,
     },
   };
 };
