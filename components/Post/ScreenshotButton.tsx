@@ -20,8 +20,8 @@ export const ScreenshotButton: React.FC<Props> = ({ post }) => {
     const screenshot = await refetch();
     download(
       screenshot.data as Blob,
-      `${paramCase(post.title)}.webp`,
-      "image/webp"
+      `${paramCase(post.title)}.png`,
+      "image/png"
     );
   }, [refetch, post]);
 
