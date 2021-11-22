@@ -75,7 +75,11 @@ const defaults: Record<string, ElementType> = {
   hr: () => {
     return <Divider />;
   },
-  a: Link,
+  a: ({ children, ...props }) => (
+    <Link {...props} textDecoration="underline" target="_blank">
+      {children}
+    </Link>
+  ),
   img: Image,
   text: (props) => {
     const { children } = props;
