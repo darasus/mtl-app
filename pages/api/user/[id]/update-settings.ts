@@ -3,6 +3,7 @@ import axios from "axios";
 import invariant from "invariant";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getUserSession } from "../../../../lib/getUserSession";
+import prisma from "../../../../lib/prisma";
 import { UserService } from "../../../../lib/prismaServices/UserService";
 import { processErrorResponse } from "../../../../utils/error";
 
@@ -19,18 +20,21 @@ export default withApiAuthRequired(async function handle(
   const userService = new UserService();
 
   try {
-    console.log(`${process.env.AUTH0_API_BASE_URL}/oauth/token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        nickname: req.body.nickname,
       },
-      data: {
-        grant_type: "client_credentials",
-        client_id: process.env.AUTH0_CLIENT_ID,
-        client_secret: process.env.AUTH0_CLIENT_SECRET,
-        audience: `${process.env.AUTH0_API_BASE_URL}/api/v2/`,
+      select: {
+        nickname: true,
       },
     });
+
+    if (existingUser && existingUser?.nickname === req.body.nickname) {
+      return res.status(400).json({
+        error: "User with this nickname already exists.",
+      });
+    }
+
     const token = await axios(`${process.env.AUTH0_API_BASE_URL}/oauth/token`, {
       method: "POST",
       headers: {
