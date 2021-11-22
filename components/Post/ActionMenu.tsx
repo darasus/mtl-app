@@ -19,6 +19,7 @@ import { Post } from "../../types/Post";
 import { usePostUnpublishMutation } from "../../hooks/mutation/usePostUnpublishMutation";
 import { usePostPublishMutation } from "../../hooks/mutation/usePostPublishMutation";
 import { usePostDeleteMutation } from "../../hooks/mutation/usePostDeleteMutation";
+import { Role, useMe } from "../../hooks/useMe";
 
 interface Props {
   isMyPost: boolean;
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
+  const me = useMe();
   const router = useRouter();
   const { mutateAsync: deletePost, isLoading: isDeleting } =
     usePostDeleteMutation(post.id);
@@ -73,43 +75,45 @@ export const ActionMenu: React.FC<Props> = ({ isMyPost, post }) => {
     sm: desktopButton,
   });
 
-  if (!isMyPost) return null;
+  if (isMyPost || me?.user?.role === Role.ADMIN) {
+    return (
+      <Menu>
+        {buttonComponent}
+        <MenuList>
+          <MenuItem
+            onClick={handleEditClick}
+            icon={<PencilAltIcon width="15" height="15" />}
+          >
+            Edit
+          </MenuItem>
+          {post.published ? (
+            <MenuItem
+              onClick={handleUnpublishPost}
+              disabled={unpublishMutation.isLoading}
+              icon={<CloudDownloadIcon width="15" height="15" />}
+            >
+              Unpublish
+            </MenuItem>
+          ) : (
+            <MenuItem
+              onClick={handlepublishPost}
+              disabled={publishMutation.isLoading}
+              icon={<CloudUploadIcon width="15" height="15" />}
+            >
+              Publish
+            </MenuItem>
+          )}
+          <MenuItem
+            onClick={handleDeletePost}
+            disabled={isDeleting}
+            icon={<TrashIcon width="15" height="15" />}
+          >
+            Remove
+          </MenuItem>
+        </MenuList>
+      </Menu>
+    );
+  }
 
-  return (
-    <Menu>
-      {buttonComponent}
-      <MenuList>
-        <MenuItem
-          onClick={handleEditClick}
-          icon={<PencilAltIcon width="15" height="15" />}
-        >
-          Edit
-        </MenuItem>
-        {post.published ? (
-          <MenuItem
-            onClick={handleUnpublishPost}
-            disabled={unpublishMutation.isLoading}
-            icon={<CloudDownloadIcon width="15" height="15" />}
-          >
-            Unpublish
-          </MenuItem>
-        ) : (
-          <MenuItem
-            onClick={handlepublishPost}
-            disabled={publishMutation.isLoading}
-            icon={<CloudUploadIcon width="15" height="15" />}
-          >
-            Publish
-          </MenuItem>
-        )}
-        <MenuItem
-          onClick={handleDeletePost}
-          disabled={isDeleting}
-          icon={<TrashIcon width="15" height="15" />}
-        >
-          Remove
-        </MenuItem>
-      </MenuList>
-    </Menu>
-  );
+  return null;
 };

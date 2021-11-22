@@ -19,7 +19,7 @@ export default withApiAuthRequired(async function handle(
   const userService = new UserService();
 
   try {
-    const token = await axios(`https://mtl-app.eu.auth0.com/oauth/token`, {
+    console.log(`${process.env.AUTH0_API_BASE_URL}/oauth/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +28,19 @@ export default withApiAuthRequired(async function handle(
         grant_type: "client_credentials",
         client_id: process.env.AUTH0_CLIENT_ID,
         client_secret: process.env.AUTH0_CLIENT_SECRET,
-        audience: `https://mtl-app.eu.auth0.com/api/v2/`,
+        audience: `${process.env.AUTH0_API_BASE_URL}/api/v2/`,
+      },
+    });
+    const token = await axios(`${process.env.AUTH0_API_BASE_URL}/oauth/token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        grant_type: "client_credentials",
+        client_id: process.env.AUTH0_CLIENT_ID,
+        client_secret: process.env.AUTH0_CLIENT_SECRET,
+        audience: `${process.env.AUTH0_API_BASE_URL}/api/v2/`,
       },
     })
       .then((res) => {
@@ -41,7 +53,7 @@ export default withApiAuthRequired(async function handle(
     const session = await getUserSession({ req, res });
 
     await axios(
-      `https://mtl-app.eu.auth0.com/api/v2/users/${session.user.sub}`,
+      `${process.env.AUTH0_API_BASE_URL}/api/v2/users/${session.user.sub}`,
       {
         method: "PATCH",
         headers: {
