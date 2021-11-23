@@ -28,6 +28,7 @@ export interface CUIAutoCompleteProps<T extends Item>
   optionFilterFunc?: (items: T[], inputValue: string) => T[];
   emptyState?: (inputValue: string) => React.ReactNode;
   disableCreateItem?: boolean;
+  "data-testid"?: string;
 }
 
 function defaultOptionFilterFunc<T>(items: T[], inputValue: string) {
@@ -217,6 +218,7 @@ export const AutoComplete = <T extends Item>(
               ref: disclosureRef,
             })
           )}
+          data-testid={downshiftProps["data-testid"]}
         />
         <Button
           {...getToggleButtonProps()}

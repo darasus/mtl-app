@@ -111,6 +111,7 @@ export const PostForm: React.FC<Props> = ({
           color="brand"
           borderColor="brand"
           onClick={handlePublish}
+          data-testid="publish-button"
         >
           Publish
         </Button>
@@ -121,9 +122,10 @@ export const PostForm: React.FC<Props> = ({
           disabled={isSaving}
           variant="outline"
           isLoading={isSaving}
-          loadingText="Publish"
+          loadingText="Saving"
           mr={2}
           onClick={handleSave}
+          data-testid="save-button"
         >
           Save as draft
         </Button>
@@ -156,6 +158,7 @@ export const PostForm: React.FC<Props> = ({
               <Input
                 {...register("title")}
                 isInvalid={!!errors.title?.message}
+                data-testid="title"
               />
             </FormItem>
             <FormItem
@@ -165,6 +168,7 @@ export const PostForm: React.FC<Props> = ({
               <Textarea
                 {...register("description")}
                 isInvalid={!!errors.description?.message}
+                data-testid="description"
               />
             </FormItem>
             <FormItem
@@ -174,6 +178,7 @@ export const PostForm: React.FC<Props> = ({
               <Select
                 {...register("codeLanguage")}
                 isInvalid={!!errors.codeLanguage?.message}
+                data-testid="codeLanguage"
               >
                 <option key={"none"} value="none">
                   -
@@ -202,6 +207,7 @@ export const PostForm: React.FC<Props> = ({
                       items={items}
                       placeholder="E.g. React..."
                       disableCreateItem={true}
+                      data-testid="tag"
                       onStateChange={(item) => {
                         onChange(
                           item?.selectedItems?.[item?.selectedItems.length - 1]
@@ -231,6 +237,7 @@ export const PostForm: React.FC<Props> = ({
                   onChange={onChange}
                   codeLanguage={codeLanguage}
                   isInvalid={!!errors.content?.message}
+                  data-testid="content"
                 />
               )}
             />
