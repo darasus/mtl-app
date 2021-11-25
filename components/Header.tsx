@@ -102,7 +102,7 @@ export const Header: React.FC = () => {
             <Flex>
               <Button
                 variant="outline"
-                onClick={() => router.push("/auth/signin")}
+                onClick={() => router.push("/api/auth/login")}
                 borderColor="brand"
                 color="brand"
               >

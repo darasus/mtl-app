@@ -34,7 +34,7 @@ export class ClientHttpConnector {
       },
       function (error) {
         if (error?.response?.status === 401) {
-          window.location.href = "/api/auth/signin";
+          window.location.href = "/api/auth/login";
         }
         return Promise.reject(error);
       }

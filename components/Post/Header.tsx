@@ -23,10 +23,13 @@ export const Header: React.FC<Props> = ({
       isPostStatusVisible={isPostStatusVisible}
     />
   );
-  const header = useBreakpointValue({
-    base,
-    md,
-  });
+  const header = useBreakpointValue(
+    {
+      base,
+      md,
+    },
+    "md"
+  );
 
-  return header || base;
+  return header || null;
 };
