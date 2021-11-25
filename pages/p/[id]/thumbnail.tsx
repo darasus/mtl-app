@@ -37,13 +37,13 @@ const PostPage: React.FC = () => {
                         />
                       </Box>
                     )}
-                    <Box mr={4} flexGrow={1} minWidth={0}>
-                      <Text fontSize="4xl" data-testid="post-title" isTruncated>
+                    <Box mr={4} minWidth={0}>
+                      <Text fontSize="3xl" data-testid="post-title" isTruncated>
                         {post.title}
                       </Text>
                     </Box>
                     <Box mr={4}>
-                      <Text fontSize="4xl">by</Text>
+                      <Text fontSize="3xl">by</Text>
                     </Box>
                     <Box mr={4}>
                       <Flex alignItems="center">
@@ -64,7 +64,7 @@ const PostPage: React.FC = () => {
                             />
                           </Box>
                         )}
-                        <Text fontSize="4xl" whiteSpace="nowrap">
+                        <Text fontSize="3xl" whiteSpace="nowrap">
                           {post.author?.name}
                         </Text>
                       </Flex>
@@ -72,11 +72,6 @@ const PostPage: React.FC = () => {
                   </Flex>
                 </Box>
               </Box>
-              {/* <Box p={4} borderColor={borderColor} borderBottomWidth="thin">
-                <Flex flexDirection="column">
-                  <Markdown value={post.description || ""} />
-                </Flex>
-              </Box> */}
               <Syntax
                 value={post.content || ""}
                 codeLanguage={post.codeLanguage || CodeLanguage.JAVASCRIPT}

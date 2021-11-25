@@ -90,7 +90,7 @@ export const DesktopHeader: React.FC<Props> = React.memo(
                       <TagIcon width="15" height="15" />
                     </Box>
                     <Box>
-                      <Text fontSize="sm">{`${post.tags
+                      <Text fontSize="sm" whiteSpace="nowrap">{`${post.tags
                         .map((tag) => tag.tag.name)
                         .join(",")}`}</Text>
                     </Box>
