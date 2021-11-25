@@ -85,7 +85,7 @@ const PostPage: React.FC = () => {
             <Box mr={1.5}>
               <Text>Created with</Text>
             </Box>
-            <Box style={{ marginBottom: -10 }}>
+            <Box style={{ marginBottom: -9 }}>
               <Logo />
             </Box>
           </Flex>
