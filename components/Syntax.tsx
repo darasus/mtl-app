@@ -14,14 +14,13 @@ interface Props {
 
 export const Syntax: React.FC<Props> = ({ value, codeLanguage, slice }) => {
   const { colorMode } = useColorMode();
+  const theme = {
+    ...(colorMode === "dark" ? darkTheme : lightTheme),
+  };
+  const language = langMap[codeLanguage];
 
   return (
-    <Highlight
-      {...defaultProps}
-      theme={colorMode === "dark" ? darkTheme : lightTheme}
-      code={value}
-      language={langMap[codeLanguage]}
-    >
+    <Highlight {...defaultProps} theme={theme} code={value} language={language}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => {
         const newTokens = slice ? [...tokens.slice(0, slice)] : tokens;
 
@@ -34,6 +33,7 @@ export const Syntax: React.FC<Props> = ({ value, codeLanguage, slice }) => {
               marginTop: 0,
               marginBottom: 0,
               overflow: "scroll",
+              fontFamily: "Fira Code, monospace",
             }}
           >
             {newTokens.map((line, i) => {

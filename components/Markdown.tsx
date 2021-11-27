@@ -17,6 +17,7 @@ import {
   Tr,
   Th,
   Td,
+  Box,
 } from "@chakra-ui/react";
 
 type GetCoreProps = {
@@ -253,8 +254,10 @@ interface Props {
 
 export const Markdown: React.FC<Props> = ({ value }) => {
   return (
-    <ReactMarkdown className="markdown" components={defaults}>
-      {value}
-    </ReactMarkdown>
+    <Box fontFamily="Fira Code, monospaces">
+      <ReactMarkdown className="markdown" components={defaults}>
+        {value}
+      </ReactMarkdown>
+    </Box>
   );
 };
