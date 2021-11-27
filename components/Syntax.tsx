@@ -8,8 +8,8 @@ import { langMap } from "./CodeEditor";
 
 interface Props {
   value: string;
-  codeLanguage: CodeLanguage;
   slice?: number;
+  codeLanguage: CodeLanguage;
 }
 
 export const Syntax: React.FC<Props> = ({ value, codeLanguage, slice }) => {
