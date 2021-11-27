@@ -13,9 +13,6 @@ module.exports = withPlugins([], {
   },
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    esmExternals: false,
-  },
   env: {
     NEXT_PUBLIC_VERCEL_URL:
       process.env.VERCEL_ENV === "production"
