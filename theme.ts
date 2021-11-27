@@ -47,7 +47,7 @@ export const theme = extendTheme({
   components: {
     Heading: {
       baseStyle: {
-        fontFamily: "Bree Serif, serif",
+        fontFamily: "Fira Code, monospace",
       },
     },
     Button: {

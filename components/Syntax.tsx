@@ -34,6 +34,7 @@ export const Syntax: React.FC<Props> = ({ value, codeLanguage, slice }) => {
               marginBottom: 0,
               overflow: "scroll",
               fontFamily: "Fira Code, monospace",
+              backgroundColor: "transparent",
             }}
           >
             {newTokens.map((line, i) => {
