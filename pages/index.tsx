@@ -30,9 +30,11 @@ const Index: React.FC = () => {
       <Layout>
         <main>
           {!me && !isMeLoading && (
-            <Center height="50vh">
-              <Intro withSignIn />
-            </Center>
+            <Box mt={10} mb={20}>
+              <Center>
+                <Intro withSignIn />
+              </Center>
+            </Box>
           )}
           <Heading title="Library feed">
             <ButtonGroup isAttached variant="solid">

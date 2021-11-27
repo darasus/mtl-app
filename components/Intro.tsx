@@ -1,52 +1,69 @@
-import { Button } from "@chakra-ui/button";
-import { Box, Flex, Heading } from "@chakra-ui/layout";
+import { Box, Flex, Text } from "@chakra-ui/layout";
 import { useBreakpointValue } from "@chakra-ui/media-query";
-import { useRouter } from "next/router";
 import React from "react";
-import { slogan } from "../constants/slogan";
+import { RouterLink } from "./RouterLinkt";
 
 interface Props {
   withSignIn?: boolean;
 }
 
 export const Intro: React.FC<Props> = ({ withSignIn }) => {
-  const router = useRouter();
-  const headerSize = useBreakpointValue({
-    base: "lg",
-    sm: "3xl",
-  });
   const textSize = useBreakpointValue({
-    base: "md",
-    sm: "xl",
+    base: "lg",
+    sm: "5xl",
   });
 
   return (
-    <Flex alignItems="center" direction="column">
-      <Flex whiteSpace="nowrap">
-        <Heading size={headerSize} mr={3}>
-          This is
-        </Heading>
-        <Heading size={headerSize} color="brand">
-          My Tiny Library
-        </Heading>
-      </Flex>
-      <Box mb={3} />
-      <Heading size={textSize} textAlign="center">
-        {slogan}
-      </Heading>
-      {withSignIn && (
-        <Box mt={10}>
-          <Button
-            variant="outline"
-            borderColor="brand"
-            color="brand"
-            onClick={() => router.push("/api/auth/login")}
-            data-testid="intro-signin-button"
-          >
-            Sign in
-          </Button>
-        </Box>
-      )}
+    <Flex direction="column">
+      <Box fontFamily="Fira Code" fontSize={textSize}>
+        <Text as="span" color="yellow.300">
+          {"=>"}
+        </Text>
+        <Text as="span" color="gray.600" fontWeight="light">
+          this is
+        </Text>
+        <Text as="span" color="yellow.300">
+          {"==="}
+        </Text>
+        <Text as="span" color="yellow.300">
+          {"{"}
+        </Text>
+        <Text as="span" fontWeight="bold">
+          my tiny library
+        </Text>
+        <Text as="span" color="yellow.300">
+          {"}"}
+        </Text>
+        <Text as="span" fontWeight="light" color="gray.600">
+          the best way
+        </Text>
+        <Text as="span" color="yellow.300">
+          {">>="}
+        </Text>
+        <Text as="span" fontWeight="light" color="gray.600">
+          to share tiny libraries
+        </Text>
+        <Text as="span" color="yellow.300">
+          {"<~>"}
+        </Text>
+        <Text as="span" fontWeight="light" color="gray.600">
+          with your peers
+        </Text>
+        {withSignIn && (
+          <>
+            <Text as="span" color="yellow.300">
+              {"!=="}
+            </Text>
+            <RouterLink
+              href="/api/auth/login"
+              data-testid="intro-signin-button"
+              chakraLinkProps={{ color: "brand", fontWeight: "bold" }}
+            >
+              Join now
+            </RouterLink>
+          </>
+        )}
+      </Box>
     </Flex>
   );
 };
