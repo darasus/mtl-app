@@ -53,10 +53,18 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const colorMode = router.query?.colorMode;
+
   return (
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
-        <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
+        <ChakraProvider
+          theme={{
+            ...theme,
+            ...(colorMode ? { config: { initialColorMode: colorMode } } : {}),
+          }}
+          colorModeManager={colorMode ? undefined : colorModeManager}
+        >
           <Toaster
             toastOptions={{
               style: {

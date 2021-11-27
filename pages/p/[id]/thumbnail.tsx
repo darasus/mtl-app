@@ -11,7 +11,7 @@ import Image from "next/image";
 import { CodeLanguage } from ".prisma/client";
 import { GetServerSideProps } from "next";
 
-const PostPage: React.FC = () => {
+const ThumbnailPage: React.FC = () => {
   const router = useRouter();
   const { data: post } = usePostQuery(router.query.id as string);
   const { borderColor } = useColors();
@@ -95,7 +95,7 @@ const PostPage: React.FC = () => {
   );
 };
 
-export default PostPage;
+export default ThumbnailPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   return {

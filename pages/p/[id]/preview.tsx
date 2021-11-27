@@ -8,7 +8,7 @@ import { Logo } from "../../../components/Logo";
 import { useMe } from "../../../hooks/useMe";
 import { GetServerSideProps } from "next";
 
-const PostPage: React.FC = () => {
+const PreviewPage: React.FC = () => {
   const router = useRouter();
   const post = usePostQuery(router.query.id as string);
   const me = useMe();
@@ -39,7 +39,7 @@ const PostPage: React.FC = () => {
   );
 };
 
-export default PostPage;
+export default PreviewPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   return {
