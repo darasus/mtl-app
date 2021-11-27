@@ -56,8 +56,11 @@ export const Intro: React.FC<Props> = ({ withSignIn }) => {
             </Text>
             <RouterLink
               href="/api/auth/login"
-              data-testid="intro-signin-button"
-              chakraLinkProps={{ color: "brand", fontWeight: "bold" }}
+              chakraLinkProps={{
+                color: "brand",
+                fontWeight: "bold",
+                "data-testid": "intro-signin-button",
+              }}
             >
               Join now
             </RouterLink>
