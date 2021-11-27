@@ -21,7 +21,7 @@ const PostPage: React.FC = () => {
   const me = useMe();
   const imageUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/screenshot?url=${
     process.env.NEXT_PUBLIC_VERCEL_URL
-  }/p/${router.query.id}/thumbnail?updateDate=${new Date(
+  }/p/${router.query.id}/thumbnail?colorMode=dark&updateDate=${new Date(
     post.data?.updatedAt as Date
   ).getTime()}`;
 
